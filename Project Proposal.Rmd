@@ -1,0 +1,24 @@
+---
+title: "Proposal"
+author: "Anand Rajan"
+date: "11/11/2021"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Project Title
+
+The Effect of Concentrations of Various Air Pollutants on Cancer Prevalence at the State Level over Time
+
+## Motivation for Project
+
+Given the rapid progression of climate change, we have seen deleterious consequences on population health in the United States, specifically cancer. Prior research has shown that air pollution is associated with the increase in incidence and mortality related to certain cancers.  Thus, we want to take a closer look at trends of levels of major air pollutants, such as NO2, SO2 and 03, and compare these trends to incidence and mortality cancer data at the state level over time. The cancers we will specifically be looking at are lung cancer, pancreatic cancer, and liver cancer. We chose these cancers based on previous clinical research that suggest associations between air pollutant concentrations and incidence/mortality of these specific cancer types. Thus our motivation is to further analyze and evaluate these associations at a population level.  
+
+```{r}
+
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
