@@ -25,7 +25,7 @@ We plan to publish our final project by constructing a website. The website will
 
 ## Anticipated Datasources
 
-Thus far, we have gathered data from two main sources. Regarding cancer statistics, we retrieved data from https://cancerstatisticscenter.cancer.org/#!/ The three data sets give us information on mortality data, trends of mortality related to various cancers over timeand incidence rate of various cancers at the state level. According to the file and website, the data source is the North American Association of Central Cancer registries. I have attached the data sets in the following code chunk.
+Thus far, we have gathered data from two main sources. Regarding cancer statistics, we retrieved data from https://cancerstatisticscenter.cancer.org/#!/ The three data sets give us information on mortality data, trends of mortality related to various cancers over time and incidence rate of various cancers at the state level. According to the file and website, the data source is the North American Association of Central Cancer registries. I have attached the data sets in the following code chunk.
 
 ```{r}
 incidence_df = 
@@ -39,12 +39,12 @@ deathtrend_df =
 
 ```
 
-The second data set is air pollution data in the United States from 2000 to 2016. The data was gathered by the EPA and measures air pollutant concentrations(in ppb) for major pollutants, such as Sulfur Dioxide and Ozone, at the city/county level. Now this is an extremely large data set with over 174,000 observations and as you can see will require much cleaning. 
+The second data set is air pollution data in the United States from 2000 to 2016. The data was gathered by the EPA and measures air pollutant concentrations(in ppb) for major pollutants, such as Sulfur Dioxide and Ozone, at the city/county level. Now, this is an extremely large data set with over 174,000 observations and will require extensive cleaning. 
 
 
 ## Planned Analyses and Data Visualization
 
-We intend to include both comprehensive numerical analyses and various data visuals. First we will evaluate the air pollutant data and come up with figures that display average pollutant concentration by state over time. Given the raw data set has values measured at the city/county level, we will have to run numerical analyses to find average pollutant concentration by state. In this table we will also include other statistics such as variance and range. With this figure we can create multiple visualizations, such as a plot the trend of specific air pollutant concentration over time by state, or stratify it by type of pollutant. We can do the same with mortality data for cancer over time by state. Furthermore, we can run linear regressions comparing pollutant concentration to incidence rate of specific cancer types. The linear regression models would fall in the numerical analyses section. Moreover, other analyses include gender specific stratification and whether there are differential effects on 
+We intend to include both comprehensive numerical analyses and various data visuals. First we will evaluate the air pollutant data and come up with figures that display average pollutant concentration by state over time. Given the raw data set with city/county level measurements, we will have to run numerical analyses to find average pollutant concentration by state. In this table we will also include other statistics such as variance and range. With this figure, we can create multiple visualizations including, but not limited to a plot tracing the trend of specific air pollutant concentration over time by state and/or comparing the data stratified by type of pollutant. Similar workflow will be applied to the mortality data for cancer over time by state. Furthermore, we can run linear regressions comparing pollutant concentration to incidence rate of specific cancer types under the numerical analyses section. Additionally, with the available data stratified by sex and race/ethnicity, visual representation of cancer incidence/death rate trend can be provided as reference.
 
 
 ## Challenges
@@ -55,9 +55,15 @@ The major challenge of this coding project will be mainly around cleaning and me
 ## Timeline
 
 11/13 - Turn in Proposal
-11/23 - Set up website infrastructure and complete data cleaning 
-11/28- Complete Numerical Analysis 
+#
+11/23 - Set up website infrastructure and complete data cleaning
+#
+11/28- Complete Numerical Analysis
+#
 12/3 - Complete Data Visualization
+#
 12/4-9 - Complete website, work on report and explanatory video
+#
 12/10- Final edits to website and report
+#
 12/11- Turn in report, repo/website, and video
