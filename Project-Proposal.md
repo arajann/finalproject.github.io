@@ -31,17 +31,17 @@ time.
 ## Intended Final Products
 
 We plan to publish our final project by constructing a website. The
-website will contain a background summarizing previous clinical research
-regarding the associations between lung, liver and pancreatic cancer to
+website will contain a background summarizing published research
+regarding the associations between lung, liver and pancreatic cancers to
 air pollutants. We evaluate the depth of analysis of current literature,
 and address where there could be possible gaps. Furthermore, we intend
 to have a methods tab that describes the source of our data sets and
-display the code that was involved in cleaning, combining and
+display the code that was involved in cleaning, combining, and
 stratifying our final data set. For this project, we anticipate merging
 multiple data sets in order to conduct necessary analysis. Moreover, our
 results section will be split into two portions. One will moreso be
 focused on numerical analyses and tables, whereas another section will
-be dedicated towards data visualization. For the data visualization we
+be dedicated towards data visualization. For the data visualization, we
 expect to create a flex dashboard. Finally, we will have a section
 dedicated to conclusions, limitations, and recommendations for future
 research.
@@ -59,20 +59,21 @@ data sets in the following code chunk.
 
 ``` r
 incidence_df = 
-  read_excel("data/incrate.xlsx", skip=6, sheet=2)
+  read_excel("data/incrate.xlsx", skip = 6, sheet = 2)
 
 deathrate_df = 
-  read_excel("data/deathrate.xlsx", skip=6, sheet=2)
+  read_excel("data/deathrate.xlsx", skip = 6, sheet = 2)
 
 deathtrend_df = 
-  read_excel("data/deathtrend.xlsx", skip=6)
+  read_excel("data/deathtrend.xlsx", skip = 6)
 ```
 
 The second data set is air pollution data in the United States from 2000
 to 2016. The data was gathered by the EPA and measures air pollutant
 concentrations(in ppb) for major pollutants, such as Sulfur Dioxide and
-Ozone, at the city/county level. Now, this is an extremely large data
-set with over 174,000 observations and will require extensive cleaning.
+Ozone, at the city/county level. This is an extremely large data set
+with over 174,000 observations and will require extensive cleaning, so
+it was not uploaded at this time due to size limitations..
 
 ## Planned Analyses and Data Visualization
 
@@ -97,11 +98,11 @@ incidence/death rate trend can be provided as reference.
 
 The major challenge of this coding project will be mainly around
 cleaning and merging the data sets. As you can see the data sets are
-fairly messy and we need to clean the observations while reasonably
+disorganized and we need to clean the observations while reasonably
 merging the data sets. This will require a lot of time and manipulation
 of the raw data. Once we are able to effectively tidy the data, running
 basic analyses and visuals should not be too difficult. However creating
-regression models maybe a tad difficult given the data sources we are
+regression models may be a tad difficult given the data sources we are
 merging and the possible incongruities of years of data collected. Until
 we get to coding/cleaning the data will we know the extent of
 regressions we can run with the given data.
