@@ -54,16 +54,18 @@ The major challenge of this coding project will be mainly around cleaning and me
 
 ## Timeline
 
-11/13 - Turn in Proposal
-#
-11/23 - Set up website infrastructure and complete data cleaning
-#
-11/28- Complete Numerical Analysis
-#
-12/3 - Complete Data Visualization
-#
-12/4-9 - Complete website, work on report and explanatory video
-#
-12/10- Final edits to website and report
-#
-12/11- Turn in report, repo/website, and video
+```{r timeline, include = FALSE}
+time_line =
+  tibble(
+    Date = c("11/13", "11/23", "11/28", "12/3", "12/4-9", "12/10", "12/11"),
+    Plan = c("Turn in Proposal", "Set up website infrastructure and complete data cleaning", 
+             "Complete Numerical Analysis", "Complete Data Visualization", 
+             "Complete website, work on report and explanatory video",
+             "Final edits to website and report", "Turn in report, repo/website, and video"))
+
+```
+
+```{r echo = FALSE}
+knitr::kable(time_line)
+```
+

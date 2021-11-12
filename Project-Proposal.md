@@ -104,8 +104,12 @@ regressions we can run with the given data.
 
 ## Timeline
 
-11/13 - Turn in Proposal \# 11/23 - Set up website infrastructure and
-complete data cleaning \# 11/28- Complete Numerical Analysis \# 12/3 -
-Complete Data Visualization \# 12/4-9 - Complete website, work on report
-and explanatory video \# 12/10- Final edits to website and report \#
-12/11- Turn in report, repo/website, and video
+| Date   | Plan                                                     |
+|:-------|:---------------------------------------------------------|
+| 11/13  | Turn in Proposal                                         |
+| 11/23  | Set up website infrastructure and complete data cleaning |
+| 11/28  | Complete Numerical Analysis                              |
+| 12/3   | Complete Data Visualization                              |
+| 12/4-9 | Complete website, work on report and explanatory video   |
+| 12/10  | Final edits to website and report                        |
+| 12/11  | Turn in report, repo/website, and video                  |
