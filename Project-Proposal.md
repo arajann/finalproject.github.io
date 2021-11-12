@@ -1,7 +1,7 @@
 Proposal
 ================
-Anand Rajan
-11/11/2021
+Anand Rajan(ar4173), Matt Neky(mjn2142), Joe Kim(jhk2201), Alyssa
+Watson(aw3253), Yoo Rim Oh (yo2336)
 
 ## Project Title
 
