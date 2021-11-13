@@ -39,7 +39,18 @@ deathtrend_df =
 
 ```
 
-The second data set is air pollution data in the United States from 2000 to 2016. The data was gathered by the EPA and measures air pollutant concentrations(in ppb) for major pollutants, such as Sulfur Dioxide and Ozone, at the city/county level. This is an extremely large data set with over 174,000 observations and will require extensive cleaning, so it was not uploaded at this time due to size limitations.. 
+The second data set is air pollution data in the United States from 2000 to 2016. The data was gathered by the EPA and measures air pollutant concentrations(in ppb) for major pollutants at the city/county level. This is an extremely large data set with over 174,000 observations and will require extensive cleaning, so it was not uploaded at this time due to size limitations.. 
+
+Though not uploaded the following is a brief description of the data set(https://data.world/arajan98/data-science-project-proposal/workspace/project-summary?agentid=data-society&datasetid=us-air-pollution-data): 
+
+Includes four major pollutants (Nitrogen Dioxide, Sulphur Dioxide, Carbon Monoxide and Ozone) and each has 5 specific columns. For example, for NO2:
+
+- NO2 Units : The units measured for NO2
+- NO2 Mean : The arithmetic mean of concentration of NO2 within a given day
+- NO2 AQI : The calculated air quality index of NO2 within a given day
+- NO2 1st Max Value : The maximum value obtained for NO2 concentration in a given day
+- NO2 1st Max Hour : The hour when the maximum NO2 concentration was recorded in a given day
+
 
 
 ## Planned Analyses and Data Visualization
