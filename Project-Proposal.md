@@ -76,7 +76,7 @@ will require extensive cleaning, so it was not uploaded at this time due
 to size limitations..
 
 Though not uploaded the following is a brief description of the data
-set:
+set(<https://data.world/arajan98/data-science-project-proposal/workspace/project-summary?agentid=data-society&datasetid=us-air-pollution-data>):
 
 Includes four major pollutants (Nitrogen Dioxide, Sulphur Dioxide,
 Carbon Monoxide and Ozone) and each has 5 specific columns. For example,
