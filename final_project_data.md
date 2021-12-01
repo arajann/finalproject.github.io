@@ -7,8 +7,15 @@ Data Cleaning
 death_state =
   read_excel("data/DeathRate.xlsx", sheet = "State", 
              skip = 6) %>%
-  janitor::clean_names()
+  janitor::clean_names() %>% 
+  separate(
+    col = breast_both_sexes_combined,
+    into = c("breast_total", "female_only"),
+    sep = "-"
+  )
 ```
+
+    ## Warning: Expected 2 pieces. Additional pieces discarded in 1 rows [41].
 
 # Death Rate Per Cancer Type
 
@@ -25,8 +32,15 @@ death_cancer =
 inc_state =
   read_excel("data/IncRate.xlsx", sheet = "State", 
              skip = 6) %>%
-  janitor::clean_names()
+  janitor::clean_names() %>% 
+  separate(
+    col = breast_both_sexes_combined,
+    into = c("breast_total", "female_only"),
+    sep = "-"
+  )
 ```
+
+    ## Warning: Expected 2 pieces. Missing pieces filled with `NA` in 2 rows [18, 25].
 
 # Incidence Rate Per Cancer Type
 

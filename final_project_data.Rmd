@@ -14,7 +14,12 @@ library(readxl)
 death_state =
   read_excel("data/DeathRate.xlsx", sheet = "State", 
              skip = 6) %>%
-  janitor::clean_names()
+  janitor::clean_names() %>% 
+  separate(
+    col = breast_both_sexes_combined,
+    into = c("breast_total", "female_only"),
+    sep = "-"
+  )
 ```
 
 
@@ -34,7 +39,12 @@ death_cancer =
 inc_state =
   read_excel("data/IncRate.xlsx", sheet = "State", 
              skip = 6) %>%
-  janitor::clean_names()
+  janitor::clean_names() %>% 
+  separate(
+    col = breast_both_sexes_combined,
+    into = c("breast_total", "female_only"),
+    sep = "-"
+  )
 ```
 
 
