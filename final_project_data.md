@@ -10,7 +10,7 @@ death_state =
   janitor::clean_names() %>% 
   separate(
     col = breast_both_sexes_combined,
-    into = c("breast_total", "female_only"),
+    into = c("breast_total", "female_breast_only"),
     sep = "-"
   )
 ```
@@ -23,7 +23,11 @@ death_state =
 death_cancer =
   read_excel("data/DeathRate.xlsx", sheet = "All US", 
              skip = 6) %>%
-  janitor::clean_names()
+  janitor::clean_names()  %>%
+  mutate(
+    male = if_else(male == "n/a", "0", male),
+    female = if_else(female == "n/a", "0", female)
+  )
 ```
 
 # Incidence Rate State Level
@@ -35,7 +39,7 @@ inc_state =
   janitor::clean_names() %>% 
   separate(
     col = breast_both_sexes_combined,
-    into = c("breast_total", "female_only"),
+    into = c("breast_total", "female_breast_only"),
     sep = "-"
   )
 ```
