@@ -6,6 +6,8 @@ output: github_document
 ```{r setup, include = FALSE}
 library(tidyverse)
 library(readxl)
+library(rvest)
+library(httr)
 ```
 
 # Death Rate State Level
@@ -83,8 +85,23 @@ inc_cancer =
 death_time =
   read_excel("data/DeathTrend.xlsx", 
              skip = 6) %>%
-  janitor::clean_names()
+  janitor::clean_names() %>% 
+  mutate(
+    colorectum_female = substr(colorectum_female, start = 1, stop = 4),
+    colorectum_male = substr(colorectum_male, start = 1, stop = 4),
+    liver_and_intrahepatic_bile_duct_female = substr(liver_and_intrahepatic_bile_duct_female, start = 1, stop = 4),
+    liver_and_intrahepatic_bile_duct_male = substr(liver_and_intrahepatic_bile_duct_male, start = 1, stop = 4),
+    lung_and_bronchus_female = substr(lung_and_bronchus_female, start = 1, stop = 4),
+    lung_and_bronchus_male = substr(lung_and_bronchus_male, start = 1, stop = 4),
+    ovary_female = substr(ovary_female, start = 1, stop = 4),
+    uterus_cervix_and_corpus_combined_female = substr(uterus_cervix_and_corpus_combined_female, start = 1, stop = 4)
+  )
 ```
 
 
 # Pollution Data
+
+```{r}
+
+```
+
