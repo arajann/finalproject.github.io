@@ -12,6 +12,10 @@ death_state =
     col = breast_both_sexes_combined,
     into = c("breast_total", "female_breast_only"),
     sep = "-"
+  ) %>% 
+  mutate(
+    breast_male = if_else(breast_male == "n/a", "0", breast_male),
+    cervix_male = if_else(cervix_male == "n/a", "0", cervix_male)
   )
 ```
 
@@ -41,6 +45,13 @@ inc_state =
     col = breast_both_sexes_combined,
     into = c("breast_total", "female_breast_only"),
     sep = "-"
+  ) %>% 
+  mutate(
+    breast_male = if_else(breast_male == "n/a", "0", breast_male),
+    cervix_male = if_else(cervix_male == "n/a", "0", cervix_male),
+    colon_excluding_rectum_both_sexes_combined = if_else(colon_excluding_rectum_both_sexes_combined == "n/a", "0", colon_excluding_rectum_both_sexes_combined),
+    colon_excluding_rectum_female = if_else(colon_excluding_rectum_female == "n/a", "0", colon_excluding_rectum_female),
+    colon_excluding_rectum_male = if_else(colon_excluding_rectum_male == "n/a", "0", colon_excluding_rectum_male)
   )
 ```
 
@@ -52,7 +63,11 @@ inc_state =
 inc_cancer =
   read_excel("data/IncRate.xlsx", sheet = "All US", 
              skip = 6) %>%
-  janitor::clean_names()
+  janitor::clean_names() %>% 
+  mutate(
+    male = if_else(male == "n/a", "0", male),
+    female = if_else(female == "n/a", "0", female)
+  )
 ```
 
 # Death Trend Over Time
