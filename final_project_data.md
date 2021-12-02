@@ -13,10 +13,12 @@ death_state =
     into = c("breast_total", "female_breast_only"),
     sep = "-"
   ) %>% 
+  select(-female_breast_only) %>%
   mutate(
     breast_male = if_else(breast_male == "n/a", "0", breast_male),
-    cervix_male = if_else(cervix_male == "n/a", "0", cervix_male)
-  )
+    cervix_male = if_else(cervix_male == "n/a", "0", cervix_male),
+  ) %>%
+  filter(state != "Puerto Rico")
 ```
 
     ## Warning: Expected 2 pieces. Additional pieces discarded in 1 rows [41].
@@ -31,8 +33,14 @@ death_cancer =
   mutate(
     male = if_else(male == "n/a", "0", male),
     female = if_else(female == "n/a", "0", female)
-  )
+  ) %>%
+  separate(both_sexes_combined, into = c("both_sexes_combined", "note"), sep = "\\-") %>%
+  select(-note) %>%
+  mutate_at(vars(-("cancer_type")), as.numeric)
 ```
+
+    ## Warning: Expected 2 pieces. Missing pieces filled with `NA` in 23 rows [1, 2, 4,
+    ## 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, ...].
 
 # Incidence Rate State Level
 
@@ -51,8 +59,10 @@ inc_state =
     cervix_male = if_else(cervix_male == "n/a", "0", cervix_male),
     colon_excluding_rectum_both_sexes_combined = if_else(colon_excluding_rectum_both_sexes_combined == "n/a", "0", colon_excluding_rectum_both_sexes_combined),
     colon_excluding_rectum_female = if_else(colon_excluding_rectum_female == "n/a", "0", colon_excluding_rectum_female),
-    colon_excluding_rectum_male = if_else(colon_excluding_rectum_male == "n/a", "0", colon_excluding_rectum_male)
-  )
+    colon_excluding_rectum_male = if_else(colon_excluding_rectum_male == "n/a", "0", colon_excluding_rectum_male),
+  ) %>%
+  filter(state != "Puerto Rico") %>%
+  select(-c("female_breast_only", starts_with("colon"), starts_with("rectum")))
 ```
 
     ## Warning: Expected 2 pieces. Missing pieces filled with `NA` in 2 rows [18, 25].
@@ -67,8 +77,16 @@ inc_cancer =
   mutate(
     male = if_else(male == "n/a", "0", male),
     female = if_else(female == "n/a", "0", female)
-  )
+  ) %>%
+  separate(both_sexes_combined, into = c("both_sexes_combined", "note"), sep = "\\-") %>%
+  select(-note) %>%
+  mutate_at(vars(-("cancer_type")), as.numeric) %>%
+  filter(cancer_type != "Colon (excluding rectum)",
+         cancer_type != "Rectum")
 ```
+
+    ## Warning: Expected 2 pieces. Missing pieces filled with `NA` in 25 rows [1, 2, 4,
+    ## 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, ...].
 
 # Death Trend Over Time
 
@@ -87,6 +105,33 @@ death_time =
     ovary_female = substr(ovary_female, start = 1, stop = 4),
     uterus_cervix_and_corpus_combined_female = substr(uterus_cervix_and_corpus_combined_female, start = 1, stop = 4)
   )
+
+death_time =
+  read_excel("data/DeathTrend.xlsx", 
+             skip = 6) %>%
+  janitor::clean_names() %>% 
+  separate(colorectum_female, into = c("colorectum_female", "note"), sep = "\\-") %>%
+  select(-note) %>%
+  separate(colorectum_male, into = c("colorectum_male", "note"), sep = "\\-") %>%
+  select(-note) %>%
+  separate(liver_and_intrahepatic_bile_duct_female, into = c("liver_and_intrahepatic_bile_duct_female",
+                                                             "note"), sep = "\\-") %>%
+  select(-note) %>%
+  separate(liver_and_intrahepatic_bile_duct_male, into = c("liver_and_intrahepatic_bile_duct_male",
+                                                             "note"), sep = "\\-") %>%
+  select(-note) %>%
+  separate(lung_and_bronchus_female, into = c("lung_and_bronchus_female", "note"), sep = "\\-") %>%
+  select(-note) %>%
+  separate(lung_and_bronchus_male, into = c("lung_and_bronchus_male", "note"), sep = "\\-") %>%
+  select(-note) %>%
+  separate(ovary_female, into = c("ovary_female", "note"), sep = "\\-") %>%
+  select(-note) %>%
+  separate(uterus_cervix_and_corpus_combined_female, 
+           into = c("uterus_cervix_and_corpus_combined_female", "note"), sep = "\\-") %>%
+  select(-note) %>%
+  select(-c("breast_male", "ovary_male", "prostate_female","uterus_cervix_and_corpus_combined_male")) %>%
+  mutate_at(vars(-("year")), as.numeric) %>%
+  mutate(year = as.factor(year))
 ```
 
 # Pollution Data
