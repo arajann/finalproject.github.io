@@ -18,10 +18,149 @@ death_state =
     breast_male = if_else(breast_male == "n/a", "0", breast_male),
     cervix_male = if_else(cervix_male == "n/a", "0", cervix_male),
   ) %>%
+  mutate_at(vars(-("state")), as.numeric) %>%
   filter(state != "Puerto Rico")
 ```
 
     ## Warning: Expected 2 pieces. Additional pieces discarded in 1 rows [41].
+
+    ## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
+
+    ## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
+
+    ## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
+
+    ## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
+
+    ## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
+
+    ## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
+
+    ## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
+
+    ## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
+
+    ## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
+
+    ## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
+
+    ## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
+
+    ## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
+
+    ## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
+
+    ## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
+
+    ## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
+
+    ## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
+
+    ## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
+
+    ## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
+
+    ## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
+
+    ## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
+
+    ## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
+
+    ## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
+
+    ## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
+
+    ## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
+
+    ## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
+
+    ## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
+
+    ## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
+
+    ## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
+
+    ## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
+
+    ## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
+
+    ## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
+
+    ## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
+
+    ## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
+
+    ## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
+
+    ## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
+
+    ## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
+
+    ## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
+
+    ## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
+
+    ## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
+
+    ## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
+
+    ## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
+
+    ## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
+
+    ## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
+
+    ## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
+
+    ## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
+
+    ## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
+
+    ## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
+
+    ## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
+
+    ## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
+
+    ## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
+
+    ## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
+
+    ## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
+
+    ## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
+
+    ## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
+
+    ## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
+
+    ## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
+
+    ## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
+
+    ## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
+
+    ## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
+
+    ## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
+
+    ## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
+
+    ## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
+
+    ## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
+
+    ## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
+
+    ## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
+
+    ## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
+
+    ## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
+
+    ## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
+
+    ## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
 
 # Death Rate Per Cancer Type
 
@@ -91,44 +230,23 @@ inc_cancer =
 # Death Trend Over Time
 
 ``` r
-death_time =
+read_death_time =
   read_excel("data/DeathTrend.xlsx", 
              skip = 6) %>%
-  janitor::clean_names() %>% 
-  mutate(
-    colorectum_female = substr(colorectum_female, start = 1, stop = 4),
-    colorectum_male = substr(colorectum_male, start = 1, stop = 4),
-    liver_and_intrahepatic_bile_duct_female = substr(liver_and_intrahepatic_bile_duct_female, start = 1, stop = 4),
-    liver_and_intrahepatic_bile_duct_male = substr(liver_and_intrahepatic_bile_duct_male, start = 1, stop = 4),
-    lung_and_bronchus_female = substr(lung_and_bronchus_female, start = 1, stop = 4),
-    lung_and_bronchus_male = substr(lung_and_bronchus_male, start = 1, stop = 4),
-    ovary_female = substr(ovary_female, start = 1, stop = 4),
-    uterus_cervix_and_corpus_combined_female = substr(uterus_cervix_and_corpus_combined_female, start = 1, stop = 4)
-  )
+  janitor::clean_names()
+
+x = c("colorectum_female", "colorectum_male", "liver_and_intrahepatic_bile_duct_female", "liver_and_intrahepatic_bile_duct_male", "lung_and_bronchus_female", "lung_and_bronchus_male", "ovary_female", "uterus_cervix_and_corpus_combined_female")
+
+remove_note = function(column_name) {
+  read_death_time = read_death_time %>% 
+    separate(column_name, into = c(column_name, "note"), sep = "\\-") %>% 
+    select(-note)}
+
+for (i in x) {
+  read_death_time = remove_note(i)} 
 
 death_time =
-  read_excel("data/DeathTrend.xlsx", 
-             skip = 6) %>%
-  janitor::clean_names() %>% 
-  separate(colorectum_female, into = c("colorectum_female", "note"), sep = "\\-") %>%
-  select(-note) %>%
-  separate(colorectum_male, into = c("colorectum_male", "note"), sep = "\\-") %>%
-  select(-note) %>%
-  separate(liver_and_intrahepatic_bile_duct_female, into = c("liver_and_intrahepatic_bile_duct_female",
-                                                             "note"), sep = "\\-") %>%
-  select(-note) %>%
-  separate(liver_and_intrahepatic_bile_duct_male, into = c("liver_and_intrahepatic_bile_duct_male",
-                                                             "note"), sep = "\\-") %>%
-  select(-note) %>%
-  separate(lung_and_bronchus_female, into = c("lung_and_bronchus_female", "note"), sep = "\\-") %>%
-  select(-note) %>%
-  separate(lung_and_bronchus_male, into = c("lung_and_bronchus_male", "note"), sep = "\\-") %>%
-  select(-note) %>%
-  separate(ovary_female, into = c("ovary_female", "note"), sep = "\\-") %>%
-  select(-note) %>%
-  separate(uterus_cervix_and_corpus_combined_female, 
-           into = c("uterus_cervix_and_corpus_combined_female", "note"), sep = "\\-") %>%
-  select(-note) %>%
+  read_death_time %>%
   filter(year %in% 2000:2016) %>%
   select(-c("breast_male", "ovary_male", "prostate_female","uterus_cervix_and_corpus_combined_male")) %>%
   mutate_at(vars(-("year")), as.numeric) %>%
@@ -144,10 +262,12 @@ pollution =
   select(state, date_local, no2_mean, o3_mean, 
          so2_mean, co_mean) %>%
   separate(date_local, into = c("year", "month", "day"), sep = "\\-") %>%
-  select(-c(month, day)) %>%
-  group_by(year, state) %>%
+  select(-c(day)) %>%
+  group_by(year, month, state) %>%
   summarize(across(everything(), mean)) %>%
-  filter(state != "Country Of Mexico")
+  mutate_if(is.numeric, ~round(., 3)) %>%
+  filter(state != "Country Of Mexico") %>%
+  mutate(year = as.factor(year))
 ```
 
     ## New names:
@@ -165,4 +285,7 @@ pollution =
     ## i Use `spec()` to retrieve the full column specification for this data.
     ## i Specify the column types or set `show_col_types = FALSE` to quiet this message.
 
-    ## `summarise()` has grouped output by 'year'. You can override using the `.groups` argument.
+    ## `summarise()` has grouped output by 'year', 'month'. You can override using the `.groups` argument.
+
+    ## `mutate_if()` ignored the following grouping variables:
+    ## Columns `year`, `month`
