@@ -8,6 +8,8 @@ library(tidyverse)
 library(readxl)
 library(rvest)
 library(httr)
+
+knitr::opts_chunk$set(warning = FALSE, message = FALSE) 
 ```
 
 

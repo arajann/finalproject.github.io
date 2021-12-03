@@ -22,146 +22,6 @@ death_state =
   filter(state != "Puerto Rico")
 ```
 
-    ## Warning: Expected 2 pieces. Additional pieces discarded in 1 rows [41].
-
-    ## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
-
-    ## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
-
-    ## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
-
-    ## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
-
-    ## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
-
-    ## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
-
-    ## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
-
-    ## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
-
-    ## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
-
-    ## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
-
-    ## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
-
-    ## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
-
-    ## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
-
-    ## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
-
-    ## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
-
-    ## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
-
-    ## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
-
-    ## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
-
-    ## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
-
-    ## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
-
-    ## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
-
-    ## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
-
-    ## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
-
-    ## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
-
-    ## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
-
-    ## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
-
-    ## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
-
-    ## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
-
-    ## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
-
-    ## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
-
-    ## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
-
-    ## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
-
-    ## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
-
-    ## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
-
-    ## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
-
-    ## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
-
-    ## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
-
-    ## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
-
-    ## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
-
-    ## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
-
-    ## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
-
-    ## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
-
-    ## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
-
-    ## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
-
-    ## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
-
-    ## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
-
-    ## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
-
-    ## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
-
-    ## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
-
-    ## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
-
-    ## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
-
-    ## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
-
-    ## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
-
-    ## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
-
-    ## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
-
-    ## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
-
-    ## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
-
-    ## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
-
-    ## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
-
-    ## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
-
-    ## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
-
-    ## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
-
-    ## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
-
-    ## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
-
-    ## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
-
-    ## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
-
-    ## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
-
-    ## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
-
-    ## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
-
 # Death Rate Per Cancer Type
 
 ``` r
@@ -177,9 +37,6 @@ death_cancer =
   select(-note) %>%
   mutate_at(vars(-("cancer_type")), as.numeric)
 ```
-
-    ## Warning: Expected 2 pieces. Missing pieces filled with `NA` in 23 rows [1, 2, 4,
-    ## 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, ...].
 
 # Incidence Rate State Level
 
@@ -204,8 +61,6 @@ inc_state =
   select(-c("female_breast_only", starts_with("colon"), starts_with("rectum")))
 ```
 
-    ## Warning: Expected 2 pieces. Missing pieces filled with `NA` in 2 rows [18, 25].
-
 # Incidence Rate Per Cancer Type
 
 ``` r
@@ -223,9 +78,6 @@ inc_cancer =
   filter(cancer_type != "Colon (excluding rectum)",
          cancer_type != "Rectum")
 ```
-
-    ## Warning: Expected 2 pieces. Missing pieces filled with `NA` in 25 rows [1, 2, 4,
-    ## 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, ...].
 
 # Death Trend Over Time
 
@@ -269,23 +121,3 @@ pollution =
   filter(state != "Country Of Mexico") %>%
   mutate(year = as.factor(year))
 ```
-
-    ## New names:
-    ## * `` -> ...1
-
-    ## Rows: 1746661 Columns: 29
-
-    ## -- Column specification --------------------------------------------------------
-    ## Delimiter: ","
-    ## chr   (8): Address, State, County, City, NO2 Units, O3 Units, SO2 Units, CO ...
-    ## dbl  (20): ...1, State Code, County Code, Site Num, NO2 Mean, NO2 1st Max Va...
-    ## date  (1): Date Local
-
-    ## 
-    ## i Use `spec()` to retrieve the full column specification for this data.
-    ## i Specify the column types or set `show_col_types = FALSE` to quiet this message.
-
-    ## `summarise()` has grouped output by 'year', 'month'. You can override using the `.groups` argument.
-
-    ## `mutate_if()` ignored the following grouping variables:
-    ## Columns `year`, `month`
