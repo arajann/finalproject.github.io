@@ -129,9 +129,40 @@ death_time =
   separate(uterus_cervix_and_corpus_combined_female, 
            into = c("uterus_cervix_and_corpus_combined_female", "note"), sep = "\\-") %>%
   select(-note) %>%
+  filter(year %in% 2000:2016) %>%
   select(-c("breast_male", "ovary_male", "prostate_female","uterus_cervix_and_corpus_combined_male")) %>%
   mutate_at(vars(-("year")), as.numeric) %>%
   mutate(year = as.factor(year))
 ```
 
 # Pollution Data
+
+``` r
+pollution =
+  read_csv("data/uspollution_us_2000_2016.csv") %>%
+  janitor::clean_names() %>%
+  select(state, date_local, no2_mean, o3_mean, 
+         so2_mean, co_mean) %>%
+  separate(date_local, into = c("year", "month", "day"), sep = "\\-") %>%
+  select(-c(month, day)) %>%
+  group_by(year, state) %>%
+  summarize(across(everything(), mean)) %>%
+  filter(state != "Country Of Mexico")
+```
+
+    ## New names:
+    ## * `` -> ...1
+
+    ## Rows: 1746661 Columns: 29
+
+    ## -- Column specification --------------------------------------------------------
+    ## Delimiter: ","
+    ## chr   (8): Address, State, County, City, NO2 Units, O3 Units, SO2 Units, CO ...
+    ## dbl  (20): ...1, State Code, County Code, Site Num, NO2 Mean, NO2 1st Max Va...
+    ## date  (1): Date Local
+
+    ## 
+    ## i Use `spec()` to retrieve the full column specification for this data.
+    ## i Specify the column types or set `show_col_types = FALSE` to quiet this message.
+
+    ## `summarise()` has grouped output by 'year'. You can override using the `.groups` argument.

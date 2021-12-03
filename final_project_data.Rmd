@@ -132,15 +132,27 @@ death_time =
   separate(uterus_cervix_and_corpus_combined_female, 
            into = c("uterus_cervix_and_corpus_combined_female", "note"), sep = "\\-") %>%
   select(-note) %>%
+  filter(year %in% 2000:2016) %>%
   select(-c("breast_male", "ovary_male", "prostate_female","uterus_cervix_and_corpus_combined_male")) %>%
   mutate_at(vars(-("year")), as.numeric) %>%
   mutate(year = as.factor(year))
+  
 ```
 
 
 # Pollution Data
 
 ```{r}
-
+pollution =
+  read_csv("data/uspollution_us_2000_2016.csv") %>%
+  janitor::clean_names() %>%
+  select(state, date_local, no2_mean, o3_mean, 
+         so2_mean, co_mean) %>%
+  separate(date_local, into = c("year", "month", "day"), sep = "\\-") %>%
+  select(-c(month, day)) %>%
+  group_by(year, state) %>%
+  summarize(across(everything(), mean)) %>%
+  filter(state != "Country Of Mexico")
+  
 ```
 
