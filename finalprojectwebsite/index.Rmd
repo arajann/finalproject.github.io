@@ -1,0 +1,28 @@
+---
+title: "Relationship Between Air Pollution and Cancer"
+output: 
+  html_document:
+    toc: false
+    toc_float: true
+    theme: united
+    
+---
+
+----------
+&nbsp;
+
+Group Project Text...
+
+&nbsp;
+
+**In case you are interested in learning more about my life...**
+&nbsp;
+  *[My Linkedin Page](www.linkedin.com/in/joseph-kim-467520b8)
+&nbsp;
+  *[Facebook](https://www.facebook.com/joe.kim.921)
+
+&nbsp;
+
+<center><img src="stephcurry.gif" style="width:60%">
+<br>
+<center>
