@@ -1,0 +1,78 @@
+---
+title: "exploratory_analysis"
+author: "Anand Rajan"
+date: "12/5/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+library(tidyverse)
+library(readxl)
+library(rvest)
+library(httr)
+        
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Exploring Death Rate Data set
+
+### Lung Cancer Death Rate
+```{r}
+lung_cancer_death_rate
+death_state %>%  
+  select(state, lung_and_bronchus_female,lung_and_bronchus_male, lung_and_bronchus_both_sexes_combined) %>% 
+  knitr::kable()
+
+death_state %>%  
+  select(state, all_cancer_types_combined_both_sexes_combined) %>% 
+  knitr::kable()
+
+death_state %>% 
+  select(state, all_cancer_types_combined_both_sexes_combined) %>% 
+  ggplot(aes(x=state, y=all_cancer_types_combined_both_sexes_combined)) +
+    geom_point()
+  
+  
+```
+
+Visualizations 
+```{r}
+
+death_state %>% 
+  select(state, lung_and_bronchus_both_sexes_combined) %>% 
+  ggplot(aes(x=state, y=lung_and_bronchus_both_sexes_combined)) +
+  geom_point()
+```
+
+
+```{r}
+pollution %>% 
+  select(-o3_mean,-so2_mean,-co_mean) %>% 
+  group_by(state,year) %>% 
+  filter(state == "New York") %>% 
+  mutate(
+    month=recode(
+      month,
+      "01"="January",
+      "02" = "February",
+      "03"="March",
+      "04"="April",
+      "05"="May",
+      "06"="June",
+      "07"="July",
+      "08"="August",
+      "09"="September",
+      "10"="October",
+      "11"="November",
+      "12"="December"
+    )
+  ) %>% 
+  ggplot(aes(x= month, y=no2_mean, group=year, color=year)) +
+  geom_point(alpha=0.5) +
+  geom_line() +
+  labs(title="Nitrous Dioxide Pollutant Concentration over Time In New York")
+
+pollution %>% 
+  group_by(month,year)
+```
+

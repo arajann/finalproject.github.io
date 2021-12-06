@@ -1,0 +1,38 @@
+---
+title: "Relationship Between Air Pollution and Cancer"
+output: 
+  html_document:
+    toc: false
+    toc_float: true
+    theme: united
+    
+---
+
+----------
+&nbsp;
+
+Group Project Text...
+
+&nbsp;
+
+</center>
+### **Group Members**:
+
+  * Anand Rajan (ar4173)
+  * Matt Neky (mjn2142)
+  * Joe Kim (jhk2201)
+  * Alyssa Watson (aw3253)
+  * Yoo Rim Oh (yo2336)
+</center>
+
+&nbsp;
+&nbsp;
+
+##### **For a brief explanation of our project, please watch the following videos.**
+&nbsp;
+
+  *[My Linkedin Page](www.linkedin.com/in/joseph-kim-467520b8)
+&nbsp;
+  *[Facebook](https://www.facebook.com/joe.kim.921)
+
+&nbsp;
