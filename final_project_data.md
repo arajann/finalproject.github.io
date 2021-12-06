@@ -114,10 +114,23 @@ pollution =
   select(state, date_local, no2_mean, o3_mean, 
          so2_mean, co_mean) %>%
   separate(date_local, into = c("year", "month", "day"), sep = "\\-") %>%
-  select(-c(day)) %>%
-  group_by(year, month, state) %>%
+  select(-c("month", "day")) %>%
+  group_by(year, state) %>%
   summarize(across(everything(), mean)) %>%
   mutate_if(is.numeric, ~round(., 3)) %>%
   filter(state != "Country Of Mexico") %>%
   mutate(year = as.factor(year))
+```
+
+death\_time and pollution merged
+
+``` r
+modified_pollution =
+  pollution %>%
+  group_by(year) %>%
+  summarize(across(everything(), mean)) %>%
+  select(-c(state))
+
+pollution_cancer =
+  left_join(death_time, modified_pollution, by = "year")
 ```
