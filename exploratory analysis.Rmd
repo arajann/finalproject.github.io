@@ -3,6 +3,7 @@ title: "exploratory_analysis"
 author: "Anand Rajan"
 date: "12/5/2021"
 output: html_document
+
 ---
 
 ```{r setup, include=FALSE}
@@ -10,6 +11,8 @@ library(tidyverse)
 library(readxl)
 library(rvest)
 library(httr)
+library(wesanderson)
+
         
 knitr::opts_chunk$set(echo = TRUE)
 ```
@@ -44,35 +47,96 @@ death_state %>%
   geom_point()
 ```
 
+Exploring Pollution dataset
+
+
+```{r}
+
+pollution %>% 
+  select(-c("month")) %>% 
+  group_by(year,state)
+
+pollution %>% 
+  group_by(state) %>% 
+  pull(state)
+
+```
+
+Pollution Trends Nationwide
+
+```{r}
+no2_trend = 
+modified_pollution %>% 
+  ggplot(aes(x=year,y=no2_mean, colo)) +
+  geom_point() +
+  geom_line()
+```
+```{r}
+nationwide_so2trend=
+  modified_pollution %>% 
+  ggplot(aes(x=year,y=so2_mean)) + 
+  geom_point() 
+```
+
 
 ```{r}
 pollution %>% 
   select(-o3_mean,-so2_mean,-co_mean) %>% 
   group_by(state,year) %>% 
   filter(state == "New York") %>% 
-  mutate(
-    month=recode(
-      month,
-      "01"="January",
-      "02" = "February",
-      "03"="March",
-      "04"="April",
-      "05"="May",
-      "06"="June",
-      "07"="July",
-      "08"="August",
-      "09"="September",
-      "10"="October",
-      "11"="November",
-      "12"="December"
-    )
-  ) %>% 
   ggplot(aes(x= month, y=no2_mean, group=year, color=year)) +
   geom_point(alpha=0.5) +
   geom_line() +
   labs(title="Nitrous Dioxide Pollutant Concentration over Time In New York")
 
 pollution %>% 
-  group_by(month,year)
+  filter(
+    year %in% c("2013","2014","2015","2016")
+  ) %>% 
+  ggplot(aes(x= year, y=no2_mean, group=state, color=state)) +
+  geom_point(alpha=0.5) +
+  geom_line()
+
+```
+
+```{r}
+pollution %>% 
+  filter(
+    year %in% c("2013","2014","2015","2016")
+  ) %>% 
+  ggplot(aes(x= year, y=so2_mean, group=state, color=state)) +
+  geom_point(alpha=0.5) +
+  geom_line()
+```
+
+
+
+```{r}
+pollution %>% 
+  filter(
+    year %in% c("2013","2014","2015","2016")
+  ) %>% 
+  ggplot(aes(x= year, y=co_mean, group=state, color=state)) +
+  geom_point(alpha=0.5) +
+  geom_line()
+```
+
+
+```{r}
+pollution %>% 
+  filter(
+    year %in% c("2013","2014","2015","2016")
+  ) %>% 
+  ggplot(aes(x= year, y=o3_mean, group=state, color=state)) +
+  geom_point(alpha=0.5) +
+  geom_line()
+```
+
+Creating a function to plot trends of mean pollutant concentration from 2013-2016 by state
+
+
+```{r}
+
+
 ```
 

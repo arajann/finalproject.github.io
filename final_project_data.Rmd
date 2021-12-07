@@ -6,8 +6,7 @@ output: github_document
 ```{r setup, include = FALSE}
 library(tidyverse)
 library(readxl)
-library(rvest)
-library(httr)
+library(patchwork)
 
 knitr::opts_chunk$set(warning = FALSE, message = FALSE) 
 ```
@@ -16,7 +15,7 @@ knitr::opts_chunk$set(warning = FALSE, message = FALSE)
 
 # Death Rate State Level
 
-```{r, warning = FALSE}
+```{r warning = FALSE}
 death_state =
   read_excel("data/DeathRate.xlsx", sheet = "State", 
              skip = 6) %>%
@@ -132,8 +131,8 @@ pollution1 = read_excel("data/uspollution_us_2000_2016.xlsx") %>%
   select(state, date_local, no2_mean, o3_mean, 
          so2_mean, co_mean) %>%
   separate(date_local, into = c("year", "month", "day"), sep = "\\-") %>%
-  select(-c(day)) %>%
-  group_by(year, month, state) %>%
+  select(-c("month", "day")) %>%
+  group_by(year, state) %>%
   summarize(across(everything(), mean)) %>%
   mutate_if(is.numeric, ~round(., 3)) %>%
   filter(state != "Country Of Mexico") %>% 
@@ -157,4 +156,65 @@ pollution1 = read_excel("data/uspollution_us_2000_2016.xlsx") %>%
 merged_pollute_inc =
   merge(inc_state, pollution1, by = "state")
 ```
+
+
+death_time and pollution merged
+```{r warning = FALSE}
+modified_pollution =
+  read_excel("data/uspollution_us_2000_2016.xlsx") %>% 
+  janitor::clean_names() %>%
+  select(state, date_local, no2_mean, o3_mean, 
+         so2_mean, co_mean) %>%
+  separate(date_local, into = c("year", "month", "day"), sep = "\\-") %>%
+  select(-c("month", "day")) %>%
+  group_by(year, state) %>%
+  summarize(across(everything(), mean)) %>%
+  mutate_if(is.numeric, ~round(., 3)) %>%
+  filter(state != "Country Of Mexico") %>%
+  group_by(year) %>%
+  summarize(across(everything(), mean)) %>%
+  select(-c(state))
+
+pollution_cancer =
+  left_join(death_time, modified_pollution, by = "year")
+```
+
+
+Plots by cancer type
+```{r}
+inc_cancer_plot =
+  inc_cancer %>%
+  select(cancer_type, female, male) %>%
+  pivot_longer(
+    female:male,
+    names_to = "sex",
+    values_to = "incidence"
+  ) %>%
+  filter(cancer_type != "All cancer types combined",
+         incidence != 0) %>%
+  mutate(cancer_type = fct_reorder(cancer_type, incidence)) %>%
+  ggplot(aes(x = cancer_type, y = incidence, color = sex)) +
+  geom_point(aes(size = 2)) + guides(size = "none") +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1)) +
+  labs(title = "Cancer Incidence Rate for Different Cancer Types by Sex in 2013-2017", 
+       x = "Cancer Type", y = "Incidence")
+
+death_cancer_plot =
+  death_cancer %>%
+  select(cancer_type, female, male) %>%
+  pivot_longer(
+    female:male,
+    names_to = "sex",
+    values_to = "death"
+  ) %>%
+  filter(cancer_type != "All cancer types combined",
+         death != 0) %>%
+  mutate(cancer_type = fct_reorder(cancer_type, death)) %>%
+  ggplot(aes(x = cancer_type, y = death, color = sex)) +
+  geom_point(aes(size = 2)) + guides(size = "none") +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1)) +
+  labs(title = "Cancer Death Rate for Different Cancer Types by Sex in 2013-2017", 
+       x = "Cancer Type", y = "Death")
+```
+
 
