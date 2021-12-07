@@ -108,8 +108,7 @@ death_time =
 # Pollution Data
 
 ``` r
-pollution =
-  read_csv("data/uspollution_us_2000_2016.csv") %>%
+pollution1 = read_excel("data/uspollution_us_2000_2016.xlsx") %>% 
   janitor::clean_names() %>%
   select(state, date_local, no2_mean, o3_mean, 
          so2_mean, co_mean) %>%
@@ -118,6 +117,24 @@ pollution =
   group_by(year, month, state) %>%
   summarize(across(everything(), mean)) %>%
   mutate_if(is.numeric, ~round(., 3)) %>%
-  filter(state != "Country Of Mexico") %>%
-  mutate(year = as.factor(year))
+  filter(state != "Country Of Mexico") %>% 
+  filter(
+    year %in% (2005:2010)
+  ) %>% 
+  ungroup() %>% 
+  select(state:co_mean) %>% 
+  group_by(state) %>% 
+  summarize(
+    no2 = mean(no2_mean),
+    o3 = mean(o3_mean),
+    so2 = mean(so2_mean),
+    co = mean(co_mean)
+  )
+```
+
+# Merging Pollution and Incidence Data Sets
+
+``` r
+merged_pollute_inc =
+  merge(inc_state, pollution1, by = "state")
 ```
