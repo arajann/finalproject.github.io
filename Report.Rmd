@@ -22,6 +22,13 @@ Given the rapid progression of climate change, we have seen widespread effects o
 
 ### Research Questions 
 
+Some ideas for the questions, not definite
+
+- What is the relationship between incidence rate and mortality rate of different types of cancer?
+- What has been the general trend of cancer incidence, cancer mortality, and pollution levels over time?
+- What is the geographical spread of cancer rates and pollution levels look like in US?
+- Is there any evidence of association between cancer rates and air pollution?
+
 &nbsp;
 
 ### Data 
@@ -30,11 +37,9 @@ Given the rapid progression of climate change, we have seen widespread effects o
 
 Our project consists of data from two main sources: 
 
-Regarding cancer statistics, we retrieved data from [American Cancer Society Cancer Statistics Center](https://cancerstatisticscenter.cancer.org/#!/). The three data sets give us information on mortality data, trends of mortality related to various cancers over time and incidence rate of various cancers at the state level. According to the file and website, the data source is the North American Association of Central Cancer registries. 
+Regarding cancer statistics, we retrieved data from [American Cancer Society Cancer Statistics Center](https://cancerstatisticscenter.cancer.org/#!/). Raw data sets were available for download in excel format. The three data sets give us information on aggregated mortality and incidence rates from 2013 to 2017, aggregated mortality and incidence rates of various cancers at the state level from 2013 to 2017, and trends of mortality related to various cancers over time from 1930 to 2018. According to the file and website, the data source is the North American Association of Central Cancer registries. 
 
-Cancer Data Code:
-
-Data from 2013-2017
+*Cancer Data Code:*
 
 Average annual rate per 100,000, age adjusted to the 2000 US standard population.
 
@@ -45,15 +50,15 @@ Incidence/Death Rate Per Cancer Type:
 - `Female` : Rate for female only
 - `Male` : Rate for male only
 
-Incidence/Death Rate 
+Incidence/Death Rate Per State:
 
 - `State` : US States including `All U.S. combined` as an observation
 
-Following columns for each cancer types:
+- Following columns for each cancer types:
 
-- `Both sexes combined`
-- `Female`
-- `Male`
+  - `Both sexes combined`
+  - `Female`
+  - `Male`
 
 
 
@@ -67,7 +72,7 @@ We focused our analyses on the mean values of 4 major pollutants:
 - **Carbon Monoxide (CO)** : measured in parts per million
 - **Ozone (O3)** : measured in parts per million
 
-Pollution Data Code:
+*Pollution Data Code:*
 
 - `State Code `: The code allocated by US EPA to each state
 - `County code` : The code of counties in a specific state allocated by US EPA
@@ -78,17 +83,20 @@ Pollution Data Code:
 - `City` : City of the monitoring site
 - `Date Local` : Date of monitoring
 
-Following Variables Per Each Pollutant:
+- Following Columns Per Each Pollutant:
 
-- `Units` : The units measured for pollutant
-- `Mean` : The arithmetic mean of concentration of pollutant within a given day
-- `AQI` : The calculated air quality index of pollutant within a given day
-- `1st Max Value` : The maximum value obtained for pollutant concentration in a given day
-- `1st Max Hour` : The hour when the maximum pollutant concentration was recorded in a given day
+  - `Units` : The units measured for pollutant
+  - `Mean` : The arithmetic mean of concentration of pollutant within a given day
+  - `AQI` : The calculated air quality index of pollutant within a given day
+  - `1st Max Value` : The maximum value obtained for pollutant concentration in a given day
+  - `1st Max Hour` : The hour when the maximum pollutant concentration was recorded in a given day
 
 
 #### Data Cleaning
 
+The pollution data was cleaned to have year, state, and the mean values of the 4 pollutants. In order to match the time period of the pollution data, the mortality trend data was cleaned to have observations from 2000 to 2016 only.
+
+Cancer incidence and mortality data sets were more difficult to clean for analysis as 
 
 &nbsp;
 
