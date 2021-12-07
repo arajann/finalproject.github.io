@@ -2,9 +2,8 @@
 title: "Relationship Between Air Pollution and Cancer"
 output: 
   html_document:
-    toc: false
+    toc: true
     toc_float: true
-    
 ---
 
 ----------
@@ -33,6 +32,7 @@ The continous developing understanding of health and medicine continues the reve
 
 &nbsp;
 &nbsp;
+
 
 ##### **For more information regarding our topic, attached are relevant research studies.**
 &nbsp;
