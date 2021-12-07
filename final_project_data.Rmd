@@ -6,9 +6,7 @@ output: github_document
 ```{r setup, include = FALSE}
 library(tidyverse)
 library(readxl)
-library(rvest)
-library(httr)
-library(plotly)
+library(patchwork)
 
 knitr::opts_chunk$set(warning = FALSE, message = FALSE) 
 ```
@@ -154,4 +152,46 @@ modified_pollution =
 pollution_cancer =
   left_join(death_time, modified_pollution, by = "year")
 ```
+
+
+Plots by cancer type
+```{r}
+inc_cancer_plot =
+  inc_cancer %>%
+  select(cancer_type, female, male) %>%
+  pivot_longer(
+    female:male,
+    names_to = "sex",
+    values_to = "incidence"
+  ) %>%
+  filter(cancer_type != "All cancer types combined",
+         incidence != 0) %>%
+  mutate(cancer_type = fct_reorder(cancer_type, incidence)) %>%
+  ggplot(aes(x = cancer_type, y = incidence, color = sex)) +
+  geom_point(aes(size = 2)) + guides(size = FALSE) +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1)) +
+  labs(title = "Cancer Incidence Rate for Different Cancer Types by Sex in 2013-2017", 
+       x = "Cancer Type", y = "Incidence")
+
+death_cancer_plot =
+  death_cancer %>%
+  select(cancer_type, female, male) %>%
+  pivot_longer(
+    female:male,
+    names_to = "sex",
+    values_to = "death"
+  ) %>%
+  filter(cancer_type != "All cancer types combined",
+         death != 0) %>%
+  mutate(cancer_type = fct_reorder(cancer_type, death)) %>%
+  ggplot(aes(x = cancer_type, y = death, color = sex)) +
+  geom_point(aes(size = 2)) + guides(size = FALSE) +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1)) +
+  labs(title = "Cancer Death Rate for Different Cancer Types by Sex in 2013-2017", 
+       x = "Cancer Type", y = "Death")
+
+
+inc_cancer_plot + death_cancer_plot
+```
+
 
