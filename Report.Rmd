@@ -9,9 +9,51 @@ output:
 
 &nbsp;
 
-### About this site
+### **"The Effect of Concentrations of Various Air Pollutants on Cancer Prevalence at the State Level over Time"**
 
-Sometimes you need to say a bit about the site -- how it was made, where it's hosted, where the source code can be found. 
+&nbsp;
 
-If this is for a project or analysis, I recommend giving some details about the R package versions that you used to create the content.
+### Motivation
+
+Given the rapid progression of climate change, we have seen widespread effects on the environment, many of which have deleterious consequences on population health, including increased burden of cancer. Prior research has shown that air pollution is associated with the increase in both incidence and mortality for certain cancers.  Thus, we want to take a closer look at trends of levels of major air pollutants, such as NO2, SO2, and 03, and compare these trends to incidence and mortality cancer data by state, with respect to time. The cancers we will specifically be looking at are lung cancer, pancreatic cancer, and liver cancer. We chose these cancers based on widely held beliefs by researchers and clinicians that suggest stronger associations between air pollutant concentrations and incidence/mortality of these specific cancer types as opposed to other forms of cancer. Our motivation for this project is to to more robustly investigate the aforementioned theories by further analyzing and evaluating the associations between pollutants and lung, pancreatic, and liver cancers at the population level with respect to time.
+
+&nbsp;
+
+### Research Questions 
+
+&nbsp;
+
+### Data Sources 
+
+Thus far, we have gathered data from two main sources. Regarding cancer statistics, we retrieved data from https://cancerstatisticscenter.cancer.org/#!/ The three data sets give us information on mortality data, trends of mortality related to various cancers over time and incidence rate of various cancers at the state level. According to the file and website, the data source is the North American Association of Central Cancer registries. I have attached the data sets in the following code chunk.
+
+The second data set is air pollution data in the United States from 2000 to 2016. The data was gathered by the EPA and measures air pollutant concentrations(in ppb) for major pollutants at the city/county level. This is an extremely large data set with over 174,000 observations and will require extensive cleaning, so it was not uploaded at this time due to size limitations.. 
+
+Though not uploaded the following is a [brief description of the data set](https://data.world/arajan98/data-science-project-proposal/workspace/project-summary?agentid=data-society&datasetid=us-air-pollution-data)
+
+Includes four major pollutants (Nitrogen Dioxide, Sulphur Dioxide, Carbon Monoxide and Ozone) and each has 5 specific columns. For example, for NO2:
+
+- **NO2 Units** : The units measured for NO2
+- **NO2 Mean** : The arithmetic mean of concentration of NO2 within a given day
+- **NO2 AQI** : The calculated air quality index of NO2 within a given day
+- **NO2 1st Max Value** : The maximum value obtained for NO2 concentration in a given day
+- **NO2 1st Max Hour** : The hour when the maximum NO2 concentration was recorded in a given day
+
+&nbsp;
+
+### Exploratory Analysis
+
+&nbsp;
+
+### Regression Analysis
+
+&nbsp;
+
+### Discussion
+
+&nbsp;
+
+### Conclusions
+
+
 
