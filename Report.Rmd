@@ -16,7 +16,7 @@ output:
 
 ### Motivation
 
-Given the rapid progression of climate change, we have seen widespread effects on the environment, many of which have deleterious consequences on population health, including increased burden of cancer. Prior research has shown that air pollution is associated with the increase in both incidence and mortality for certain cancers.  Thus, we want to take a closer look at trends of levels of major air pollutants, such as NO2, SO2, and 03, and compare these trends to incidence and mortality cancer data by state, with respect to time. The cancers we will specifically be looking at are lung cancer, pancreatic cancer, and liver cancer. We chose these cancers based on widely held beliefs by researchers and clinicians that suggest stronger associations between air pollutant concentrations and incidence/mortality of these specific cancer types as opposed to other forms of cancer. Our motivation for this project is to to more robustly investigate the aforementioned theories by further analyzing and evaluating the associations between pollutants and lung, pancreatic, and liver cancers at the population level with respect to time.
+Given the rapid progression of climate change, we have seen widespread effects on the environment, many of which have deleterious consequences on population health, including increased burden of cancer. Prior research has shown that air pollution is associated with the increase in both incidence and mortality for certain cancers.  Thus, we want to take a closer look at trends of levels of major air pollutants, such as NO2, SO2, and 03, and compare these trends to incidence and mortality cancer data by state, with respect to time. Our motivation for this project is to more robustly investigate the aforementioned theories by further analyzing and evaluating the associations between pollutants and certain cancer types at the population level with respect to time.
 
 &nbsp;
 
@@ -24,21 +24,71 @@ Given the rapid progression of climate change, we have seen widespread effects o
 
 &nbsp;
 
-### Data Sources 
+### Data 
+
+#### Data Source
 
 Our project consists of data from two main sources: 
 
-Regarding cancer statistics, we retrieved data from [American Cancer Society Cancer Statistics Center] (https://cancerstatisticscenter.cancer.org/#!/). The three data sets give us information on mortality data, trends of mortality related to various cancers over time and incidence rate of various cancers at the state level. According to the file and website, the data source is the North American Association of Central Cancer registries. 
+Regarding cancer statistics, we retrieved data from [American Cancer Society Cancer Statistics Center](https://cancerstatisticscenter.cancer.org/#!/). The three data sets give us information on mortality data, trends of mortality related to various cancers over time and incidence rate of various cancers at the state level. According to the file and website, the data source is the North American Association of Central Cancer registries. 
+
+Cancer Data Code:
+
+Data from 2013-2017
+
+Average annual rate per 100,000, age adjusted to the 2000 US standard population.
+
+Incidence/Death Rate Per Cancer Type:
+
+- `Cancer Type` : Type of cancer
+- `Both sexes combined` : Combined rate for both female and male
+- `Female` : Rate for female only
+- `Male` : Rate for male only
+
+Incidence/Death Rate 
+
+- `State` : US States including `All U.S. combined` as an observation
+
+Following columns for each cancer types:
+
+- `Both sexes combined`
+- `Female`
+- `Male`
+
+
 
 The second data set is air pollution data in the United States from 2000 to 2016. The data was gathered by the EPA and measures air pollutant concentrations(in ppb/ppm) for major pollutants at the city/county level. This is an extremely large data set with over 174,000 observations.
 [Brief description of the pollution data set](https://data.world/data-society/us-air-pollution-data)
 
 We focused our analyses on the mean values of 4 major pollutants:
 
-- **Nitrogen Dioxide** : NO2, measured in parts per billion
-- **Sulphur Dioxide** : SO2, measured in parts per billion
-- **Carbon Monoxide** : CO, measured in parts per million
-- **Ozone** : O3, measured in parts per million
+- **Nitrogen Dioxide (NO2)** : measured in parts per billion
+- **Sulphur Dioxide (SO2)** : measured in parts per billion
+- **Carbon Monoxide (CO)** : measured in parts per million
+- **Ozone (O3)** : measured in parts per million
+
+Pollution Data Code:
+
+- `State Code `: The code allocated by US EPA to each state
+- `County code` : The code of counties in a specific state allocated by US EPA
+- `Site Num` : The site number in a specific county allocated by US EPA
+- `Address`: Address of the monitoring site
+- `State` : State of monitoring site
+- `County` : County of monitoring site
+- `City` : City of the monitoring site
+- `Date Local` : Date of monitoring
+
+Following Variables Per Each Pollutant:
+
+- `Units` : The units measured for pollutant
+- `Mean` : The arithmetic mean of concentration of pollutant within a given day
+- `AQI` : The calculated air quality index of pollutant within a given day
+- `1st Max Value` : The maximum value obtained for pollutant concentration in a given day
+- `1st Max Hour` : The hour when the maximum pollutant concentration was recorded in a given day
+
+
+#### Data Cleaning
+
 
 &nbsp;
 

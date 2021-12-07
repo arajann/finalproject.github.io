@@ -361,26 +361,71 @@ div.tocify {
 </div>
 <div id="motivation" class="section level3">
 <h3>Motivation</h3>
-<p>Given the rapid progression of climate change, we have seen widespread effects on the environment, many of which have deleterious consequences on population health, including increased burden of cancer. Prior research has shown that air pollution is associated with the increase in both incidence and mortality for certain cancers. Thus, we want to take a closer look at trends of levels of major air pollutants, such as NO2, SO2, and 03, and compare these trends to incidence and mortality cancer data by state, with respect to time. The cancers we will specifically be looking at are lung cancer, pancreatic cancer, and liver cancer. We chose these cancers based on widely held beliefs by researchers and clinicians that suggest stronger associations between air pollutant concentrations and incidence/mortality of these specific cancer types as opposed to other forms of cancer. Our motivation for this project is to to more robustly investigate the aforementioned theories by further analyzing and evaluating the associations between pollutants and lung, pancreatic, and liver cancers at the population level with respect to time.</p>
+<p>Given the rapid progression of climate change, we have seen widespread effects on the environment, many of which have deleterious consequences on population health, including increased burden of cancer. Prior research has shown that air pollution is associated with the increase in both incidence and mortality for certain cancers. Thus, we want to take a closer look at trends of levels of major air pollutants, such as NO2, SO2, and 03, and compare these trends to incidence and mortality cancer data by state, with respect to time. Our motivation for this project is to more robustly investigate the aforementioned theories by further analyzing and evaluating the associations between pollutants and certain cancer types at the population level with respect to time.</p>
 <p> </p>
 </div>
 <div id="research-questions" class="section level3">
 <h3>Research Questions</h3>
 <p> </p>
 </div>
-<div id="data-sources" class="section level3">
-<h3>Data Sources</h3>
+<div id="data" class="section level3">
+<h3>Data</h3>
+<div id="data-source" class="section level4">
+<h4>Data Source</h4>
 <p>Our project consists of data from two main sources:</p>
-<p>Regarding cancer statistics, we retrieved data from [American Cancer Society Cancer Statistics Center] (<a href="https://cancerstatisticscenter.cancer.org/#!/" class="uri">https://cancerstatisticscenter.cancer.org/#!/</a>). The three data sets give us information on mortality data, trends of mortality related to various cancers over time and incidence rate of various cancers at the state level. According to the file and website, the data source is the North American Association of Central Cancer registries.</p>
+<p>Regarding cancer statistics, we retrieved data from <a href="https://cancerstatisticscenter.cancer.org/#!/">American Cancer Society Cancer Statistics Center</a>. The three data sets give us information on mortality data, trends of mortality related to various cancers over time and incidence rate of various cancers at the state level. According to the file and website, the data source is the North American Association of Central Cancer registries.</p>
+<p>Cancer Data Code:</p>
+<p>Data from 2013-2017</p>
+<p>Average annual rate per 100,000, age adjusted to the 2000 US standard population.</p>
+<p>Incidence/Death Rate Per Cancer Type:</p>
+<ul>
+<li><code>Cancer Type</code> : Type of cancer</li>
+<li><code>Both sexes combined</code> : Combined rate for both female and male</li>
+<li><code>Female</code> : Rate for female only</li>
+<li><code>Male</code> : Rate for male only</li>
+</ul>
+<p>Incidence/Death Rate</p>
+<ul>
+<li><code>State</code> : US States including <code>All U.S. combined</code> as an observation</li>
+</ul>
+<p>Following columns for each cancer types:</p>
+<ul>
+<li><code>Both sexes combined</code></li>
+<li><code>Female</code></li>
+<li><code>Male</code></li>
+</ul>
 <p>The second data set is air pollution data in the United States from 2000 to 2016. The data was gathered by the EPA and measures air pollutant concentrations(in ppb/ppm) for major pollutants at the city/county level. This is an extremely large data set with over 174,000 observations. <a href="https://data.world/data-society/us-air-pollution-data">Brief description of the pollution data set</a></p>
 <p>We focused our analyses on the mean values of 4 major pollutants:</p>
 <ul>
-<li><strong>Nitrogen Dioxide</strong> : NO2, measured in parts per billion</li>
-<li><strong>Sulphur Dioxide</strong> : SO2, measured in parts per billion</li>
-<li><strong>Carbon Monoxide</strong> : CO, measured in parts per million</li>
-<li><strong>Ozone</strong> : O3, measured in parts per million</li>
+<li><strong>Nitrogen Dioxide (NO2)</strong> : measured in parts per billion</li>
+<li><strong>Sulphur Dioxide (SO2)</strong> : measured in parts per billion</li>
+<li><strong>Carbon Monoxide (CO)</strong> : measured in parts per million</li>
+<li><strong>Ozone (O3)</strong> : measured in parts per million</li>
 </ul>
+<p>Pollution Data Code:</p>
+<ul>
+<li><code>State Code</code>: The code allocated by US EPA to each state</li>
+<li><code>County code</code> : The code of counties in a specific state allocated by US EPA</li>
+<li><code>Site Num</code> : The site number in a specific county allocated by US EPA</li>
+<li><code>Address</code>: Address of the monitoring site</li>
+<li><code>State</code> : State of monitoring site</li>
+<li><code>County</code> : County of monitoring site</li>
+<li><code>City</code> : City of the monitoring site</li>
+<li><code>Date Local</code> : Date of monitoring</li>
+</ul>
+<p>Following Variables Per Each Pollutant:</p>
+<ul>
+<li><code>Units</code> : The units measured for pollutant</li>
+<li><code>Mean</code> : The arithmetic mean of concentration of pollutant within a given day</li>
+<li><code>AQI</code> : The calculated air quality index of pollutant within a given day</li>
+<li><code>1st Max Value</code> : The maximum value obtained for pollutant concentration in a given day</li>
+<li><code>1st Max Hour</code> : The hour when the maximum pollutant concentration was recorded in a given day</li>
+</ul>
+</div>
+<div id="data-cleaning" class="section level4">
+<h4>Data Cleaning</h4>
 <p> </p>
+</div>
 </div>
 <div id="exploratory-analysis" class="section level3">
 <h3>Exploratory Analysis</h3>
