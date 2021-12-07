@@ -1,15 +1,16 @@
 ---
-title: "Report"
+title: "The Effect of Concentrations of Various Air Pollutants on Cancer Prevalence at the State Level over Time"
 output: 
   html_document:
-    toc: false
+    toc: true
     toc_float: true
+
 
 ---
 
 &nbsp;
 
-### **"The Effect of Concentrations of Various Air Pollutants on Cancer Prevalence at the State Level over Time"**
+### **Report**
 
 &nbsp;
 

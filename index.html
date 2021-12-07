@@ -29,9 +29,6 @@
        h6 {font-size: 12px;}
        code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
        pre:not([class]) { background-color: white }</style>
-<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
-<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
-<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
 <link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
@@ -223,69 +220,6 @@ $(document).ready(function () {
 
 
 
-<style type="text/css">
-
-#TOC {
-  margin: 25px 0px 20px 0px;
-}
-@media (max-width: 768px) {
-#TOC {
-  position: relative;
-  width: 100%;
-}
-}
-
-@media print {
-.toc-content {
-  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
-  float: right;
-}
-}
-
-.toc-content {
-  padding-left: 30px;
-  padding-right: 40px;
-}
-
-div.main-container {
-  max-width: 1200px;
-}
-
-div.tocify {
-  width: 20%;
-  max-width: 260px;
-  max-height: 85%;
-}
-
-@media (min-width: 768px) and (max-width: 991px) {
-  div.tocify {
-    width: 25%;
-  }
-}
-
-@media (max-width: 767px) {
-  div.tocify {
-    width: 100%;
-    max-width: none;
-  }
-}
-
-.tocify ul, .tocify li {
-  line-height: 20px;
-}
-
-.tocify-subheader .tocify-item {
-  font-size: 0.90em;
-}
-
-.tocify .list-group-item {
-  border-radius: 0px;
-}
-
-
-</style>
-
-
 
 </head>
 
@@ -293,16 +227,6 @@ div.tocify {
 
 
 <div class="container-fluid main-container">
-
-
-<!-- setup 3col/9col grid for toc_float and main content  -->
-<div class="row">
-<div class="col-xs-12 col-sm-4 col-md-3">
-<div id="TOC" class="tocify">
-</div>
-</div>
-
-<div class="toc-content col-xs-12 col-sm-8 col-md-9">
 
 
 
@@ -325,6 +249,9 @@ div.tocify {
         <li>
   <a href="Report.html">Report</a>
 </li>
+<li class="dropdown-header">Exploratory Analysis</li>
+<li class="dropdown-header">Dashboard</li>
+<li class="dropdown-header">Plotly</li>
 <li>
   <a href="mailto:&lt;jhk2201@cumc.columbia.edu&gt;">
     <span class="fa fa-envelope fa-lg"></span>
@@ -353,15 +280,19 @@ div.tocify {
 
 <hr />
 <p> </p>
+<center>
+<img src="air-pollution.png" style="width:75%">
+</center>
+<p> </p>
 <div id="our-motivation" class="section level3">
 <h3><strong>Our Motivation</strong>:</h3>
 <p>The continous developing understanding of health and medicine continues the reveal the inherent association between an individual’s health and their lived-in environment. One of the biggest environmental concerns in this generation is air pollution caused by our dependence to combustible fuel sources. Hundreds of research studies have illustrated the link between outdoor air pollution (particulate matter concentration) and specific types of cancer, specifically of the lungs. Thus, we want to take a closer look at trends of levels of major air pollutants, such as NO2, SO2, and 03, and compare these trends to incidence and mortality cancer data by state, with respect to time. Our motivation for this project is to to more robustly investigate the aforementioned theories by further analyzing and evaluating the associations between pollutants and lung, pancreatic, and liver cancers at the population level with respect to time.</p>
 <p> </p>
 <div id="please-view-the-following-video" class="section level4">
-<h4><em>Please view the following video…</em></h4>
-<p><img src="https://www.youtube.com/watch?v=zNzZ1PfUDNk" /></p>
+<h4><strong><em>Please view the following video…</em></strong></h4>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/BG8_9qyK6NE" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
+</iframe>
 <p> </p>
-</center>
 <div id="group-members" class="section level5">
 <h5><strong>Group Members</strong>:</h5>
 <ul>
@@ -369,8 +300,7 @@ div.tocify {
 <li>Matt Neky (mjn2142)</li>
 <li>Joe Kim (jhk2201)</li>
 <li>Alyssa Watson (aw3253)</li>
-<li>Yoo Rim Oh (yo2336)
-</center></li>
+<li>Yoo Rim Oh (yo2336)</li>
 </ul>
 <p> </p>
 </div>
@@ -386,8 +316,6 @@ div.tocify {
 
 
 
-</div>
-</div>
 
 </div>
 
@@ -420,35 +348,6 @@ $(document).ready(function () {
 
 <!-- code folding -->
 
-<script>
-$(document).ready(function ()  {
-
-    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
-    $('.unlisted.unnumbered').addClass('toc-ignore')
-
-    // move toc-ignore selectors from section div to header
-    $('div.section.toc-ignore')
-        .removeClass('toc-ignore')
-        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
-
-    // establish options
-    var options = {
-      selectors: "h1,h2,h3",
-      theme: "bootstrap3",
-      context: '.toc-content',
-      hashGenerator: function (text) {
-        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
-      },
-      ignoreSelector: ".toc-ignore",
-      scrollTo: 0
-    };
-    options.showAndHide = true;
-    options.smoothScroll = true;
-
-    // tocify
-    var toc = $("#TOC").tocify(options).data("toc-tocify");
-});
-</script>
 
 <!-- dynamically load mathjax for compatibility with self-contained -->
 <script>

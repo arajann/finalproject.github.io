@@ -2,11 +2,17 @@
 title: "Relationship Between Air Pollution and Cancer"
 output: 
   html_document:
-    toc: true
+    toc: false
     toc_float: true
 ---
 
 ----------
+&nbsp;
+
+<center>
+<img src="air-pollution.png" style="width:75%">
+</center>
+
 &nbsp;
 
 ### **Our Motivation**:
@@ -15,13 +21,12 @@ The continous developing understanding of health and medicine continues the reve
 
 &nbsp;
 
-#### *Please view the following video...*
-![](https://www.youtube.com/watch?v=zNzZ1PfUDNk)
-
+#### ***Please view the following video...***
+<iframe width="560" height="315" src="https://www.youtube.com/embed/BG8_9qyK6NE" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
 &nbsp;
 
-</center>
+
 ##### **Group Members**:
 
   * Anand Rajan (ar4173)
@@ -29,7 +34,7 @@ The continous developing understanding of health and medicine continues the reve
   * Joe Kim (jhk2201)
   * Alyssa Watson (aw3253)
   * Yoo Rim Oh (yo2336)
-</center>
+
 
 &nbsp;
 
