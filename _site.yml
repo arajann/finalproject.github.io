@@ -1,7 +1,7 @@
 name: "Final Project"
 output_dir: "."
 navbar:
-  title: "Main Page"
+  title: "Home"
   right:
     - text: "Report"
       href: Report.html
