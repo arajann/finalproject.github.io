@@ -45,6 +45,7 @@ death_state %>%
   select(state, lung_and_bronchus_both_sexes_combined) %>% 
   ggplot(aes(x=state, y=lung_and_bronchus_both_sexes_combined)) +
   geom_point()
+
 ```
 
 Exploring Pollution dataset
@@ -76,6 +77,20 @@ nationwide_so2trend=
   modified_pollution %>% 
   ggplot(aes(x=year,y=so2_mean)) + 
   geom_point() 
+```
+
+
+```{r}
+nationwide_o3trend=
+  modified_pollution %>% 
+  ggplot(aes(x=year,y=o3_mean)) + 
+  geom_point()
+```
+
+```{r}
+  modified_pollution %>% 
+  ggplot(aes(x=year,y=co_mean)) + 
+  geom_point()
 ```
 
 
