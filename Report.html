@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>The Effect of Concentrations of Various Air Pollutants on Cancer Prevalence at the State Level over Time</title>
+
+<script src="site_libs/header-attrs-2.11/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.tab('show');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Home</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="Report.html">Report</a>
+</li>
+<li class="dropdown-header">Exploratory Analysis</li>
+<li class="dropdown-header">Dashboard</li>
+<li class="dropdown-header">Plotly</li>
+<li>
+  <a href="mailto:&lt;jhk2201@cumc.columbia.edu&gt;">
+    <span class="fa fa-envelope fa-lg"></span>
+     
+  </a>
+</li>
+<li>
+  <a href="https://github.com/arajann/finalproject/">
+    <span class="fa fa-github fa-lg"></span>
+     
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore">The Effect of Concentrations of Various Air Pollutants on Cancer Prevalence at the State Level over Time</h1>
+
+</div>
+
+
+<p> </p>
+<div id="report" class="section level3">
+<h3><strong>Report</strong></h3>
+<p> </p>
+</div>
+<div id="motivation" class="section level3">
+<h3>Motivation</h3>
+<p>Given the rapid progression of climate change, we have seen widespread effects on the environment, many of which have deleterious consequences on population health, including increased burden of cancer. Prior research has shown that air pollution is associated with the increase in both incidence and mortality for certain cancers. Thus, we want to take a closer look at trends of levels of major air pollutants, such as NO2, SO2, and 03, and compare these trends to incidence and mortality cancer data by state, with respect to time. Our motivation for this project is to more robustly investigate the aforementioned theories by further analyzing and evaluating the associations between pollutants and certain cancer types at the population level with respect to time.</p>
+<p> </p>
+</div>
+<div id="research-questions" class="section level3">
+<h3>Research Questions</h3>
+<p>Some ideas for the questions, not definite</p>
+<ul>
+<li>What is the relationship between incidence rate and mortality rate of different types of cancer?</li>
+<li>What has been the general trend of cancer incidence, cancer mortality, and pollution levels over time?</li>
+<li>What is the geographical spread of cancer rates and pollution levels look like in US?</li>
+<li>Is there any evidence of association between cancer rates and air pollution?</li>
+</ul>
+<p> </p>
+</div>
+<div id="data" class="section level3">
+<h3>Data</h3>
+<div id="data-source" class="section level4">
+<h4>Data Source</h4>
+<p>Our project consists of data from two main sources:</p>
+<p>Regarding cancer statistics, we retrieved data from <a href="https://cancerstatisticscenter.cancer.org/#!/">American Cancer Society Cancer Statistics Center</a>. Raw data sets were available for download in excel format. The three data sets give us information on aggregated mortality and incidence rates from 2013 to 2017, aggregated mortality and incidence rates of various cancers at the state level from 2013 to 2017, and trends of mortality related to various cancers over time from 1930 to 2018. According to the file and website, the data source is the North American Association of Central Cancer registries.</p>
+<p><em>Cancer Data Code:</em></p>
+<p>Average annual rate per 100,000, age adjusted to the 2000 US standard population.</p>
+<p>Incidence/Death Rate Per Cancer Type:</p>
+<ul>
+<li><code>Cancer Type</code> : Type of cancer</li>
+<li><code>Both sexes combined</code> : Combined rate for both female and male</li>
+<li><code>Female</code> : Rate for female only</li>
+<li><code>Male</code> : Rate for male only</li>
+</ul>
+<p>Incidence/Death Rate Per State:</p>
+<ul>
+<li><p><code>State</code> : US States including <code>All U.S. combined</code> as an observation</p></li>
+<li><p>Following columns for each cancer types:</p>
+<ul>
+<li><code>Both sexes combined</code></li>
+<li><code>Female</code></li>
+<li><code>Male</code></li>
+</ul></li>
+</ul>
+<p>The second data set is air pollution data in the United States from 2000 to 2016. The data was gathered by the EPA and measures air pollutant concentrations(in ppb/ppm) for major pollutants at the city/county level. This is an extremely large data set with over 174,000 observations. <a href="https://data.world/data-society/us-air-pollution-data">Brief description of the pollution data set</a></p>
+<p>We focused our analyses on the mean values of 4 major pollutants:</p>
+<ul>
+<li><strong>Nitrogen Dioxide (NO2)</strong> : measured in parts per billion</li>
+<li><strong>Sulphur Dioxide (SO2)</strong> : measured in parts per billion</li>
+<li><strong>Carbon Monoxide (CO)</strong> : measured in parts per million</li>
+<li><strong>Ozone (O3)</strong> : measured in parts per million</li>
+</ul>
+<p><em>Pollution Data Code:</em></p>
+<ul>
+<li><p><code>State Code</code>: The code allocated by US EPA to each state</p></li>
+<li><p><code>County code</code> : The code of counties in a specific state allocated by US EPA</p></li>
+<li><p><code>Site Num</code> : The site number in a specific county allocated by US EPA</p></li>
+<li><p><code>Address</code>: Address of the monitoring site</p></li>
+<li><p><code>State</code> : State of monitoring site</p></li>
+<li><p><code>County</code> : County of monitoring site</p></li>
+<li><p><code>City</code> : City of the monitoring site</p></li>
+<li><p><code>Date Local</code> : Date of monitoring</p></li>
+<li><p>Following Columns Per Each Pollutant:</p>
+<ul>
+<li><code>Units</code> : The units measured for pollutant</li>
+<li><code>Mean</code> : The arithmetic mean of concentration of pollutant within a given day</li>
+<li><code>AQI</code> : The calculated air quality index of pollutant within a given day</li>
+<li><code>1st Max Value</code> : The maximum value obtained for pollutant concentration in a given day</li>
+<li><code>1st Max Hour</code> : The hour when the maximum pollutant concentration was recorded in a given day</li>
+</ul></li>
+</ul>
+</div>
+<div id="data-cleaning" class="section level4">
+<h4>Data Cleaning</h4>
+<p>The pollution data was cleaned to have year, state, and the mean values of the 4 pollutants. In order to match the time period of the pollution data, the mortality trend data was cleaned to have observations from 2000 to 2016 only.</p>
+<p>Cancer incidence and mortality data sets were more difficult to clean for analysis as</p>
+<p> </p>
+</div>
+</div>
+<div id="exploratory-analysis" class="section level3">
+<h3>Exploratory Analysis</h3>
+<p> </p>
+</div>
+<div id="regression-analysis" class="section level3">
+<h3>Regression Analysis</h3>
+<p> </p>
+</div>
+<div id="discussion" class="section level3">
+<h3>Discussion</h3>
+<p> </p>
+</div>
+<div id="conclusions" class="section level3">
+<h3>Conclusions</h3>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

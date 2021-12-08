@@ -4,10 +4,15 @@ output:
   html_document:
     toc: false
     toc_float: true
-    
 ---
 
 ----------
+&nbsp;
+
+<center>
+<img src="air-pollution.png" style="width:75%">
+</center>
+
 &nbsp;
 
 ### **Our Motivation**:
@@ -16,12 +21,12 @@ The continous developing understanding of health and medicine continues the reve
 
 &nbsp;
 
-![](https://www.youtube.com/watch?v=zNzZ1PfUDNk)
-
+#### ***Please view the following video...***
+<iframe width="560" height="315" src="https://www.youtube.com/embed/BG8_9qyK6NE" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
 &nbsp;
 
-</center>
+
 ##### **Group Members**:
 
   * Anand Rajan (ar4173)
@@ -29,16 +34,16 @@ The continous developing understanding of health and medicine continues the reve
   * Joe Kim (jhk2201)
   * Alyssa Watson (aw3253)
   * Yoo Rim Oh (yo2336)
-</center>
 
-&nbsp;
+
 &nbsp;
 
 ##### **For more information regarding our topic, attached are relevant research studies.**
+
 &nbsp;
 
-  *[My Linkedin Page](www.linkedin.com/in/joseph-kim-467520b8)
-&nbsp;
-  *[Facebook](https://www.facebook.com/joe.kim.921)
+[Outdoor air pollution and cancer](https://acsjournals.onlinelibrary.wiley.com/doi/10.3322/caac.21632)
+
+[Lung Cancer and Air Pollution](https://ehp.niehs.nih.gov/doi/abs/10.1289/ehp.95103s8219)
 
 &nbsp;

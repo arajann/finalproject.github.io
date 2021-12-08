@@ -1,14 +1,21 @@
 name: "Final Project"
 output_dir: "."
 navbar:
-  title: "Main Page"
+  title: "Home"
   right:
-    - text: "Analysis"
-      href: Analysis.html
+    - text: "Report"
+      href: Report.html
+    - text: "Exploratory Analysis"
+      href: 
+    - text: "Dashboard"
+      href: 
+    - text: "Plotly"
+      href: 
     - icon: fa-envelope fa-lg
       href: mailto:<jhk2201@cumc.columbia.edu>
     - icon: fa-github fa-lg
       href: https://github.com/arajann/finalproject/
 output:
   html_document:
-  theme: cosmo
+    self_contained: no  
+    theme: flatly
