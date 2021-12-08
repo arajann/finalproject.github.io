@@ -7,6 +7,7 @@ output: github_document
 library(tidyverse)
 library(readxl)
 library(patchwork)
+library(plotly)
 
 knitr::opts_chunk$set(warning = FALSE, message = FALSE) 
 ```
@@ -78,7 +79,7 @@ inc_state =
 
 # Incidence Rate Per Cancer Type
 
-```{r}
+```{r warning = FALSE}
 inc_cancer =
   read_excel("data/IncRate.xlsx", sheet = "All US", 
              skip = 6) %>%
@@ -123,10 +124,11 @@ death_time =
 ```
 
 
-# Pollution Data
+# Pollution Data Cleaned for Incidence State Data
 
 ```{r}
-pollution1 = read_excel("data/uspollution_us_2000_2016.xlsx") %>% 
+pollution1 = 
+  read_csv("data/uspollution_us_2000_2016.csv") %>% 
   janitor::clean_names() %>%
   select(state, date_local, no2_mean, o3_mean, 
          so2_mean, co_mean) %>%
@@ -134,10 +136,9 @@ pollution1 = read_excel("data/uspollution_us_2000_2016.xlsx") %>%
   select(-c("month", "day")) %>%
   group_by(year, state) %>%
   summarize(across(everything(), mean)) %>%
-  mutate_if(is.numeric, ~round(., 3)) %>%
   filter(state != "Country Of Mexico") %>% 
   filter(
-    year %in% (2005:2010)
+    year %in% (2013:2017)
   ) %>% 
   ungroup() %>% 
   select(state:co_mean) %>% 
@@ -147,7 +148,8 @@ pollution1 = read_excel("data/uspollution_us_2000_2016.xlsx") %>%
     o3 = mean(o3_mean),
     so2 = mean(so2_mean),
     co = mean(co_mean)
-  )
+  ) %>%
+  mutate_if(is.numeric, ~round(., 3))
 ```
 
 # Merging Pollution and Incidence Data Sets
@@ -158,10 +160,10 @@ merged_pollute_inc =
 ```
 
 
-death_time and pollution merged
+# Death_time and Pollution Merged
 ```{r warning = FALSE}
 modified_pollution =
-  read_excel("data/uspollution_us_2000_2016.xlsx") %>% 
+  read_csv("data/uspollution_us_2000_2016.csv") %>% 
   janitor::clean_names() %>%
   select(state, date_local, no2_mean, o3_mean, 
          so2_mean, co_mean) %>%
@@ -180,7 +182,7 @@ pollution_cancer =
 ```
 
 
-Plots by cancer type
+# Plots by cancer type
 ```{r}
 inc_cancer_plot =
   inc_cancer %>%
@@ -216,5 +218,4 @@ death_cancer_plot =
   labs(title = "Cancer Death Rate for Different Cancer Types by Sex in 2013-2017", 
        x = "Cancer Type", y = "Death")
 ```
-
 

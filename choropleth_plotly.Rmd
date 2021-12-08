@@ -1,0 +1,121 @@
+---
+title: "Choropleth Plotly"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+library(tidyverse)
+library(plotly)
+
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+# Pollution Data
+
+```{r}
+pollution1 = 
+  read_csv("data/uspollution_us_2000_2016.csv") %>% 
+  janitor::clean_names() %>%
+  select(state, date_local, no2_mean, o3_mean, 
+         so2_mean, co_mean) %>%
+  separate(date_local, into = c("year", "month", "day"), sep = "\\-") %>%
+  select(-c("month", "day")) %>%
+  group_by(year, state) %>%
+  summarize(across(everything(), mean)) %>%
+  filter(state != "Country Of Mexico") %>% 
+  filter(
+    year %in% (2013:2017)
+  ) %>% 
+  ungroup() %>% 
+  select(state:co_mean) %>% 
+  group_by(state) %>% 
+  summarize(
+    no2 = mean(no2_mean),
+    o3 = mean(o3_mean),
+    so2 = mean(so2_mean),
+    co = mean(co_mean)
+  ) %>%
+  mutate_if(is.numeric, ~round(., 3))
+```
+
+
+# Choropleth Attempt
+
+```{r}
+g = list(
+  scope = 'usa',
+  projection = list(type = 'albers usa'),
+  showlakes = TRUE,
+  lakecolor = toRGB('white')
+)
+
+# For NO2
+pollution1 %>%
+  ungroup() %>%
+  mutate(code = state.abb[match(state, state.name)]) %>%
+  filter(code != is.na(code)) %>%
+  relocate(state, code) %>%
+  plot_geo(., locationmode = 'USA-states') %>% 
+  add_trace(
+    z = ~no2, text = ~state, locations = ~code,
+    color = ~no2, colors = 'viridis'
+  ) %>% 
+  colorbar(title = "Mean NO2 in parts per billion") %>% 
+  layout(
+    title = "Distribution of Mean NO2 by State in 2013-2017",
+    geo = g
+  )
+
+# For O3
+pollution1 %>%
+  ungroup() %>%
+  mutate(code = state.abb[match(state, state.name)]) %>%
+  filter(code != is.na(code)) %>%
+  relocate(state, code) %>%
+  plot_geo(., locationmode = 'USA-states') %>% 
+  add_trace(
+    z = ~o3, text = ~state, locations = ~code,
+    color = ~o3, colors = 'viridis'
+  ) %>% 
+  colorbar(title = "Mean O3 in parts per million") %>% 
+  layout(
+    title = "Distribution of Mean O3 by State in 2013-2017",
+    geo = g
+  )
+
+# For SO2
+pollution1 %>%
+  ungroup() %>%
+  mutate(code = state.abb[match(state, state.name)]) %>%
+  filter(code != is.na(code)) %>%
+  relocate(state, code) %>%
+  plot_geo(., locationmode = 'USA-states') %>% 
+  add_trace(
+    z = ~so2, text = ~state, locations = ~code,
+    color = ~so2, colors = 'viridis'
+  ) %>% 
+  colorbar(title = "Mean SO2 in parts per billion") %>% 
+  layout(
+    title = "Distribution of Mean SO2 by State in 2013-2017",
+    geo = g
+  )
+
+# For CO
+pollution1 %>%
+  ungroup() %>%
+  mutate(code = state.abb[match(state, state.name)]) %>%
+  filter(code != is.na(code)) %>%
+  relocate(state, code) %>%
+  plot_geo(., locationmode = 'USA-states') %>% 
+  add_trace(
+    z = ~co, text = ~state, locations = ~code,
+    color = ~co, colors = 'viridis'
+  ) %>% 
+  colorbar(title = "Mean CO in parts per million") %>% 
+  layout(
+    title = "Distribution of Mean CO by State in 2013-2017",
+    geo = g
+  )
+```
+
