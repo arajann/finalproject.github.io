@@ -14,6 +14,12 @@ output:
 
 &nbsp;
 
+### Background
+
+Current research has shown the strong associations attributing to higher incidence of certain cancers. Not only does current research provide a rationale higher cancer screening practices, but demonstrates the deterioration caused by climate change have been linked to lackadasical environmental policies. [Insert 2018 and 2020 articles].
+
+&nbsp;
+
 ### Motivation
 
 Given the rapid progression of climate change, we have seen widespread effects on the environment, many of which have deleterious consequences on population health, including increased burden of cancer. Prior research has shown that air pollution is associated with the increase in both incidence and mortality for certain cancers.  Thus, we want to take a closer look at trends of levels of major air pollutants, such as NO2, SO2, and 03, and compare these trends to incidence and mortality cancer data by state, with respect to time. Our motivation for this project is to more robustly investigate the aforementioned theories by further analyzing and evaluating the associations between pollutants and certain cancer types at the population level with respect to time.
