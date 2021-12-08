@@ -35,7 +35,7 @@ death_state %>%
   select(state, all_cancer_types_combined_both_sexes_combined) %>% 
   ggplot(aes(x=state, y=all_cancer_types_combined_both_sexes_combined)) +
    theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1)) +
-    geom_point()
+    geom_violin()
   
   
 ```
@@ -102,7 +102,9 @@ nationwide_so2trend=
 ```{r}
 nationwide_o3trend=
   modified_pollution %>% 
-  ggplot(aes(x=year,y=o3_mean)) + 
+  ggplot(aes(x=year,y=o3_mean)) +
+  scale_color_viridis(discrete=FALSE) +
+  theme_bw() +
   geom_point() +
   labs(
     title="Nationwide Trend in Ozone Concentration from 2000-2016",
@@ -112,10 +114,13 @@ nationwide_o3trend=
 ```
 
 ```{r}
+nationwide_cotrend=
   modified_pollution %>% 
   ggplot(aes(x=year,y=co_mean)) + 
   geom_point() +
   geom_smooth(se=FALSE) +
+  scale_color_viridis(discrete=FALSE) +
+  theme_bw() +
   labs(
     title="Nationwide Trend in Carbon Monoxide Concentration from 2000-2016",
     x="Year",
@@ -177,11 +182,57 @@ pollution %>%
   geom_line()
 ```
 
+```{r}
+modified_pollution =
+  read_csv("data/uspollution_us_2000_2016.csv") %>% 
+  janitor::clean_names() %>%
+  select(state, date_local, no2_mean, o3_mean, 
+         so2_mean, co_mean) %>%
+  separate(date_local, into = c("year", "month", "day"), sep = "\\-") %>%
+  select(-c("month", "day")) %>%
+  group_by(year, state) %>%
+  summarize(across(everything(), mean)) %>%
+  mutate_if(is.numeric, ~round(., 3)) %>%
+  filter(state != "Country Of Mexico") %>%
+  group_by(year) %>%
+  summarize(across(everything(), mean)) %>%
+  select(-c(state)) %>% 
+  mutate(
+    year = as.numeric(year)
+  )
+
+modified_pollution %>% 
+  knitr::kable(caption="United States Pollutant Concentration from 2000-2016")
+```
+
+```{r}
+modified_pollution %>% 
+  pivot_longer(
+    no2_mean:co_mean,
+    names_to = "pollutant_type",
+    values_to="concentration"
+  ) %>% 
+  ggplot(aes(x=year,y=concentration, group=pollutant_type, color=pollutant_type)) +
+  geom_point() +
+  geom_line() +
+  scale_color_viridis(discrete=TRUE) +
+  theme_bw() +
+  labs(
+    title="Trends in Polluntant Concentration in the US from 2000-2016",
+    x="Year",
+    y="Pollutant Concentration(ppm)"
+  ) 
+  
+```
+
+
+
 Creating a function to plot trends of mean pollutant concentration from 2013-2016 by state
 
 
 ```{r}
-
+modified_pollution %>% 
+  modelr::add_residuals()
 
 ```
 
