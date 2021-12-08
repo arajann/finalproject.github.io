@@ -12,6 +12,7 @@ library(readxl)
 library(rvest)
 library(httr)
 library(wesanderson)
+library(viridis)
 
         
 knitr::opts_chunk$set(echo = TRUE)
@@ -21,7 +22,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ### Lung Cancer Death Rate
 ```{r}
-lung_cancer_death_rate
+lung_cancer_death_rate =
 death_state %>%  
   select(state, lung_and_bronchus_female,lung_and_bronchus_male, lung_and_bronchus_both_sexes_combined) %>% 
   knitr::kable()
@@ -33,6 +34,7 @@ death_state %>%
 death_state %>% 
   select(state, all_cancer_types_combined_both_sexes_combined) %>% 
   ggplot(aes(x=state, y=all_cancer_types_combined_both_sexes_combined)) +
+   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1)) +
     geom_point()
   
   
@@ -68,15 +70,32 @@ Pollution Trends Nationwide
 ```{r}
 no2_trend = 
 modified_pollution %>% 
-  ggplot(aes(x=year,y=no2_mean, colo)) +
+  ggplot(aes(x=year,y=no2_mean)) +
   geom_point() +
-  geom_line()
+  geom_smooth(se=FALSE) +
+  scale_color_viridis(discrete=FALSE) +
+  theme_bw()  +
+  labs(
+    title="Nationwide Trend in Nitrous Dioxide Concentration from 2000-2016",
+    x="Year",
+    y="Nitrous Oxide Concentration(ppm)"
+  )
+  
 ```
+
 ```{r}
 nationwide_so2trend=
   modified_pollution %>% 
   ggplot(aes(x=year,y=so2_mean)) + 
-  geom_point() 
+  geom_point(alpha=0.3) +
+  geom_smooth(se=FALSE) +
+  scale_color_viridis(discrete=FALSE) +
+  theme_bw() +
+  labs(
+    title="Nationwide Trend in Sulfur Dioxide Concentration from 2000-2016",
+    x="Year",
+    y="Sulfur Oxide Concentration(ppm)"
+  )
 ```
 
 
@@ -84,13 +103,24 @@ nationwide_so2trend=
 nationwide_o3trend=
   modified_pollution %>% 
   ggplot(aes(x=year,y=o3_mean)) + 
-  geom_point()
+  geom_point() +
+  labs(
+    title="Nationwide Trend in Ozone Concentration from 2000-2016",
+    x="Year",
+    y="Ozone Concentration(ppm)"
+  )
 ```
 
 ```{r}
   modified_pollution %>% 
   ggplot(aes(x=year,y=co_mean)) + 
-  geom_point()
+  geom_point() +
+  geom_smooth(se=FALSE) +
+  labs(
+    title="Nationwide Trend in Carbon Monoxide Concentration from 2000-2016",
+    x="Year",
+    y="Carbon Monoxide Concentration(ppm)"
+  )
 ```
 
 
