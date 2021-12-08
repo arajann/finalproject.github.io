@@ -4,6 +4,7 @@ output: html_document
 ---
 
 ```{r setup, include=FALSE}
+library(readxl)
 library(tidyverse)
 library(plotly)
 
@@ -115,6 +116,42 @@ pollution1 %>%
   colorbar(title = "Mean CO in parts per million") %>% 
   layout(
     title = "Distribution of Mean CO by State in 2013-2017",
+    geo = g
+  )
+
+# For Lung Cancer
+inc_state =
+  read_excel("data/IncRate.xlsx", sheet = "State", 
+             skip = 6) %>%
+  janitor::clean_names() %>% 
+  separate(
+    col = breast_both_sexes_combined,
+    into = c("breast_total", "female_breast_only"),
+    sep = "-"
+  ) %>% 
+  mutate(
+    breast_male = if_else(breast_male == "n/a", "0", breast_male),
+    cervix_male = if_else(cervix_male == "n/a", "0", cervix_male),
+    colon_excluding_rectum_both_sexes_combined = if_else(colon_excluding_rectum_both_sexes_combined == "n/a", "0", colon_excluding_rectum_both_sexes_combined),
+    colon_excluding_rectum_female = if_else(colon_excluding_rectum_female == "n/a", "0", colon_excluding_rectum_female),
+    colon_excluding_rectum_male = if_else(colon_excluding_rectum_male == "n/a", "0", colon_excluding_rectum_male),
+  ) %>%
+  filter(state != "Puerto Rico")
+
+inc_state %>%
+  select(state, lung_and_bronchus_both_sexes_combined) %>%
+  mutate(code = state.abb[match(state, state.name)],
+         lung_and_bronchus_both_sexes_combined = as.numeric(lung_and_bronchus_both_sexes_combined)) %>%
+  filter(code != is.na(code)) %>%
+  relocate(state, code) %>%
+  plot_geo(., locationmode = 'USA-states') %>% 
+  add_trace(
+    z = ~lung_and_bronchus_both_sexes_combined, text = ~state, locations = ~code,
+    color = ~lung_and_bronchus_both_sexes_combined, colors = 'viridis'
+  ) %>% 
+  colorbar(title = "Incidence Rate") %>% 
+  layout(
+    title = "Distribution of Lung and Bronchus Cancer Incidence Rate by State in 2013-2017",
     geo = g
   )
 ```
