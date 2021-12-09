@@ -14,15 +14,30 @@ output:
 
 &nbsp;
 
-### Background
-
-Current research has shown the strong associations attributing to higher incidence of certain cancers. Not only does current research provide a rationale higher cancer screening practices, but demonstrates the deterioration caused by climate change have been linked to lackadasical environmental policies. [Insert 2018 and 2020 articles].
-
-&nbsp;
 
 ### Motivation
 
-Given the rapid progression of climate change, we have seen widespread effects on the environment, many of which have deleterious consequences on population health, including increased burden of cancer. Prior research has shown that air pollution is associated with the increase in both incidence and mortality for certain cancers.  Thus, we want to take a closer look at trends of levels of major air pollutants, such as NO2, SO2, and 03, and compare these trends to incidence and mortality cancer data by state, with respect to time. Our motivation for this project is to more robustly investigate the aforementioned theories by further analyzing and evaluating the associations between pollutants and certain cancer types at the population level with respect to time.
+#### Background and Related Works
+
+
+Given the rapid progression of climate change, we have seen widespread effects on the environment, major air pollutants have serious adverse effects on population health and has been linked by substantial evidence to be a large contributor to an increased burden of cancer.
+
+Common air pollutants are responsible for pervasive inflammation throughout the body(NSW), and long-term exposure has been linked to increased mortality for all cancers, but particularly hazardous for cancers of the lung, liver, colorectal, bladder, kidney, and larynx(meta analysis).
+
+
+Prior research has shown that air pollution is associated with the increase in both incidence and mortality for certain cancers.  Thus, we will to take a closer look at trends of levels of major air pollutants that are of major public health concern as declared by the WHO: NO2, SO2, CO and 03, and compare these trends to incidence and mortality of lung, liver and pancreatic cancer data by state, with respect to time. 
+
+Lung cancer is the currently the leading cause of cancer-related mortality and most commonly diagnosed. Liver cancer also accounts largely for a high number of cancer-related deaths (8,2%) behind lung and breast cancer (ACS Journal) while overall pancreatic cancer has increased for both men and women between 2013-2017 as reported in the 2021 National Cancer Institute Annual Report to the Nation (NCI).
+
+
+Our motivation for this project is to more robustly investigate the aforementioned theories by further analyzing and evaluating the associations between pollutants and certain cancer types at the population level with respect to time.
+
+The implications of such an analysis can provide justification for further research on the effects of major air pollutants on cancer survival and make plain the urgency for environmental policy to slow the progression of climate change to improve quality of life and deleterious consequences on population health. 
+
+<center>
+<img src="pathways.png" style="width:75%">
+Air Pollution-Related Cancer: Potential Pathways and Mechanisms. Turner et.al (2020)
+</center>
 
 &nbsp;
 
@@ -115,6 +130,8 @@ Cancer incidence and mortality data sets were more difficult to clean for analys
 &nbsp;
 
 ### Discussion
+
+In light of our exploratory and regressed analysis, we attained the following insights:
 
 &nbsp;
 
