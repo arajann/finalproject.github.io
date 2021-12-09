@@ -18,4 +18,4 @@ navbar:
 output:
   html_document:
     self_contained: no  
-    theme: flatly
+    theme: journal
