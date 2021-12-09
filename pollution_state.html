@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>Pollution By State</title>
+
+<script src="site_libs/header-attrs-2.11/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/journal.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<script src="site_libs/htmlwidgets-1.5.4/htmlwidgets.js"></script>
+<script src="site_libs/plotly-binding-4.10.0/plotly.js"></script>
+<script src="site_libs/typedarray-0.1/typedarray.min.js"></script>
+<link href="site_libs/crosstalk-1.1.1/css/crosstalk.css" rel="stylesheet" />
+<script src="site_libs/crosstalk-1.1.1/js/crosstalk.min.js"></script>
+<link href="site_libs/plotly-htmlwidgets-css-2.5.1/plotly-htmlwidgets.css" rel="stylesheet" />
+<script src="site_libs/plotly-main-2.5.1/plotly-latest.min.js"></script>
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.tab('show');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Home</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="Report.html">Report</a>
+</li>
+<li class="dropdown-header">Exploratory Analysis</li>
+<li class="dropdown-header">Dashboard</li>
+<li class="dropdown-header">Plotly</li>
+<li>
+  <a href="mailto:&lt;jhk2201@cumc.columbia.edu&gt;">
+    <span class="fa fa-envelope fa-lg"></span>
+     
+  </a>
+</li>
+<li>
+  <a href="https://github.com/arajann/finalproject/">
+    <span class="fa fa-github fa-lg"></span>
+     
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore">Pollution By State</h1>
+
+</div>
+
+
+<pre class="r"><code>pollution1 = 
+  read_csv(&quot;data/uspollution_us_2000_2016.csv&quot;) %&gt;% 
+  janitor::clean_names() %&gt;%
+  select(state, date_local, no2_mean, o3_mean, 
+         so2_mean, co_mean) %&gt;%
+  separate(date_local, into = c(&quot;year&quot;, &quot;month&quot;, &quot;day&quot;), sep = &quot;\\-&quot;) %&gt;%
+  select(-c(&quot;month&quot;, &quot;day&quot;)) %&gt;%
+  group_by(year, state) %&gt;%
+  summarize(across(everything(), mean)) %&gt;%
+  filter(state != &quot;Country Of Mexico&quot;) %&gt;% 
+  filter(
+    year %in% (2013:2017)
+  ) %&gt;% 
+  ungroup() %&gt;% 
+  select(state:co_mean) %&gt;% 
+  group_by(state) %&gt;% 
+  summarize(
+    no2 = mean(no2_mean),
+    o3 = mean(o3_mean),
+    so2 = mean(so2_mean),
+    co = mean(co_mean)
+  ) %&gt;%
+  mutate_if(is.numeric, ~round(., 3))</code></pre>
+<pre><code>## New names:
+## * `` -&gt; ...1</code></pre>
+<pre><code>## Rows: 1746661 Columns: 29</code></pre>
+<pre><code>## -- Column specification --------------------------------------------------------
+## Delimiter: &quot;,&quot;
+## chr   (8): Address, State, County, City, NO2 Units, O3 Units, SO2 Units, CO ...
+## dbl  (20): ...1, State Code, County Code, Site Num, NO2 Mean, NO2 1st Max Va...
+## date  (1): Date Local</code></pre>
+<pre><code>## 
+## i Use `spec()` to retrieve the full column specification for this data.
+## i Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+<pre><code>## `summarise()` has grouped output by &#39;year&#39;. You can override using the `.groups` argument.</code></pre>
+<pre class="r"><code>g = list(
+  scope = &#39;usa&#39;,
+  projection = list(type = &#39;albers usa&#39;),
+  showlakes = TRUE,
+  lakecolor = toRGB(&#39;white&#39;)
+)</code></pre>
+<div id="column" class="section level2" data-width="500">
+<h2 data-width="500">Column</h2>
+<div id="distribution-of-mean-no2-by-state-in-2013-2017" class="section level3">
+<h3>Distribution of Mean NO2 by State in 2013-2017</h3>
+<pre class="r"><code>pollution1 %&gt;%
+  ungroup() %&gt;%
+  mutate(code = state.abb[match(state, state.name)]) %&gt;%
+  filter(code != is.na(code)) %&gt;%
+  relocate(state, code) %&gt;%
+  plot_geo(., locationmode = &#39;USA-states&#39;) %&gt;% 
+  add_trace(
+    z = ~no2, text = ~state, locations = ~code,
+    color = ~no2, colors = &#39;viridis&#39;
+  ) %&gt;% 
+  colorbar(title = &quot;Mean NO2 in parts per billion&quot;) %&gt;% 
+  layout(
+    title = &quot;Distribution of Mean NO2 by State in 2013-2017&quot;,
+    geo = g
+  )</code></pre>
+<div id="htmlwidget-bb0cde838b22c69cc5cf" style="width:672px;height:480px;" class="plotly html-widget"></div>
+<script type="application/json" data-for="htmlwidget-bb0cde838b22c69cc5cf">{"x":{"visdat":{"47d83c656e01":["function () ","plotlyVisDat"]},"cur_data":"47d83c656e01","attrs":{"47d83c656e01":{"locationmode":"USA-states","alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"z":{},"text":{},"locations":{},"color":{},"colors":"viridis","inherit":true}},"layout":{"margin":{"b":40,"l":60,"t":25,"r":10},"mapType":"geo","scene":{"zaxis":{"title":"no2"}},"geo":{"domain":{"x":[0,1],"y":[0,1]},"scope":"usa","projection":{"type":"albers usa"},"showlakes":true,"lakecolor":"rgba(255,255,255,1)"},"hovermode":"closest","showlegend":false,"legend":{"yanchor":"top","y":0.5},"title":"Distribution of Mean NO2 by State in 2013-2017"},"source":"A","config":{"modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"data":[{"colorbar":{"title":"Mean NO2 in parts per billion","ticklen":2,"len":0.5,"lenmode":"fraction","y":1,"yanchor":"top"},"colorscale":[["0","rgba(68,1,84,1)"],["0.0416666666666667","rgba(71,17,100,1)"],["0.0833333333333333","rgba(72,31,112,1)"],["0.125","rgba(71,45,123,1)"],["0.166666666666667","rgba(68,58,131,1)"],["0.208333333333333","rgba(64,70,136,1)"],["0.25","rgba(59,82,139,1)"],["0.291666666666667","rgba(54,93,141,1)"],["0.333333333333333","rgba(49,104,142,1)"],["0.375","rgba(44,114,142,1)"],["0.416666666666667","rgba(40,124,142,1)"],["0.458333333333333","rgba(36,134,142,1)"],["0.5","rgba(33,144,141,1)"],["0.541666666666667","rgba(31,154,138,1)"],["0.583333333333333","rgba(32,164,134,1)"],["0.625","rgba(39,173,129,1)"],["0.666666666666667","rgba(53,183,121,1)"],["0.708333333333333","rgba(71,193,110,1)"],["0.75","rgba(93,200,99,1)"],["0.791666666666667","rgba(117,208,84,1)"],["0.833333333333333","rgba(143,214,68,1)"],["0.875","rgba(170,220,50,1)"],["0.916666666666667","rgba(199,224,32,1)"],["0.958333333333333","rgba(227,228,24,1)"],["1","rgba(253,231,37,1)"]],"showscale":true,"locationmode":"USA-states","z":[10.02,11.388,15.027,8.982,10.254,18.727,7.565,11.579,4.782,10.369,3.377,10.072,12.261,6.295,11.378,11.144,10.606,4.77,8.33,15.819,6.439,12.367,15.126,4.019,15.447,11.523,17.463,7.661,4.554,11.723,7.175,9.157,8.326,7.561,9.312,4.613,0.894,9.679,18.91,7.015,11.219,3.4],"text":["Alabama","Alaska","Arizona","Arkansas","California","Colorado","Connecticut","Delaware","Florida","Georgia","Hawaii","Illinois","Indiana","Iowa","Kansas","Kentucky","Louisiana","Maine","Maryland","Massachusetts","Minnesota","Missouri","Nevada","New Hampshire","New Jersey","New Mexico","New York","North Carolina","North Dakota","Ohio","Oklahoma","Oregon","Pennsylvania","Rhode Island","South Carolina","South Dakota","Tennessee","Texas","Utah","Virginia","Washington","Wyoming"],"locations":["AL","AK","AZ","AR","CA","CO","CT","DE","FL","GA","HI","IL","IN","IA","KS","KY","LA","ME","MD","MA","MN","MO","NV","NH","NJ","NM","NY","NC","ND","OH","OK","OR","PA","RI","SC","SD","TN","TX","UT","VA","WA","WY"],"type":"choropleth","marker":{"line":{"colorbar":{"title":"","ticklen":2},"cmin":0.894,"cmax":18.91,"colorscale":[["0","rgba(68,1,84,1)"],["0.0416666666666667","rgba(71,17,100,1)"],["0.0833333333333333","rgba(72,31,112,1)"],["0.125","rgba(71,45,123,1)"],["0.166666666666667","rgba(68,58,131,1)"],["0.208333333333333","rgba(64,70,136,1)"],["0.25","rgba(59,82,139,1)"],["0.291666666666667","rgba(54,93,141,1)"],["0.333333333333333","rgba(49,104,142,1)"],["0.375","rgba(44,114,142,1)"],["0.416666666666667","rgba(40,124,142,1)"],["0.458333333333333","rgba(36,134,142,1)"],["0.5","rgba(33,144,141,1)"],["0.541666666666667","rgba(31,154,138,1)"],["0.583333333333333","rgba(32,164,134,1)"],["0.625","rgba(39,173,129,1)"],["0.666666666666667","rgba(53,183,121,1)"],["0.708333333333333","rgba(71,193,110,1)"],["0.75","rgba(93,200,99,1)"],["0.791666666666667","rgba(117,208,84,1)"],["0.833333333333333","rgba(143,214,68,1)"],["0.875","rgba(170,220,50,1)"],["0.916666666666667","rgba(199,224,32,1)"],["0.958333333333333","rgba(227,228,24,1)"],["1","rgba(253,231,37,1)"]],"showscale":false,"color":[10.02,11.388,15.027,8.982,10.254,18.727,7.565,11.579,4.782,10.369,3.377,10.072,12.261,6.295,11.378,11.144,10.606,4.77,8.33,15.819,6.439,12.367,15.126,4.019,15.447,11.523,17.463,7.661,4.554,11.723,7.175,9.157,8.326,7.561,9.312,4.613,0.894,9.679,18.91,7.015,11.219,3.4]}},"geo":"geo","frame":null}],"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.2,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+</div>
+<div id="distribution-of-mean-o3-by-state-in-2013-2017" class="section level3">
+<h3>Distribution of Mean O3 by State in 2013-2017</h3>
+<pre class="r"><code>pollution1 %&gt;%
+  ungroup() %&gt;%
+  mutate(code = state.abb[match(state, state.name)]) %&gt;%
+  filter(code != is.na(code)) %&gt;%
+  relocate(state, code) %&gt;%
+  plot_geo(., locationmode = &#39;USA-states&#39;) %&gt;% 
+  add_trace(
+    z = ~o3, text = ~state, locations = ~code,
+    color = ~o3, colors = &#39;viridis&#39;
+  ) %&gt;% 
+  colorbar(title = &quot;Mean O3 in parts per million&quot;) %&gt;% 
+  layout(
+    title = &quot;Distribution of Mean O3 by State in 2013-2017&quot;,
+    geo = g
+  )</code></pre>
+<div id="htmlwidget-110dd779e6922ba84e51" style="width:672px;height:480px;" class="plotly html-widget"></div>
+<script type="application/json" data-for="htmlwidget-110dd779e6922ba84e51">{"x":{"visdat":{"47d862e9261d":["function () ","plotlyVisDat"]},"cur_data":"47d862e9261d","attrs":{"47d862e9261d":{"locationmode":"USA-states","alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"z":{},"text":{},"locations":{},"color":{},"colors":"viridis","inherit":true}},"layout":{"margin":{"b":40,"l":60,"t":25,"r":10},"mapType":"geo","scene":{"zaxis":{"title":"o3"}},"geo":{"domain":{"x":[0,1],"y":[0,1]},"scope":"usa","projection":{"type":"albers usa"},"showlakes":true,"lakecolor":"rgba(255,255,255,1)"},"hovermode":"closest","showlegend":false,"legend":{"yanchor":"top","y":0.5},"title":"Distribution of Mean O3 by State in 2013-2017"},"source":"A","config":{"modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"data":[{"colorbar":{"title":"Mean O3 in parts per million","ticklen":2,"len":0.5,"lenmode":"fraction","y":1,"yanchor":"top"},"colorscale":[["0","rgba(68,1,84,1)"],["0.0416666666666667","rgba(71,17,100,1)"],["0.0833333333333334","rgba(72,31,112,1)"],["0.125","rgba(71,45,123,1)"],["0.166666666666667","rgba(68,58,131,1)"],["0.208333333333333","rgba(64,70,136,1)"],["0.25","rgba(59,82,139,1)"],["0.291666666666667","rgba(54,93,141,1)"],["0.333333333333333","rgba(49,104,142,1)"],["0.375","rgba(44,114,142,1)"],["0.416666666666667","rgba(40,124,142,1)"],["0.458333333333333","rgba(36,134,142,1)"],["0.5","rgba(33,144,141,1)"],["0.541666666666667","rgba(31,154,138,1)"],["0.583333333333333","rgba(32,164,134,1)"],["0.625","rgba(39,173,129,1)"],["0.666666666666667","rgba(53,183,121,1)"],["0.708333333333333","rgba(71,193,110,1)"],["0.75","rgba(93,200,99,1)"],["0.791666666666667","rgba(117,208,84,1)"],["0.833333333333333","rgba(143,214,68,1)"],["0.875","rgba(170,220,50,1)"],["0.916666666666667","rgba(199,224,32,1)"],["0.958333333333333","rgba(227,228,24,1)"],["1","rgba(253,231,37,1)"]],"showscale":true,"locationmode":"USA-states","z":[0.022,0.012,0.026,0.025,0.026,0.025,0.031,0.027,0.027,0.02,0.025,0.025,0.027,0.028,0.025,0.02,0.024,0.026,0.027,0.022,0.026,0.023,0.028,0.029,0.024,0.031,0.024,0.027,0.027,0.024,0.028,0.019,0.027,0.03,0.03,0.029,0.038,0.026,0.026,0.027,0.021,0.038],"text":["Alabama","Alaska","Arizona","Arkansas","California","Colorado","Connecticut","Delaware","Florida","Georgia","Hawaii","Illinois","Indiana","Iowa","Kansas","Kentucky","Louisiana","Maine","Maryland","Massachusetts","Minnesota","Missouri","Nevada","New Hampshire","New Jersey","New Mexico","New York","North Carolina","North Dakota","Ohio","Oklahoma","Oregon","Pennsylvania","Rhode Island","South Carolina","South Dakota","Tennessee","Texas","Utah","Virginia","Washington","Wyoming"],"locations":["AL","AK","AZ","AR","CA","CO","CT","DE","FL","GA","HI","IL","IN","IA","KS","KY","LA","ME","MD","MA","MN","MO","NV","NH","NJ","NM","NY","NC","ND","OH","OK","OR","PA","RI","SC","SD","TN","TX","UT","VA","WA","WY"],"type":"choropleth","marker":{"line":{"colorbar":{"title":"","ticklen":2},"cmin":0.012,"cmax":0.038,"colorscale":[["0","rgba(68,1,84,1)"],["0.0416666666666667","rgba(71,17,100,1)"],["0.0833333333333334","rgba(72,31,112,1)"],["0.125","rgba(71,45,123,1)"],["0.166666666666667","rgba(68,58,131,1)"],["0.208333333333333","rgba(64,70,136,1)"],["0.25","rgba(59,82,139,1)"],["0.291666666666667","rgba(54,93,141,1)"],["0.333333333333333","rgba(49,104,142,1)"],["0.375","rgba(44,114,142,1)"],["0.416666666666667","rgba(40,124,142,1)"],["0.458333333333333","rgba(36,134,142,1)"],["0.5","rgba(33,144,141,1)"],["0.541666666666667","rgba(31,154,138,1)"],["0.583333333333333","rgba(32,164,134,1)"],["0.625","rgba(39,173,129,1)"],["0.666666666666667","rgba(53,183,121,1)"],["0.708333333333333","rgba(71,193,110,1)"],["0.75","rgba(93,200,99,1)"],["0.791666666666667","rgba(117,208,84,1)"],["0.833333333333333","rgba(143,214,68,1)"],["0.875","rgba(170,220,50,1)"],["0.916666666666667","rgba(199,224,32,1)"],["0.958333333333333","rgba(227,228,24,1)"],["1","rgba(253,231,37,1)"]],"showscale":false,"color":[0.022,0.012,0.026,0.025,0.026,0.025,0.031,0.027,0.027,0.02,0.025,0.025,0.027,0.028,0.025,0.02,0.024,0.026,0.027,0.022,0.026,0.023,0.028,0.029,0.024,0.031,0.024,0.027,0.027,0.024,0.028,0.019,0.027,0.03,0.03,0.029,0.038,0.026,0.026,0.027,0.021,0.038]}},"geo":"geo","frame":null}],"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.2,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+<div id="column-1" class="section level2" data-width="500">
+<h2 data-width="500">Column</h2>
+<div id="distribution-of-mean-so2-by-state-in-2013-2017" class="section level3">
+<h3>Distribution of Mean SO2 by State in 2013-2017</h3>
+<pre class="r"><code>pollution1 %&gt;%
+  ungroup() %&gt;%
+  mutate(code = state.abb[match(state, state.name)]) %&gt;%
+  filter(code != is.na(code)) %&gt;%
+  relocate(state, code) %&gt;%
+  plot_geo(., locationmode = &#39;USA-states&#39;) %&gt;% 
+  add_trace(
+    z = ~so2, text = ~state, locations = ~code,
+    color = ~so2, colors = &#39;viridis&#39;
+  ) %&gt;% 
+  colorbar(title = &quot;Mean SO2 in parts per billion&quot;) %&gt;% 
+  layout(
+    title = &quot;Distribution of Mean SO2 by State in 2013-2017&quot;,
+    geo = g
+  )</code></pre>
+<div id="htmlwidget-ba9ec415ca44e428ac82" style="width:672px;height:480px;" class="plotly html-widget"></div>
+<script type="application/json" data-for="htmlwidget-ba9ec415ca44e428ac82">{"x":{"visdat":{"47d825007bbd":["function () ","plotlyVisDat"]},"cur_data":"47d825007bbd","attrs":{"47d825007bbd":{"locationmode":"USA-states","alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"z":{},"text":{},"locations":{},"color":{},"colors":"viridis","inherit":true}},"layout":{"margin":{"b":40,"l":60,"t":25,"r":10},"mapType":"geo","scene":{"zaxis":{"title":"so2"}},"geo":{"domain":{"x":[0,1],"y":[0,1]},"scope":"usa","projection":{"type":"albers usa"},"showlakes":true,"lakecolor":"rgba(255,255,255,1)"},"hovermode":"closest","showlegend":false,"legend":{"yanchor":"top","y":0.5},"title":"Distribution of Mean SO2 by State in 2013-2017"},"source":"A","config":{"modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"data":[{"colorbar":{"title":"Mean SO2 in parts per billion","ticklen":2,"len":0.5,"lenmode":"fraction","y":1,"yanchor":"top"},"colorscale":[["0","rgba(68,1,84,1)"],["0.0416666666666667","rgba(71,17,100,1)"],["0.0833333333333333","rgba(72,31,112,1)"],["0.125","rgba(71,45,123,1)"],["0.166666666666667","rgba(68,58,131,1)"],["0.208333333333333","rgba(64,70,136,1)"],["0.25","rgba(59,82,139,1)"],["0.291666666666667","rgba(54,93,141,1)"],["0.333333333333333","rgba(49,104,142,1)"],["0.375","rgba(44,114,142,1)"],["0.416666666666667","rgba(40,124,142,1)"],["0.458333333333333","rgba(36,134,142,1)"],["0.5","rgba(33,144,141,1)"],["0.541666666666667","rgba(31,154,138,1)"],["0.583333333333333","rgba(32,164,134,1)"],["0.625","rgba(39,173,129,1)"],["0.666666666666667","rgba(53,183,121,1)"],["0.708333333333333","rgba(71,193,110,1)"],["0.75","rgba(93,200,99,1)"],["0.791666666666667","rgba(117,208,84,1)"],["0.833333333333333","rgba(143,214,68,1)"],["0.875","rgba(170,220,50,1)"],["0.916666666666667","rgba(199,224,32,1)"],["0.958333333333333","rgba(227,228,24,1)"],["1","rgba(253,231,37,1)"]],"showscale":true,"locationmode":"USA-states","z":[0.945,6.055,0.655,1.054,0.507,1.01,0.497,0.897,0.129,0.306,1.107,0.997,1.578,0.352,1.607,1.169,1.016,0.639,0.91,0.873,0.56,1.782,0.412,0.854,0.475,0.67,1.324,0.273,0.185,2.122,0.675,0.795,1.691,0.502,0.231,0.5,0.119,0.323,0.418,0.514,0.59,0.159],"text":["Alabama","Alaska","Arizona","Arkansas","California","Colorado","Connecticut","Delaware","Florida","Georgia","Hawaii","Illinois","Indiana","Iowa","Kansas","Kentucky","Louisiana","Maine","Maryland","Massachusetts","Minnesota","Missouri","Nevada","New Hampshire","New Jersey","New Mexico","New York","North Carolina","North Dakota","Ohio","Oklahoma","Oregon","Pennsylvania","Rhode Island","South Carolina","South Dakota","Tennessee","Texas","Utah","Virginia","Washington","Wyoming"],"locations":["AL","AK","AZ","AR","CA","CO","CT","DE","FL","GA","HI","IL","IN","IA","KS","KY","LA","ME","MD","MA","MN","MO","NV","NH","NJ","NM","NY","NC","ND","OH","OK","OR","PA","RI","SC","SD","TN","TX","UT","VA","WA","WY"],"type":"choropleth","marker":{"line":{"colorbar":{"title":"","ticklen":2},"cmin":0.119,"cmax":6.055,"colorscale":[["0","rgba(68,1,84,1)"],["0.0416666666666667","rgba(71,17,100,1)"],["0.0833333333333333","rgba(72,31,112,1)"],["0.125","rgba(71,45,123,1)"],["0.166666666666667","rgba(68,58,131,1)"],["0.208333333333333","rgba(64,70,136,1)"],["0.25","rgba(59,82,139,1)"],["0.291666666666667","rgba(54,93,141,1)"],["0.333333333333333","rgba(49,104,142,1)"],["0.375","rgba(44,114,142,1)"],["0.416666666666667","rgba(40,124,142,1)"],["0.458333333333333","rgba(36,134,142,1)"],["0.5","rgba(33,144,141,1)"],["0.541666666666667","rgba(31,154,138,1)"],["0.583333333333333","rgba(32,164,134,1)"],["0.625","rgba(39,173,129,1)"],["0.666666666666667","rgba(53,183,121,1)"],["0.708333333333333","rgba(71,193,110,1)"],["0.75","rgba(93,200,99,1)"],["0.791666666666667","rgba(117,208,84,1)"],["0.833333333333333","rgba(143,214,68,1)"],["0.875","rgba(170,220,50,1)"],["0.916666666666667","rgba(199,224,32,1)"],["0.958333333333333","rgba(227,228,24,1)"],["1","rgba(253,231,37,1)"]],"showscale":false,"color":[0.945,6.055,0.655,1.054,0.507,1.01,0.497,0.897,0.129,0.306,1.107,0.997,1.578,0.352,1.607,1.169,1.016,0.639,0.91,0.873,0.56,1.782,0.412,0.854,0.475,0.67,1.324,0.273,0.185,2.122,0.675,0.795,1.691,0.502,0.231,0.5,0.119,0.323,0.418,0.514,0.59,0.159]}},"geo":"geo","frame":null}],"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.2,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+</div>
+<div id="distribution-of-mean-co-by-state-in-2013-2017" class="section level3">
+<h3>Distribution of Mean CO by State in 2013-2017</h3>
+<pre class="r"><code>pollution1 %&gt;%
+  ungroup() %&gt;%
+  mutate(code = state.abb[match(state, state.name)]) %&gt;%
+  filter(code != is.na(code)) %&gt;%
+  relocate(state, code) %&gt;%
+  plot_geo(., locationmode = &#39;USA-states&#39;) %&gt;% 
+  add_trace(
+    z = ~co, text = ~state, locations = ~code,
+    color = ~co, colors = &#39;viridis&#39;
+  ) %&gt;% 
+  colorbar(title = &quot;Mean CO in parts per million&quot;) %&gt;% 
+  layout(
+    title = &quot;Distribution of Mean CO by State in 2013-2017&quot;,
+    geo = g
+  )</code></pre>
+<div id="htmlwidget-eeb0be456398a56f7105" style="width:672px;height:480px;" class="plotly html-widget"></div>
+<script type="application/json" data-for="htmlwidget-eeb0be456398a56f7105">{"x":{"visdat":{"47d86274264":["function () ","plotlyVisDat"]},"cur_data":"47d86274264","attrs":{"47d86274264":{"locationmode":"USA-states","alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"z":{},"text":{},"locations":{},"color":{},"colors":"viridis","inherit":true}},"layout":{"margin":{"b":40,"l":60,"t":25,"r":10},"mapType":"geo","scene":{"zaxis":{"title":"co"}},"geo":{"domain":{"x":[0,1],"y":[0,1]},"scope":"usa","projection":{"type":"albers usa"},"showlakes":true,"lakecolor":"rgba(255,255,255,1)"},"hovermode":"closest","showlegend":false,"legend":{"yanchor":"top","y":0.5},"title":"Distribution of Mean CO by State in 2013-2017"},"source":"A","config":{"modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"data":[{"colorbar":{"title":"Mean CO in parts per million","ticklen":2,"len":0.5,"lenmode":"fraction","y":1,"yanchor":"top"},"colorscale":[["0","rgba(68,1,84,1)"],["0.0416666666666667","rgba(71,17,100,1)"],["0.0833333333333333","rgba(72,31,112,1)"],["0.125","rgba(71,45,123,1)"],["0.166666666666667","rgba(68,58,131,1)"],["0.208333333333333","rgba(64,70,136,1)"],["0.25","rgba(59,82,139,1)"],["0.291666666666667","rgba(54,93,141,1)"],["0.333333333333333","rgba(49,104,142,1)"],["0.375","rgba(44,114,142,1)"],["0.416666666666667","rgba(40,124,142,1)"],["0.458333333333333","rgba(36,134,142,1)"],["0.5","rgba(33,144,141,1)"],["0.541666666666667","rgba(31,154,138,1)"],["0.583333333333333","rgba(32,164,134,1)"],["0.625","rgba(39,173,129,1)"],["0.666666666666667","rgba(53,183,121,1)"],["0.708333333333333","rgba(71,193,110,1)"],["0.75","rgba(93,200,99,1)"],["0.791666666666667","rgba(117,208,84,1)"],["0.833333333333333","rgba(143,214,68,1)"],["0.875","rgba(170,220,50,1)"],["0.916666666666667","rgba(199,224,32,1)"],["0.958333333333333","rgba(227,228,24,1)"],["1","rgba(253,231,37,1)"]],"showscale":true,"locationmode":"USA-states","z":[0.212,0.43,0.388,0.34,0.348,0.367,0.207,0.269,0.461,0.311,0.381,0.301,0.248,0.206,0.31,0.295,0.231,0.245,0.221,0.274,0.267,0.276,0.293,0.194,0.28,0.222,0.284,0.266,0.169,0.26,0.212,0.27,0.156,0.23,0.158,0.182,0.177,0.197,0.384,0.272,0.217,0.055],"text":["Alabama","Alaska","Arizona","Arkansas","California","Colorado","Connecticut","Delaware","Florida","Georgia","Hawaii","Illinois","Indiana","Iowa","Kansas","Kentucky","Louisiana","Maine","Maryland","Massachusetts","Minnesota","Missouri","Nevada","New Hampshire","New Jersey","New Mexico","New York","North Carolina","North Dakota","Ohio","Oklahoma","Oregon","Pennsylvania","Rhode Island","South Carolina","South Dakota","Tennessee","Texas","Utah","Virginia","Washington","Wyoming"],"locations":["AL","AK","AZ","AR","CA","CO","CT","DE","FL","GA","HI","IL","IN","IA","KS","KY","LA","ME","MD","MA","MN","MO","NV","NH","NJ","NM","NY","NC","ND","OH","OK","OR","PA","RI","SC","SD","TN","TX","UT","VA","WA","WY"],"type":"choropleth","marker":{"line":{"colorbar":{"title":"","ticklen":2},"cmin":0.055,"cmax":0.461,"colorscale":[["0","rgba(68,1,84,1)"],["0.0416666666666667","rgba(71,17,100,1)"],["0.0833333333333333","rgba(72,31,112,1)"],["0.125","rgba(71,45,123,1)"],["0.166666666666667","rgba(68,58,131,1)"],["0.208333333333333","rgba(64,70,136,1)"],["0.25","rgba(59,82,139,1)"],["0.291666666666667","rgba(54,93,141,1)"],["0.333333333333333","rgba(49,104,142,1)"],["0.375","rgba(44,114,142,1)"],["0.416666666666667","rgba(40,124,142,1)"],["0.458333333333333","rgba(36,134,142,1)"],["0.5","rgba(33,144,141,1)"],["0.541666666666667","rgba(31,154,138,1)"],["0.583333333333333","rgba(32,164,134,1)"],["0.625","rgba(39,173,129,1)"],["0.666666666666667","rgba(53,183,121,1)"],["0.708333333333333","rgba(71,193,110,1)"],["0.75","rgba(93,200,99,1)"],["0.791666666666667","rgba(117,208,84,1)"],["0.833333333333333","rgba(143,214,68,1)"],["0.875","rgba(170,220,50,1)"],["0.916666666666667","rgba(199,224,32,1)"],["0.958333333333333","rgba(227,228,24,1)"],["1","rgba(253,231,37,1)"]],"showscale":false,"color":[0.212,0.43,0.388,0.34,0.348,0.367,0.207,0.269,0.461,0.311,0.381,0.301,0.248,0.206,0.31,0.295,0.231,0.245,0.221,0.274,0.267,0.276,0.293,0.194,0.28,0.222,0.284,0.266,0.169,0.26,0.212,0.27,0.156,0.23,0.158,0.182,0.177,0.197,0.384,0.272,0.217,0.055]}},"geo":"geo","frame":null}],"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.2,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
