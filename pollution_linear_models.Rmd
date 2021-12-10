@@ -1,6 +1,6 @@
 ---
-title: "Pollution Linear Models"
-author: "Matthew Neky"
+title: "Model Building for Lung Cancer Incidence"
+author: "Matthew Neky & Anand Rajan"
 date: "12/8/2021"
 output: github_document
 ---
@@ -9,9 +9,13 @@ output: github_document
 library(tidyverse)
 library(readxl)
 library(patchwork)
+library(modelr)
+library(viridis)
 
 knitr::opts_chunk$set(warning = FALSE, message = FALSE)
 ```
+
+## Importing and Merging Data
 
 ```{r}
 inc_state =
@@ -36,7 +40,7 @@ inc_state =
 
 
 ```{r}
-pollution1 = read_excel("data/uspollution_us_2000_2016.xlsx") %>% 
+pollution_incidence = read_csv("data/uspollution_us_2000_2016.csv") %>% 
   janitor::clean_names() %>%
   select(state, date_local, no2_mean, o3_mean, 
          so2_mean, co_mean) %>%
@@ -46,9 +50,6 @@ pollution1 = read_excel("data/uspollution_us_2000_2016.xlsx") %>%
   summarize(across(everything(), mean)) %>%
   mutate_if(is.numeric, ~round(., 3)) %>%
   filter(state != "Country Of Mexico") %>% 
-  filter(
-    year %in% (2005:2010)
-  ) %>% 
   ungroup() %>% 
   select(state:co_mean) %>% 
   group_by(state) %>% 
@@ -61,19 +62,162 @@ pollution1 = read_excel("data/uspollution_us_2000_2016.xlsx") %>%
   merge(inc_state, by = "state") %>% 
   filter(
     state != "Nevada"
+  ) %>% 
+  mutate(
+    lung_and_bronchus_both_sexes_combined = as.numeric(lung_and_bronchus_both_sexes_combined),
+    lung_and_bronchus_female = as.numeric(lung_and_bronchus_female),
+    lung_and_bronchus_male = as.numeric(lung_and_bronchus_male)
   )
+
+
+str(pollution_incidence)
 ```
 
 ### Linear Models
 
 ```{r}
-model1 = lm(all_cancer_types_combined_both_sexes_combined ~ no2 + o3 + so2 + co, data = pollution1)
+model1 = lm(all_cancer_types_combined_both_sexes_combined ~ no2 + o3 + so2 + co, data = pollution_incidence)
 model1 %>% broom::glance()
 
-model2 = lm(lung_and_bronchus_both_sexes_combined ~ no2 + o3 + so2 + co, data = pollution1)
+model2 = lm(lung_and_bronchus_both_sexes_combined ~ no2 + o3 + so2 + co, data = pollution_incidence)
 model2 %>% broom::glance()
 
-model3 = lm(colorectum_both_sexes_combined ~ no2 + o3 + so2 + co, data = pollution1)
+model3 = lm(colorectum_both_sexes_combined ~ no2 + o3 + so2 + co, data = pollution_incidence)
 model3 %>% broom::glance()
+
 ```
+
+
+## Building a Model for Lung Incidence 
+
+Lets begin by exploring each pollutant to see if there exists linear relationship between the pollutant concentration and incidence of lung cancer
+
+```{r}
+continuous_variables =
+  pollution_incidence %>% 
+  select(is.numeric) %>% 
+  select(-lung_and_bronchus_both_sexes_combined,-lung_and_bronchus_female, -lung_and_bronchus_male) %>% 
+  colnames() %>% 
+  as.vector()
+
+```
+
+```{r}
+continuous_variables =
+  continuous_variables %>% 
+  as.list()
+
+for (i in continuous_variables) {
+  plot =
+  ggplot(pollution_incidence, aes_string(i,  "lung_and_bronchus_both_sexes_combined")) + 
+  geom_point() +
+  geom_smooth(method = lm, se = FALSE) +
+  labs(title = "Pollutant Concentration vs. Lung Cancer Incidence", y = "Lung Cancer Incidence") +
+  theme(plot.title = element_text(hjust = 0.5, face = "bold"))
+  
+  print(plot)
+  
+}
+
+
+
+```
+
+From reviewing the scatter plots, none of the pollutants show a particularly strong linear relationship with incidence of lung cancer,however we will proceed forward with a model that includes all the pollutants. 
+
+```{r}
+fitted_model = lm(lung_and_bronchus_both_sexes_combined ~ no2 + o3 + so2 + co, data = pollution_incidence)
+
+fitted_model %>% 
+  broom::glance()
+
+fitted_model %>% 
+  broom::tidy() %>% 
+  select(term, estimate,p.value) %>%
+  knitr::kable(digits=3)
+```
+
+As we see the p-values for each of the slopes are significant except the slope for Carbon Monoxide. Moreover, the p-value for the overall model is significant(p-value=0.0126). Thus we will continue with the current model and compared to other comparison models 
+
+```{r}
+pollution_incidence %>% 
+  add_residuals(fitted_model) %>% 
+  add_predictions(model2) %>% 
+  ggplot(aes(x=pred, y=resid)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE) +
+  labs(
+    title= "Predictions vs Residuals plot",
+    x="Predictions",
+    y="Residuals"
+  ) +
+  scale_color_viridis(discrete=TRUE) +
+  theme_bw()
+```
+From the plot we see the assumption of homescedasticity is not violated, thus we can proceed forward with this model. 
+
+Comparison Models
+
+```{r}
+comparison_model = lm(lung_and_bronchus_both_sexes_combined ~ no2 + o3 + so2, data = pollution_incidence)  
+comparison_model2 = lm(lung_and_bronchus_both_sexes_combined ~ o3 + so2, data = pollution_incidence) %>% 
+  broom::tidy()
+
+```
+
+#Cross Validate
+
+```{r}
+cv_df = crossv_mc(pollution_incidence,100) 
+
+cv_df =
+  cv_df %>% 
+  mutate(
+    train=map(train,as_tibble),
+    test=map(test,as_tibble)
+  )
+
+```
+
+```{r}
+cv_df = 
+  cv_df %>% 
+  mutate(
+    fitted_model = map(train, ~lm(lung_and_bronchus_both_sexes_combined ~ no2 + o3 + so2 + co, data = pollution_incidence)),
+    comparison_model = map(train, ~lm(lung_and_bronchus_both_sexes_combined ~ no2 + o3 + so2, data = pollution_incidence)),
+    comparison_model2  = map(train, ~lm(lung_and_bronchus_both_sexes_combined ~ o3 + so2, data = pollution_incidence))) %>% 
+  mutate(
+    rmse_fitted_model = map2_dbl(fitted_model, test,~rmse(model=.x, data=.y)),
+    rmse_comparison_model = map2_dbl(comparison_model, test, ~rmse(model=.x, data=.y)),
+    rmse_comparison_model2 = map2_dbl(comparison_model2, test, ~rmse(model=.x, data=.y))                            
+  )
+
+cv_df %>% 
+  select(starts_with("rmse")) %>% 
+  pivot_longer(
+    everything(),
+    names_to = "model", 
+    values_to = "rmse",
+    names_prefix = "rmse_") %>% 
+  mutate(model = fct_inorder(model)) %>% 
+  ggplot(aes(x = model, y = rmse)) + geom_boxplot()
+```
+
+
+
+```{r}
+female_model = lm(lung_and_bronchus_female ~ no2 + o3 + so2 + co, data=pollution_incidence)
+
+female_model %>% 
+  broom::glance()
+
+model_male = lm(lung_and_bronchus_male ~ no2 + o3 + so2 + co, data=pollution_incidence) 
+
+model_male %>% 
+  broom::glance()
+```
+
+
+
+
 

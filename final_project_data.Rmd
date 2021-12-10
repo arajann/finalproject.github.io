@@ -127,12 +127,11 @@ death_time =
 # Pollution Data Cleaned for Incidence State Data
 
 ```{r}
-<<<<<<< HEAD
+
 pollution1 = 
-  read_csv("data/uspollution_us_2000_2016.csv") %>% 
-=======
+  read_csv("data/uspollution_us_2000_2016.csv")  
+  
 pollution1 = read_csv("data/uspollution_us_2000_2016.csv") %>% 
->>>>>>> 29e79355c2da1b8430fe5f5c9b02849af85635e6
   janitor::clean_names() %>%
   select(state, date_local, no2_mean, o3_mean, 
          so2_mean, co_mean) %>%
@@ -204,8 +203,7 @@ modified_pollution =
     year = as.numeric(year)
   )
 
-pollution_cancer =
-  left_join(death_time, modified_pollution, by = "year")
+
 ```
 
 
