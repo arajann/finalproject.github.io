@@ -18,7 +18,7 @@ knitr::opts_chunk$set(warning = FALSE, message = FALSE)
     
 ```
 
-## Exploring Pollution Data Set
+# Exploring Pollution Data Set
 
 ```{r }
 modified_pollution =
@@ -46,6 +46,7 @@ modified_pollution =
   )
 
 modified_pollution %>% 
+  mutate_if(is.numeric, ~round(., 3)) %>%
   knitr::kable(caption = "United States Pollutant Concentration from 2000-2016")
 ```
 
@@ -65,7 +66,7 @@ modified_pollution %>%
   knitr::kable(digits = 3)
 ```
 
-Comparing Distributions of Pollutant Concentrations 
+# Comparing Distributions of Pollutant Concentrations 
 
 ```{r}
 modified_pollution %>% 
@@ -105,7 +106,7 @@ modified_pollution %>%
   ) 
 ```
 
-## Exploring Trends in Death From Lung Cancer
+# Exploring Trends in Death From Lung Cancer
 
   
 ```{r}
@@ -215,7 +216,7 @@ for (i in pollutant_variables) {
 ```
 
 
-### Exploring Incidence of Lung Cancer 
+# Exploring Incidence of Lung Cancer 
 
 ```{r}
 g = list(

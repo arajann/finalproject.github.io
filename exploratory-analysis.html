@@ -376,8 +376,8 @@ div.tocify {
 </div>
 
 
-<div id="exploring-pollution-data-set" class="section level2">
-<h2>Exploring Pollution Data Set</h2>
+<div id="exploring-pollution-data-set" class="section level1">
+<h1>Exploring Pollution Data Set</h1>
 <pre class="r"><code>modified_pollution =
   read_csv(&quot;data/uspollution_us_2000_2016.csv&quot;) %&gt;% 
   janitor::clean_names() %&gt;%
@@ -403,6 +403,7 @@ div.tocify {
   )
 
 modified_pollution %&gt;% 
+  mutate_if(is.numeric, ~round(., 3)) %&gt;%
   knitr::kable(caption = &quot;United States Pollutant Concentration from 2000-2016&quot;)</code></pre>
 <table>
 <caption>United States Pollutant Concentration from 2000-2016</caption>
@@ -418,122 +419,122 @@ modified_pollution %&gt;%
 <tbody>
 <tr class="odd">
 <td align="right">2000</td>
-<td align="right">17.323000</td>
-<td align="right">0.0250526</td>
-<td align="right">4.3962632</td>
-<td align="right">0.5822632</td>
+<td align="right">17.323</td>
+<td align="right">0.025</td>
+<td align="right">4.396</td>
+<td align="right">0.582</td>
 </tr>
 <tr class="even">
 <td align="right">2001</td>
-<td align="right">17.670100</td>
-<td align="right">0.0256500</td>
-<td align="right">3.5975000</td>
-<td align="right">0.4763500</td>
+<td align="right">17.670</td>
+<td align="right">0.026</td>
+<td align="right">3.598</td>
+<td align="right">0.476</td>
 </tr>
 <tr class="odd">
 <td align="right">2002</td>
-<td align="right">15.537136</td>
-<td align="right">0.0277727</td>
-<td align="right">2.8994091</td>
-<td align="right">0.4774545</td>
+<td align="right">15.537</td>
+<td align="right">0.028</td>
+<td align="right">2.899</td>
+<td align="right">0.477</td>
 </tr>
 <tr class="even">
 <td align="right">2003</td>
-<td align="right">14.554696</td>
-<td align="right">0.0266957</td>
-<td align="right">3.1442174</td>
-<td align="right">0.4672609</td>
+<td align="right">14.555</td>
+<td align="right">0.027</td>
+<td align="right">3.144</td>
+<td align="right">0.467</td>
 </tr>
 <tr class="odd">
 <td align="right">2004</td>
-<td align="right">14.944842</td>
-<td align="right">0.0243684</td>
-<td align="right">3.2192105</td>
-<td align="right">0.4366842</td>
+<td align="right">14.945</td>
+<td align="right">0.024</td>
+<td align="right">3.219</td>
+<td align="right">0.437</td>
 </tr>
 <tr class="even">
 <td align="right">2005</td>
-<td align="right">15.296632</td>
-<td align="right">0.0264737</td>
-<td align="right">3.1294737</td>
-<td align="right">0.4373158</td>
+<td align="right">15.297</td>
+<td align="right">0.026</td>
+<td align="right">3.129</td>
+<td align="right">0.437</td>
 </tr>
 <tr class="odd">
 <td align="right">2006</td>
-<td align="right">13.284269</td>
-<td align="right">0.0259231</td>
-<td align="right">2.8768462</td>
-<td align="right">0.3955769</td>
+<td align="right">13.284</td>
+<td align="right">0.026</td>
+<td align="right">2.877</td>
+<td align="right">0.396</td>
 </tr>
 <tr class="even">
 <td align="right">2007</td>
-<td align="right">12.208414</td>
-<td align="right">0.0260345</td>
-<td align="right">2.4068621</td>
-<td align="right">0.3721379</td>
+<td align="right">12.208</td>
+<td align="right">0.026</td>
+<td align="right">2.407</td>
+<td align="right">0.372</td>
 </tr>
 <tr class="odd">
 <td align="right">2008</td>
-<td align="right">10.843862</td>
-<td align="right">0.0263793</td>
-<td align="right">1.9670000</td>
-<td align="right">0.3232069</td>
+<td align="right">10.844</td>
+<td align="right">0.026</td>
+<td align="right">1.967</td>
+<td align="right">0.323</td>
 </tr>
 <tr class="even">
 <td align="right">2009</td>
-<td align="right">9.916679</td>
-<td align="right">0.0255357</td>
-<td align="right">1.6744286</td>
-<td align="right">0.3003214</td>
+<td align="right">9.917</td>
+<td align="right">0.026</td>
+<td align="right">1.674</td>
+<td align="right">0.300</td>
 </tr>
 <tr class="odd">
 <td align="right">2010</td>
-<td align="right">10.668167</td>
-<td align="right">0.0272667</td>
-<td align="right">1.4239667</td>
-<td align="right">0.3099333</td>
+<td align="right">10.668</td>
+<td align="right">0.027</td>
+<td align="right">1.424</td>
+<td align="right">0.310</td>
 </tr>
 <tr class="even">
 <td align="right">2011</td>
-<td align="right">10.971667</td>
-<td align="right">0.0268611</td>
-<td align="right">1.2288056</td>
-<td align="right">0.2875000</td>
+<td align="right">10.972</td>
+<td align="right">0.027</td>
+<td align="right">1.229</td>
+<td align="right">0.288</td>
 </tr>
 <tr class="odd">
 <td align="right">2012</td>
-<td align="right">10.445514</td>
-<td align="right">0.0280571</td>
-<td align="right">0.9306000</td>
-<td align="right">0.2916286</td>
+<td align="right">10.446</td>
+<td align="right">0.028</td>
+<td align="right">0.931</td>
+<td align="right">0.292</td>
 </tr>
 <tr class="even">
 <td align="right">2013</td>
-<td align="right">10.187526</td>
-<td align="right">0.0259737</td>
-<td align="right">0.9171053</td>
-<td align="right">0.2610789</td>
+<td align="right">10.188</td>
+<td align="right">0.026</td>
+<td align="right">0.917</td>
+<td align="right">0.261</td>
 </tr>
 <tr class="odd">
 <td align="right">2014</td>
-<td align="right">9.591073</td>
-<td align="right">0.0258780</td>
-<td align="right">1.0114878</td>
-<td align="right">0.2597317</td>
+<td align="right">9.591</td>
+<td align="right">0.026</td>
+<td align="right">1.011</td>
+<td align="right">0.260</td>
 </tr>
 <tr class="even">
 <td align="right">2015</td>
-<td align="right">9.253191</td>
-<td align="right">0.0259762</td>
-<td align="right">0.8508333</td>
-<td align="right">0.2652381</td>
+<td align="right">9.253</td>
+<td align="right">0.026</td>
+<td align="right">0.851</td>
+<td align="right">0.265</td>
 </tr>
 <tr class="odd">
 <td align="right">2016</td>
-<td align="right">10.988235</td>
-<td align="right">0.0262941</td>
-<td align="right">0.6460588</td>
-<td align="right">0.2801471</td>
+<td align="right">10.988</td>
+<td align="right">0.026</td>
+<td align="right">0.646</td>
+<td align="right">0.280</td>
 </tr>
 </tbody>
 </table>
@@ -585,7 +586,9 @@ modified_pollution %&gt;%
 </tr>
 </tbody>
 </table>
-<p>Comparing Distributions of Pollutant Concentrations</p>
+</div>
+<div id="comparing-distributions-of-pollutant-concentrations" class="section level1">
+<h1>Comparing Distributions of Pollutant Concentrations</h1>
 <pre class="r"><code>modified_pollution %&gt;% 
   pivot_longer(
     no2:co,
@@ -621,8 +624,8 @@ modified_pollution %&gt;%
   ) </code></pre>
 <p><img src="exploratory-analysis_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
 </div>
-<div id="exploring-trends-in-death-from-lung-cancer" class="section level2">
-<h2>Exploring Trends in Death From Lung Cancer</h2>
+<div id="exploring-trends-in-death-from-lung-cancer" class="section level1">
+<h1>Exploring Trends in Death From Lung Cancer</h1>
 <pre class="r"><code>read_death_time =
   read_excel(&quot;data/DeathTrend.xlsx&quot;, 
              skip = 6) %&gt;%
@@ -710,8 +713,9 @@ for (i in pollutant_variables) {
   
 }</code></pre>
 <p><img src="exploratory-analysis_files/figure-html/unnamed-chunk-10-1.png" width="672" /><img src="exploratory-analysis_files/figure-html/unnamed-chunk-10-2.png" width="672" /><img src="exploratory-analysis_files/figure-html/unnamed-chunk-10-3.png" width="672" /><img src="exploratory-analysis_files/figure-html/unnamed-chunk-10-4.png" width="672" /></p>
-<div id="exploring-incidence-of-lung-cancer" class="section level3">
-<h3>Exploring Incidence of Lung Cancer</h3>
+</div>
+<div id="exploring-incidence-of-lung-cancer" class="section level1">
+<h1>Exploring Incidence of Lung Cancer</h1>
 <pre class="r"><code>g = list(
   scope = &#39;usa&#39;,
   projection = list(type = &#39;albers usa&#39;),
@@ -756,9 +760,8 @@ inc_state %&gt;%
     title = &quot;Distribution of Lung and Bronchus Cancer Incidence Rate by State in 2013-2017&quot;,
     geo = g
   )</code></pre>
-<div id="htmlwidget-1d6380f3fa8a585c5265" style="width:672px;height:480px;" class="plotly html-widget"></div>
-<script type="application/json" data-for="htmlwidget-1d6380f3fa8a585c5265">{"x":{"visdat":{"43503ef63253":["function () ","plotlyVisDat"]},"cur_data":"43503ef63253","attrs":{"43503ef63253":{"locationmode":"USA-states","alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"z":{},"text":{},"locations":{},"color":{},"colors":"viridis","inherit":true}},"layout":{"margin":{"b":40,"l":60,"t":25,"r":10},"mapType":"geo","scene":{"zaxis":{"title":"lung_and_bronchus_both_sexes_combined"}},"geo":{"domain":{"x":[0,1],"y":[0,1]},"scope":"usa","projection":{"type":"albers usa"},"showlakes":true,"lakecolor":"rgba(255,255,255,1)"},"hovermode":"closest","showlegend":false,"legend":{"yanchor":"top","y":0.5},"title":"Distribution of Lung and Bronchus Cancer Incidence Rate by State in 2013-2017"},"source":"A","config":{"modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"data":[{"colorbar":{"title":"Incidence Rate","ticklen":2,"len":0.5,"lenmode":"fraction","y":1,"yanchor":"top"},"colorscale":[["0","rgba(68,1,84,1)"],["0.0416666666666667","rgba(71,17,100,1)"],["0.0833333333333334","rgba(72,31,112,1)"],["0.125","rgba(71,45,123,1)"],["0.166666666666667","rgba(68,58,131,1)"],["0.208333333333333","rgba(64,70,136,1)"],["0.25","rgba(59,82,139,1)"],["0.291666666666667","rgba(54,93,141,1)"],["0.333333333333333","rgba(49,104,142,1)"],["0.375","rgba(44,114,142,1)"],["0.416666666666667","rgba(40,124,142,1)"],["0.458333333333333","rgba(36,134,142,1)"],["0.5","rgba(33,144,141,1)"],["0.541666666666667","rgba(31,154,138,1)"],["0.583333333333333","rgba(32,164,134,1)"],["0.625","rgba(39,173,129,1)"],["0.666666666666667","rgba(53,183,121,1)"],["0.708333333333333","rgba(71,193,110,1)"],["0.75","rgba(93,200,99,1)"],["0.791666666666667","rgba(117,208,84,1)"],["0.833333333333333","rgba(143,214,68,1)"],["0.875","rgba(170,220,50,1)"],["0.916666666666667","rgba(199,224,32,1)"],["0.958333333333333","rgba(227,228,24,1)"],["1","rgba(253,231,37,1)"]],"showscale":true,"locationmode":"USA-states","z":[64.8,55.8,46.7,77.2,41.5,41.4,59.6,66.9,57.7,62.8,45.7,49.5,63.7,72.2,63.3,56.2,91,66.2,72.1,56.4,61.6,63.3,56.1,74.9,72,53.7,57,63.7,55.3,38.5,58.7,67.7,57.7,67.8,67.4,54.1,63.5,69.4,64.4,59,74.5,50.6,26,61.1,56.4,54,79.8,59.1,42.2],"text":["Alabama","Alaska","Arizona","Arkansas","California","Colorado","Connecticut","Delaware","Florida","Georgia","Hawaii","Idaho","Illinois","Indiana","Iowa","Kansas","Kentucky","Louisiana","Maine","Maryland","Massachusetts","Michigan","Minnesota","Mississippi","Missouri","Montana","Nebraska","New Hampshire","New Jersey","New Mexico","New York","North Carolina","North Dakota","Ohio","Oklahoma","Oregon","Pennsylvania","Rhode Island","South Carolina","South Dakota","Tennessee","Texas","Utah","Vermont","Virginia","Washington","West Virginia","Wisconsin","Wyoming"],"locations":["AL","AK","AZ","AR","CA","CO","CT","DE","FL","GA","HI","ID","IL","IN","IA","KS","KY","LA","ME","MD","MA","MI","MN","MS","MO","MT","NE","NH","NJ","NM","NY","NC","ND","OH","OK","OR","PA","RI","SC","SD","TN","TX","UT","VT","VA","WA","WV","WI","WY"],"type":"choropleth","marker":{"line":{"colorbar":{"title":"","ticklen":2},"cmin":26,"cmax":91,"colorscale":[["0","rgba(68,1,84,1)"],["0.0416666666666667","rgba(71,17,100,1)"],["0.0833333333333334","rgba(72,31,112,1)"],["0.125","rgba(71,45,123,1)"],["0.166666666666667","rgba(68,58,131,1)"],["0.208333333333333","rgba(64,70,136,1)"],["0.25","rgba(59,82,139,1)"],["0.291666666666667","rgba(54,93,141,1)"],["0.333333333333333","rgba(49,104,142,1)"],["0.375","rgba(44,114,142,1)"],["0.416666666666667","rgba(40,124,142,1)"],["0.458333333333333","rgba(36,134,142,1)"],["0.5","rgba(33,144,141,1)"],["0.541666666666667","rgba(31,154,138,1)"],["0.583333333333333","rgba(32,164,134,1)"],["0.625","rgba(39,173,129,1)"],["0.666666666666667","rgba(53,183,121,1)"],["0.708333333333333","rgba(71,193,110,1)"],["0.75","rgba(93,200,99,1)"],["0.791666666666667","rgba(117,208,84,1)"],["0.833333333333333","rgba(143,214,68,1)"],["0.875","rgba(170,220,50,1)"],["0.916666666666667","rgba(199,224,32,1)"],["0.958333333333333","rgba(227,228,24,1)"],["1","rgba(253,231,37,1)"]],"showscale":false,"color":[64.8,55.8,46.7,77.2,41.5,41.4,59.6,66.9,57.7,62.8,45.7,49.5,63.7,72.2,63.3,56.2,91,66.2,72.1,56.4,61.6,63.3,56.1,74.9,72,53.7,57,63.7,55.3,38.5,58.7,67.7,57.7,67.8,67.4,54.1,63.5,69.4,64.4,59,74.5,50.6,26,61.1,56.4,54,79.8,59.1,42.2]}},"geo":"geo","frame":null}],"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.2,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
-</div>
+<div id="htmlwidget-8c747c3c7d4a99264f4e" style="width:672px;height:480px;" class="plotly html-widget"></div>
+<script type="application/json" data-for="htmlwidget-8c747c3c7d4a99264f4e">{"x":{"visdat":{"39984b14799e":["function () ","plotlyVisDat"]},"cur_data":"39984b14799e","attrs":{"39984b14799e":{"locationmode":"USA-states","alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"z":{},"text":{},"locations":{},"color":{},"colors":"viridis","inherit":true}},"layout":{"margin":{"b":40,"l":60,"t":25,"r":10},"mapType":"geo","scene":{"zaxis":{"title":"lung_and_bronchus_both_sexes_combined"}},"geo":{"domain":{"x":[0,1],"y":[0,1]},"scope":"usa","projection":{"type":"albers usa"},"showlakes":true,"lakecolor":"rgba(255,255,255,1)"},"hovermode":"closest","showlegend":false,"legend":{"yanchor":"top","y":0.5},"title":"Distribution of Lung and Bronchus Cancer Incidence Rate by State in 2013-2017"},"source":"A","config":{"modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"data":[{"colorbar":{"title":"Incidence Rate","ticklen":2,"len":0.5,"lenmode":"fraction","y":1,"yanchor":"top"},"colorscale":[["0","rgba(68,1,84,1)"],["0.0416666666666667","rgba(71,17,100,1)"],["0.0833333333333334","rgba(72,31,112,1)"],["0.125","rgba(71,45,123,1)"],["0.166666666666667","rgba(68,58,131,1)"],["0.208333333333333","rgba(64,70,136,1)"],["0.25","rgba(59,82,139,1)"],["0.291666666666667","rgba(54,93,141,1)"],["0.333333333333333","rgba(49,104,142,1)"],["0.375","rgba(44,114,142,1)"],["0.416666666666667","rgba(40,124,142,1)"],["0.458333333333333","rgba(36,134,142,1)"],["0.5","rgba(33,144,141,1)"],["0.541666666666667","rgba(31,154,138,1)"],["0.583333333333333","rgba(32,164,134,1)"],["0.625","rgba(39,173,129,1)"],["0.666666666666667","rgba(53,183,121,1)"],["0.708333333333333","rgba(71,193,110,1)"],["0.75","rgba(93,200,99,1)"],["0.791666666666667","rgba(117,208,84,1)"],["0.833333333333333","rgba(143,214,68,1)"],["0.875","rgba(170,220,50,1)"],["0.916666666666667","rgba(199,224,32,1)"],["0.958333333333333","rgba(227,228,24,1)"],["1","rgba(253,231,37,1)"]],"showscale":true,"locationmode":"USA-states","z":[64.8,55.8,46.7,77.2,41.5,41.4,59.6,66.9,57.7,62.8,45.7,49.5,63.7,72.2,63.3,56.2,91,66.2,72.1,56.4,61.6,63.3,56.1,74.9,72,53.7,57,63.7,55.3,38.5,58.7,67.7,57.7,67.8,67.4,54.1,63.5,69.4,64.4,59,74.5,50.6,26,61.1,56.4,54,79.8,59.1,42.2],"text":["Alabama","Alaska","Arizona","Arkansas","California","Colorado","Connecticut","Delaware","Florida","Georgia","Hawaii","Idaho","Illinois","Indiana","Iowa","Kansas","Kentucky","Louisiana","Maine","Maryland","Massachusetts","Michigan","Minnesota","Mississippi","Missouri","Montana","Nebraska","New Hampshire","New Jersey","New Mexico","New York","North Carolina","North Dakota","Ohio","Oklahoma","Oregon","Pennsylvania","Rhode Island","South Carolina","South Dakota","Tennessee","Texas","Utah","Vermont","Virginia","Washington","West Virginia","Wisconsin","Wyoming"],"locations":["AL","AK","AZ","AR","CA","CO","CT","DE","FL","GA","HI","ID","IL","IN","IA","KS","KY","LA","ME","MD","MA","MI","MN","MS","MO","MT","NE","NH","NJ","NM","NY","NC","ND","OH","OK","OR","PA","RI","SC","SD","TN","TX","UT","VT","VA","WA","WV","WI","WY"],"type":"choropleth","marker":{"line":{"colorbar":{"title":"","ticklen":2},"cmin":26,"cmax":91,"colorscale":[["0","rgba(68,1,84,1)"],["0.0416666666666667","rgba(71,17,100,1)"],["0.0833333333333334","rgba(72,31,112,1)"],["0.125","rgba(71,45,123,1)"],["0.166666666666667","rgba(68,58,131,1)"],["0.208333333333333","rgba(64,70,136,1)"],["0.25","rgba(59,82,139,1)"],["0.291666666666667","rgba(54,93,141,1)"],["0.333333333333333","rgba(49,104,142,1)"],["0.375","rgba(44,114,142,1)"],["0.416666666666667","rgba(40,124,142,1)"],["0.458333333333333","rgba(36,134,142,1)"],["0.5","rgba(33,144,141,1)"],["0.541666666666667","rgba(31,154,138,1)"],["0.583333333333333","rgba(32,164,134,1)"],["0.625","rgba(39,173,129,1)"],["0.666666666666667","rgba(53,183,121,1)"],["0.708333333333333","rgba(71,193,110,1)"],["0.75","rgba(93,200,99,1)"],["0.791666666666667","rgba(117,208,84,1)"],["0.833333333333333","rgba(143,214,68,1)"],["0.875","rgba(170,220,50,1)"],["0.916666666666667","rgba(199,224,32,1)"],["0.958333333333333","rgba(227,228,24,1)"],["1","rgba(253,231,37,1)"]],"showscale":false,"color":[64.8,55.8,46.7,77.2,41.5,41.4,59.6,66.9,57.7,62.8,45.7,49.5,63.7,72.2,63.3,56.2,91,66.2,72.1,56.4,61.6,63.3,56.1,74.9,72,53.7,57,63.7,55.3,38.5,58.7,67.7,57.7,67.8,67.4,54.1,63.5,69.4,64.4,59,74.5,50.6,26,61.1,56.4,54,79.8,59.1,42.2]}},"geo":"geo","frame":null}],"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.2,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
 </div>
 
 

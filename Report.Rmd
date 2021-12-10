@@ -10,16 +10,12 @@ output:
 
 &nbsp;
 
-### **Report**
+
+# Motivation
 
 &nbsp;
 
-
-### Motivation
-
-&nbsp;
-
-#### Background and Related Works
+## Background and Related Works
 
 
 Given the rapid progression of climate change, we have seen widespread effects on the environment, in which long-term exposure subsequently have harmful health effects that is a cause for public health concern. Major air pollutants have serious adverse effects on population health and has been linked by substantial evidence to be a large contributor to an increased burden of cancer.
@@ -30,7 +26,7 @@ Lung cancer is the currently the leading cause of cancer-related mortality and m
 
 &nbsp;
 
-#### Project Motivations
+## Project Motivations
 
 Current research and trends clearly demonstrate that air pollution is associated with the increase in both incidence and mortality for certain cancers.  Thus, we will to take a closer look at trends of levels of major air pollutants that are of major public health concern [as declared by the WHO](https://www.who.int/health-topics/air-pollution#tab=tab_1): NO2, SO2, CO and 03, and compare these trends to incidence and mortality of lung, liver and pancreatic cancer data by state, with respect to time. 
 
@@ -48,26 +44,26 @@ Turner et.al (2020): Air Pollution-Related Cancer: Potential Pathways and Mechan
 
 &nbsp;
 
-### Research Questions 
+# Research Questions 
 
 Some ideas for the questions, not definite
 
 - What is the relationship between incidence rate and mortality rate of different types of cancer?
 - What has been the general trend of cancer incidence, cancer mortality, and pollution levels over time?
-- What is the geographical spread of cancer rates and pollution levels look like in US?
-- Is there any evidence of association between cancer rates and air pollution?
+- What is the geographical spread of cancer incidence and pollution levels in US?
+- Is there any evidence of association between cancer incidence (especially lung cancer) and air pollution?
 
 &nbsp;
 
-### Data 
+# Data 
 
-#### Data Source
+## Data Source
 
 Our project consists of data from two main sources: 
 
 Regarding cancer statistics, we retrieved data from [American Cancer Society Cancer Statistics Center](https://cancerstatisticscenter.cancer.org/#!/). Raw data sets were available for download in excel format. The three data sets give us information on aggregated mortality and incidence rates from 2013 to 2017, aggregated mortality and incidence rates of various cancers at the state level from 2013 to 2017, and trends of mortality related to various cancers over time from 1930 to 2018. According to the file and website, the data source is the North American Association of Central Cancer registries. 
 
-*Cancer Data Code:*
+### *Cancer Data Code:*
 
 Average annual rate per 100,000, age adjusted to the 2000 US standard population.
 
@@ -100,7 +96,7 @@ We focused our analyses on the mean values of 4 major pollutants:
 - **Carbon Monoxide (CO)** : measured in parts per million
 - **Ozone (O3)** : measured in parts per million
 
-*Pollution Data Code:*
+### *Pollution Data Code:*
 
 - `State Code `: The code allocated by US EPA to each state
 - `County code` : The code of counties in a specific state allocated by US EPA
@@ -120,7 +116,7 @@ We focused our analyses on the mean values of 4 major pollutants:
   - `1st Max Hour` : The hour when the maximum pollutant concentration was recorded in a given day
 
 
-#### Data Cleaning
+## Data Cleaning
 
 The pollution data was cleaned to have year, state, and the mean values of the 4 pollutants. In order to match the time period of the pollution data, the mortality trend data was cleaned to have observations from 2000 to 2016 only. 
 
@@ -128,7 +124,7 @@ Cancer incidence and mortality data sets were more difficult to clean for analys
 
 &nbsp;
 
-### Exploratory Analysis
+# Exploratory Analysis
 
 For visual plots, check out [Exploratory Analysis](exploratory-analysis.html)!
 
@@ -136,22 +132,22 @@ For visual plots, check out [Exploratory Analysis](exploratory-analysis.html)!
 
 &nbsp;
 
-### Regression Analysis
+# Regression Analysis
 
 &nbsp;
 
-### Discussion
+# Discussion
 
 In light of our exploratory and regressed analysis, we attained the following insights:
 
 
-#### Limitations and Challenges
+## Limitations and Challenges
 
 
 
 &nbsp;
 
-### Conclusions
+# Conclusions
 
 
 
