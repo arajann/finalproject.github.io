@@ -4,8 +4,7 @@ output:
   html_document:
     toc: true
     toc_float: true
-
-
+    code_folding: hide
 ---
 
 &nbsp;
@@ -118,9 +117,115 @@ We focused our analyses on the mean values of 4 major pollutants:
 
 ## Data Cleaning
 
-The pollution data was cleaned to have year, state, and the mean values of the 4 pollutants. In order to match the time period of the pollution data, the mortality trend data was cleaned to have observations from 2000 to 2016 only. 
+The pollution data was cleaned to have year, state, and the mean values of the 4 pollutants as main variables. Furthermore, observations from `Country of Mexico` was excluded to match available state data from cancer mortality trend dataset. 
 
-Cancer incidence and mortality data sets were more difficult to clean for analysis as some observation values included notes along with their numeric values.
+```{r include = FALSE}
+library(tidyverse)
+library(readxl)
+knitr::opts_chunk$set(warning = FALSE, message = FALSE) 
+```
+
+```{r pollution data cleaning example}
+pollution = read_csv("data/uspollution_us_2000_2016.csv") %>% 
+  janitor::clean_names() %>%
+  select(state, date_local, no2_mean, o3_mean, 
+         so2_mean, co_mean) %>%
+  separate(date_local, into = c("year", "month", "day"), sep = "\\-") %>%
+  select(-c("month", "day")) %>%
+  group_by(year, state) %>%
+  summarize(across(everything(), mean)) %>%
+  mutate_if(is.numeric, ~round(., 3)) %>%
+  filter(state != "Country Of Mexico") %>% 
+  mutate(
+    year = as.numeric(year)
+  )
+```
+
+
+Additionally, to explore the relationship among different pollutant levels and cancer incidence, especially lung cancer, another version of pollution data aggregated to have mean pollutant levels from 2013 to 2017 collectively was prepared.
+
+```{r pollution 2013-2017 cleaning example}
+pollution1 =
+  pollution %>% 
+  filter(
+    year %in% (2013:2017)
+  ) %>% 
+  ungroup() %>% 
+  select(state:co_mean) %>% 
+  group_by(state) %>% 
+  summarize(
+    no2 = mean(no2_mean),
+    o3 = mean(o3_mean),
+    so2 = mean(so2_mean),
+    co = mean(co_mean)
+  ) %>%
+  mutate_if(is.numeric, ~round(., 3))
+```
+
+
+In order to match the time period of the pollution data containing observations from 2000 to 2016, the mortality trend data was cleaned to have observations from 2000 to 2016 only as well. Moreover, our function `remove_note` allowed cleaning observation points with notes added to only have the numeric value.
+
+```{r death trend data cleaning example}
+read_death_time =
+  read_excel("data/DeathTrend.xlsx", 
+             skip = 6) %>%
+  janitor::clean_names()
+
+x = c("colorectum_female", "colorectum_male", "liver_and_intrahepatic_bile_duct_female", "liver_and_intrahepatic_bile_duct_male", "lung_and_bronchus_female", "lung_and_bronchus_male", "ovary_female", "uterus_cervix_and_corpus_combined_female")
+
+remove_note = function(column_name) {
+  read_death_time = read_death_time %>% 
+    separate(column_name, into = c(column_name, "note"), sep = "\\-") %>% 
+    select(-note)}
+
+for (i in x) {
+  read_death_time = remove_note(i)} 
+
+death_time =
+  read_death_time %>%
+  filter(year %in% 2000:2016) %>%
+  select(-c("breast_male", "ovary_male", "prostate_female","uterus_cervix_and_corpus_combined_male")) %>%
+  mutate_at(vars(-("year")), as.numeric) %>%
+  mutate(year = as.factor(year))
+  
+```
+
+Cancer incidence and mortality datasets per state and per cancer types were similarly cleaned to have only the numeric observation values. More specifically for data per cancer type, the incidence rates for the `Colon (excluding rectum)` and `Rectum` were excluded to match similarly formatted death rate per cancer type dataset. Also, observations for `Puerto Rico` were excluded from incidence and death rate per state dataset to match the state variable available in the pollution dataset. 
+
+```{r inc per cancer type and per state data cleaning example}
+inc_cancer =
+  read_excel("data/IncRate.xlsx", sheet = "All US", 
+             skip = 6) %>%
+  janitor::clean_names() %>% 
+  mutate(
+    male = if_else(male == "n/a", "0", male),
+    female = if_else(female == "n/a", "0", female)
+  ) %>%
+  separate(both_sexes_combined, into = c("both_sexes_combined", "note"), sep = "\\-") %>%
+  select(-note) %>%
+  mutate_at(vars(-("cancer_type")), as.numeric) %>%
+  filter(cancer_type != "Colon (excluding rectum)",
+         cancer_type != "Rectum")
+
+inc_state =
+  read_excel("data/IncRate.xlsx", sheet = "State", 
+             skip = 6) %>%
+  janitor::clean_names() %>% 
+  separate(
+    col = breast_both_sexes_combined,
+    into = c("breast_total", "female_breast_only"),
+    sep = "-"
+  ) %>% 
+  mutate(
+    breast_male = if_else(breast_male == "n/a", "0", breast_male),
+    cervix_male = if_else(cervix_male == "n/a", "0", cervix_male),
+    colon_excluding_rectum_both_sexes_combined = if_else(colon_excluding_rectum_both_sexes_combined == "n/a", "0", colon_excluding_rectum_both_sexes_combined),
+    colon_excluding_rectum_female = if_else(colon_excluding_rectum_female == "n/a", "0", colon_excluding_rectum_female),
+    colon_excluding_rectum_male = if_else(colon_excluding_rectum_male == "n/a", "0", colon_excluding_rectum_male),
+  ) %>%
+  filter(state != "Puerto Rico") %>%
+  select(-c("female_breast_only", starts_with("colon"), starts_with("rectum")))
+```
 
 &nbsp;
 
@@ -128,7 +233,7 @@ Cancer incidence and mortality data sets were more difficult to clean for analys
 
 For visual plots, check out [Exploratory Analysis](exploratory-analysis.html)!
 
-
+To explore 
 
 &nbsp;
 
