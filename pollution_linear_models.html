@@ -33,6 +33,7 @@
 <link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
 <script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
 <link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
 <link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
@@ -220,6 +221,9 @@ $(document).ready(function () {
 </style>
 
 <!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
 
 
 
@@ -350,6 +354,14 @@ div.tocify {
 
 <div id="header">
 
+<div class="btn-group pull-right float-right">
+<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu dropdown-menu-right" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
+
 
 
 <h1 class="title toc-ignore">Model Building for Lung Cancer</h1>
@@ -412,7 +424,7 @@ div.tocify {
 <p>Let’s begin by exploring each pollutant to see if there exists linear relationship between the pollutant concentration and incidence of lung cancer</p>
 <pre class="r"><code>continuous_variables =
   pollution_incidence %&gt;% 
-  select(is.numeric) %&gt;% 
+  select(where(is.numeric)) %&gt;% 
   select(-lung_and_bronchus_both_sexes_combined,-lung_and_bronchus_female, -lung_and_bronchus_male) %&gt;% 
   colnames() %&gt;% 
   as.vector()</code></pre>
@@ -434,11 +446,12 @@ for (i in continuous_variables) {
 }</code></pre>
 <p><img src="pollution_linear_models_files/figure-html/unnamed-chunk-4-1.png" width="672" /><img src="pollution_linear_models_files/figure-html/unnamed-chunk-4-2.png" width="672" /><img src="pollution_linear_models_files/figure-html/unnamed-chunk-4-3.png" width="672" /><img src="pollution_linear_models_files/figure-html/unnamed-chunk-4-4.png" width="672" /></p>
 <p>Well, this is not the best start. From reviewing the scatter plots, none of the pollutants show a particularly strong linear relationship with incidence of lung cancer. Each plot has a linear model fitted, but as we can see none of the linear associations are strong, however we will proceed forward with a model that includes all the pollutants.The lack of strong linear association will be noted in the final discussion of the prediction accuracy of the fitted model.</p>
-<pre class="r"><code>fitted_model = lm(lung_and_bronchus_both_sexes_combined ~ no2 + o3 + so2 + co, data = pollution_incidence)</code></pre>
+<pre class="r"><code>fitted_model = lm(lung_and_bronchus_both_sexes_combined ~ no2 + o3 + so2 + co, 
+                  data = pollution_incidence)</code></pre>
 <pre class="r"><code>fitted_model %&gt;% 
   broom::tidy() %&gt;% 
   select(term, estimate,p.value) %&gt;%
-  knitr::kable(digits=3)</code></pre>
+  knitr::kable(digits = 3)</code></pre>
 <table>
 <thead>
 <tr class="header">
@@ -477,7 +490,7 @@ for (i in continuous_variables) {
 </table>
 <pre class="r"><code>fitted_model %&gt;% 
   broom::glance() %&gt;% 
-   knitr::kable(digits=3)</code></pre>
+   knitr::kable(digits = 3)</code></pre>
 <table>
 <colgroup>
 <col width="9%" />
@@ -530,15 +543,15 @@ for (i in continuous_variables) {
 <pre class="r"><code>pollution_incidence %&gt;% 
   add_residuals(fitted_model) %&gt;% 
   add_predictions(fitted_model) %&gt;% 
-  ggplot(aes(x=pred, y=resid)) +
+  ggplot(aes(x = pred, y = resid)) +
   geom_point() +
   geom_smooth(method = &quot;lm&quot;, se = FALSE) +
   labs(
-    title= &quot;Predictions vs Residuals plot&quot;,
-    x=&quot;Predictions&quot;,
-    y=&quot;Residuals&quot;
+    title = &quot;Predictions vs Residuals plot&quot;,
+    x = &quot;Predictions&quot;,
+    y = &quot;Residuals&quot;
   ) +
-  scale_color_viridis(discrete=TRUE) +
+  scale_color_viridis(discrete = TRUE) +
   theme_bw()</code></pre>
 <p><img src="pollution_linear_models_files/figure-html/unnamed-chunk-8-1.png" width="672" /> The plot indicates a random scatter of residuals. Therefore, the assumption of homescedasticity is not violated.</p>
 </div>
@@ -552,15 +565,18 @@ comparison_model2 = lm(lung_and_bronchus_both_sexes_combined ~ no2 + co, data = 
 cv_df =
   cv_df %&gt;% 
   mutate(
-    train=map(train,as_tibble),
-    test=map(test,as_tibble)
+    train = map(train,as_tibble),
+    test = map(test,as_tibble)
   )</code></pre>
 <pre class="r"><code>cv_df = 
   cv_df %&gt;% 
   mutate(
-    fitted_model = map(train, ~lm(lung_and_bronchus_both_sexes_combined ~ no2 + o3 + so2 + co, data = pollution_incidence)),
-    comparison_model = map(train, ~lm(lung_and_bronchus_both_sexes_combined ~ o3 + so2, data = pollution_incidence)),
-    comparison_model2  = map(train, ~lm(lung_and_bronchus_both_sexes_combined ~ no2 + co, data = pollution_incidence))) %&gt;% 
+    fitted_model = map(train, ~lm(lung_and_bronchus_both_sexes_combined ~ no2 + o3 + so2 + co, 
+                                  data = pollution_incidence)),
+    comparison_model = map(train, ~lm(lung_and_bronchus_both_sexes_combined ~ o3 + so2, 
+                                      data = pollution_incidence)),
+    comparison_model2  = map(train, ~lm(lung_and_bronchus_both_sexes_combined ~ no2 + co, 
+                                        data = pollution_incidence))) %&gt;% 
   mutate(
     rmse_fitted_model = map2_dbl(fitted_model, test,~rmse(model=.x, data=.y)),
     rmse_comparison_model = map2_dbl(comparison_model, test, ~rmse(model=.x, data=.y)),
@@ -581,10 +597,10 @@ cv_df %&gt;%
 <div id="lung-cancer-incidnce-stratified-by-gender" class="section level3">
 <h3>Lung Cancer Incidnce Stratified by Gender</h3>
 <p>Female Model</p>
-<pre class="r"><code>female_model = lm(lung_and_bronchus_female ~ no2 + o3 + so2 + co, data=pollution_incidence)</code></pre>
+<pre class="r"><code>female_model = lm(lung_and_bronchus_female ~ no2 + o3 + so2 + co, data = pollution_incidence)</code></pre>
 <pre class="r"><code>female_model %&gt;% 
   broom::tidy() %&gt;% 
-  knitr::kable(digits=3)</code></pre>
+  knitr::kable(digits = 3)</code></pre>
 <table>
 <thead>
 <tr class="header">
@@ -635,7 +651,7 @@ cv_df %&gt;%
 </table>
 <pre class="r"><code>female_model %&gt;% 
   broom::glance() %&gt;% 
-  knitr::kable(digits=3)</code></pre>
+  knitr::kable(digits = 3)</code></pre>
 <table>
 <colgroup>
 <col width="9%" />
@@ -685,10 +701,10 @@ cv_df %&gt;%
 </tbody>
 </table>
 <p>Male Model</p>
-<pre class="r"><code>male_model = lm(lung_and_bronchus_male ~ no2 + o3 + so2 + co, data=pollution_incidence) </code></pre>
+<pre class="r"><code>male_model = lm(lung_and_bronchus_male ~ no2 + o3 + so2 + co, data = pollution_incidence) </code></pre>
 <pre class="r"><code>male_model %&gt;%
   broom::tidy() %&gt;% 
-  knitr::kable(digits=3)</code></pre>
+  knitr::kable(digits = 3)</code></pre>
 <table>
 <thead>
 <tr class="header">
@@ -739,7 +755,7 @@ cv_df %&gt;%
 </table>
 <pre class="r"><code>male_model %&gt;%
   broom::glance() %&gt;% 
-  knitr::kable(digits=3)</code></pre>
+  knitr::kable(digits = 3)</code></pre>
 <table style="width:100%;">
 <colgroup>
 <col width="9%" />
@@ -827,6 +843,11 @@ $(document).ready(function () {
 </script>
 
 <!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
 
 <script>
 $(document).ready(function ()  {
