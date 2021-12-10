@@ -17,8 +17,13 @@ library(readxl)
 library(wesanderson)
 library(viridis)
 library(plotly) 
+library(patchwork)
         
-knitr::opts_chunk$set(warning = FALSE, message = FALSE)
+knitr::opts_chunk$set(warning = FALSE, 
+                      message = FALSE,
+                      fig.width = 8,
+                      fig.asp = .6,
+                      out.width = "90%")
     
 ```
 
@@ -53,6 +58,7 @@ modified_pollution =
 
 modified_pollution %>% 
   mutate_if(is.numeric, ~round(., 3)) %>%
+  rename("no2 (ppb)" = "no2", "o3 (ppm)" = "o3", "so2 (ppb)" = "so2", "co (ppm)" = "co") %>%
   knitr::kable(caption = "United States Pollutant Concentration from 2000-2016")
 ```
 
@@ -64,11 +70,15 @@ modified_pollution %>%
     names_to = "pollutant_type",
     values_to = "concentration"
   )  %>% 
-  group_by(pollutant_type) %>% 
+  mutate(measurement = case_when(
+    pollutant_type %in% c("no2", "so2") ~ "ppb",
+    pollutant_type %in% c("co", "o3") ~ "ppm")) %>%
+   group_by(pollutant_type, measurement) %>% 
    summarize(
     mean_concentration = mean(concentration),
     median_concentration = median(concentration),
     sd_concentration = sd(concentration)) %>% 
+  arrange(measurement) %>%
   knitr::kable(digits = 3)
 ```
 
@@ -79,41 +89,81 @@ modified_pollution %>%
 # Comparing Distributions of Pollutant Concentrations 
 
 ```{r}
-modified_pollution %>% 
+ppb_plot =
+  modified_pollution %>% 
   pivot_longer(
     no2:co,
     names_to = "pollutant_type",
     values_to = "concentration"
   ) %>% 
   group_by(pollutant_type) %>% 
+  filter(pollutant_type %in% c("no2", "so2")) %>%
   ggplot(aes(x = pollutant_type, y = concentration)) + 
   geom_boxplot() +
   labs(
-    title = "Distribution of Concentration Values for each Pollutant Type",
     x = "Pollutant Type",
-    y = "Concentration(in ppm)"
-  ) +
-  scale_color_viridis(discrete = TRUE) +
-  theme_bw() 
-```
+    y = "Concentration (ppb)",) + theme_bw() 
 
-```{r}
-modified_pollution %>% 
+ppm_plot =
+   modified_pollution %>% 
   pivot_longer(
     no2:co,
     names_to = "pollutant_type",
     values_to = "concentration"
   ) %>% 
+  group_by(pollutant_type) %>% 
+  filter(pollutant_type %in% c("o3", "co")) %>%
+  ggplot(aes(x = pollutant_type, y = concentration)) + 
+  geom_boxplot() +
+  labs(
+    x = "Pollutant Type",
+    y = "Concentration (ppm)",) + theme_bw()
+
+ppb_plot + ppm_plot + plot_annotation(title = 
+                                        "Distribution of Concentration Values for each Pollutant Type")
+```
+
+```{r}
+ppm_point =
+  modified_pollution %>% 
+  pivot_longer(
+    no2:co,
+    names_to = "pollutant_type",
+    values_to = "concentration"
+  ) %>% 
+  filter(pollutant_type %in% c("o3", "co")) %>%
   ggplot(aes(x = year,y = concentration, group = pollutant_type, color = pollutant_type)) +
   geom_point() +
   geom_line() +
   scale_color_viridis(discrete = TRUE) +
   theme_bw() +
   labs(
-    title = "Trends in Polluntant Concentration in the US from 2000-2016",
+    title = "",
     x = "Year",
     y = "Pollutant Concentration(ppm)"
   ) 
+
+ppb_point =
+  modified_pollution %>% 
+  pivot_longer(
+    no2:co,
+    names_to = "pollutant_type",
+    values_to = "concentration"
+  ) %>% 
+  filter(pollutant_type %in% c("no2", "so2")) %>%
+  ggplot(aes(x = year,y = concentration, group = pollutant_type, color = pollutant_type)) +
+  geom_point() +
+  geom_line() +
+  scale_color_viridis(discrete = TRUE) +
+  theme_bw() +
+  labs(
+    title = "",
+    x = "Year",
+    y = "Pollutant Concentration(ppb)"
+  ) 
+
+ppb_point / ppm_point + plot_annotation(title = 
+                                        "Trends in Polluntant Concentration in the US from 2000-2016")
 ```
 
 &nbsp;
@@ -280,9 +330,11 @@ inc_state %>%
   ) %>% 
   colorbar(title = "Incidence Rate") %>% 
   layout(
-    title = "Distribution of Lung and Bronchus Cancer Incidence Rate by State in 2013-2017",
+    title = "Distribution of Lung/Bronchus Cancer Incidence Rate by State in 2013-2017",
     geo = g
   )
+
+
 ```
 
   

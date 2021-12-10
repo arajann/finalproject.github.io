@@ -7,8 +7,10 @@ output:
     code_folding: hide
 ---
 
-&nbsp;
 
+Anand Rajan (ar4173), Matt Neky (mjn2142), Joe Kim (jhk2201), Alyssa Watson (aw3253), Yoo Rim Oh (yo2336)
+
+&nbsp;
 
 # Motivation
 
@@ -19,17 +21,17 @@ output:
 
 Given the rapid progression of climate change, we have seen widespread effects on the environment, in which long-term exposure subsequently have harmful health effects that is a cause for public health concern. Major air pollutants have serious adverse effects on population health and has been linked by substantial evidence to be a large contributor to an increased burden of cancer.
 
-Common air pollutants are responsible for pervasive inflammation throughout the body ([NSW, 2021](https://www.health.nsw.gov.au/environment/air/Pages/outdoor-air-pollution.aspx)), and long-term exposure has been linked to increased mortality for all cancers, but particularly hazardous for cancers of the lung, liver, colorectal, bladder, kidney, and larynx ([Kim et. al, 2018](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6266691/)).
+Common air pollutants are responsible for pervasive inflammation throughout the body ([NSW, 2021](https://www.health.nsw.gov.au/environment/air/Pages/outdoor-air-pollution.aspx)), and long-term exposure has been linked to increased mortality for all cancers, but particularly hazardous for cancers of the lung cancer. ([Kim et. al, 2018](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6266691/)).
 
-Lung cancer is the currently the leading cause of cancer-related mortality and most commonly diagnosed. Liver cancer also accounts largely for a high number of cancer-related deaths (8.2%) behind lung and breast cancer ([Turner et.al, 2020](https://acsjournals.onlinelibrary.wiley.com/doi/10.3322/caac.21632)) while overall pancreatic cancer has increased for both men and women between 2013-2017 as reported in the [2021 National Cancer Institute Annual Report to the Nation](https://seer.cancer.gov/report_to_nation/infographics/trends_incidence.html).
+Lung cancer is the currently the leading cause of cancer-related mortality and the most commonly diagnosed ([Turner et.al, 2020](https://acsjournals.onlinelibrary.wiley.com/doi/10.3322/caac.21632)). In fact, further exposure to air pollution after lung cancer diagnosis shortens survival compared to those exposed to lower levels of air pollution ([Schiller et. al, 2020](https://ascopubs.org/doi/10.1200/OP.20.00609)).
 
 &nbsp;
 
 ## Project Motivations
 
-Current research and trends clearly demonstrate that air pollution is associated with the increase in both incidence and mortality for certain cancers.  Thus, we will to take a closer look at trends of levels of major air pollutants that are of major public health concern [as declared by the WHO](https://www.who.int/health-topics/air-pollution#tab=tab_1): NO2, SO2, CO and 03, and compare these trends to incidence and mortality of lung, liver and pancreatic cancer data by state, with respect to time. 
+Current research and trends clearly demonstrate that air pollution is associated with the increase in both incidence and mortality for certain cancers.  Thus, we will to take a closer look at trends of levels of major air pollutants that are of major public health concern [as declared by the WHO](https://www.who.int/health-topics/air-pollution#tab=tab_1): NO2, SO2, CO and 03, and compare these trends to incidence and mortality of lung cancer data by state, with respect to time. 
 
-Our motivation for this project is to more robustly investigate the aforementioned theories by further analyzing and evaluating the associations between pollutants and certain cancer types at the population level with respect to time.
+Our motivation for this project is to more robustly investigate the aforementioned theories by further analyzing and evaluating the associations between pollutants and lung cancer at the population level with respect to time.
 
 The implications of such an analysis can provide justification for further research on the effects of major air pollutants on cancer survival and motivate urgency for environmental policy to slow the progression of climate change to improve quality of life and deleterious consequences on population health. 
 
@@ -226,6 +228,8 @@ inc_state =
   filter(state != "Puerto Rico") %>%
   select(-c("female_breast_only", starts_with("colon"), starts_with("rectum")))
 ```
+
+These cleaned up datasets were further wrangled as needed for analysis.
 
 &nbsp;
 

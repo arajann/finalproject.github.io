@@ -404,16 +404,17 @@ div.tocify {
 
 modified_pollution %&gt;% 
   mutate_if(is.numeric, ~round(., 3)) %&gt;%
+  rename(&quot;no2 (ppb)&quot; = &quot;no2&quot;, &quot;o3 (ppm)&quot; = &quot;o3&quot;, &quot;so2 (ppb)&quot; = &quot;so2&quot;, &quot;co (ppm)&quot; = &quot;co&quot;) %&gt;%
   knitr::kable(caption = &quot;United States Pollutant Concentration from 2000-2016&quot;)</code></pre>
 <table>
 <caption>United States Pollutant Concentration from 2000-2016</caption>
 <thead>
 <tr class="header">
 <th align="right">year</th>
-<th align="right">no2</th>
-<th align="right">o3</th>
-<th align="right">so2</th>
-<th align="right">co</th>
+<th align="right">no2 (ppb)</th>
+<th align="right">o3 (ppm)</th>
+<th align="right">so2 (ppb)</th>
+<th align="right">co (ppm)</th>
 </tr>
 </thead>
 <tbody>
@@ -544,16 +545,28 @@ modified_pollution %&gt;%
     names_to = &quot;pollutant_type&quot;,
     values_to = &quot;concentration&quot;
   )  %&gt;% 
-  group_by(pollutant_type) %&gt;% 
+  mutate(measurement = case_when(
+    pollutant_type %in% c(&quot;no2&quot;, &quot;so2&quot;) ~ &quot;ppb&quot;,
+    pollutant_type %in% c(&quot;co&quot;, &quot;o3&quot;) ~ &quot;ppm&quot;)) %&gt;%
+   group_by(pollutant_type, measurement) %&gt;% 
    summarize(
     mean_concentration = mean(concentration),
     median_concentration = median(concentration),
     sd_concentration = sd(concentration)) %&gt;% 
+  arrange(measurement) %&gt;%
   knitr::kable(digits = 3)</code></pre>
 <table>
+<colgroup>
+<col width="17%" />
+<col width="14%" />
+<col width="22%" />
+<col width="25%" />
+<col width="20%" />
+</colgroup>
 <thead>
 <tr class="header">
 <th align="left">pollutant_type</th>
+<th align="left">measurement</th>
 <th align="right">mean_concentration</th>
 <th align="right">median_concentration</th>
 <th align="right">sd_concentration</th>
@@ -561,28 +574,32 @@ modified_pollution %&gt;%
 </thead>
 <tbody>
 <tr class="odd">
+<td align="left">no2</td>
+<td align="left">ppb</td>
+<td align="right">12.570</td>
+<td align="right">10.988</td>
+<td align="right">2.782</td>
+</tr>
+<tr class="even">
+<td align="left">so2</td>
+<td align="left">ppb</td>
+<td align="right">2.136</td>
+<td align="right">1.967</td>
+<td align="right">1.153</td>
+</tr>
+<tr class="odd">
 <td align="left">co</td>
+<td align="left">ppm</td>
 <td align="right">0.366</td>
 <td align="right">0.323</td>
 <td align="right">0.098</td>
 </tr>
 <tr class="even">
-<td align="left">no2</td>
-<td align="right">12.570</td>
-<td align="right">10.988</td>
-<td align="right">2.782</td>
-</tr>
-<tr class="odd">
 <td align="left">o3</td>
+<td align="left">ppm</td>
 <td align="right">0.026</td>
 <td align="right">0.026</td>
 <td align="right">0.001</td>
-</tr>
-<tr class="even">
-<td align="left">so2</td>
-<td align="right">2.136</td>
-<td align="right">1.967</td>
-<td align="right">1.153</td>
 </tr>
 </tbody>
 </table>
@@ -591,40 +608,80 @@ modified_pollution %&gt;%
 </div>
 <div id="comparing-distributions-of-pollutant-concentrations" class="section level1">
 <h1>Comparing Distributions of Pollutant Concentrations</h1>
-<pre class="r"><code>modified_pollution %&gt;% 
+<pre class="r"><code>ppb_plot =
+  modified_pollution %&gt;% 
   pivot_longer(
     no2:co,
     names_to = &quot;pollutant_type&quot;,
     values_to = &quot;concentration&quot;
   ) %&gt;% 
   group_by(pollutant_type) %&gt;% 
+  filter(pollutant_type %in% c(&quot;no2&quot;, &quot;so2&quot;)) %&gt;%
   ggplot(aes(x = pollutant_type, y = concentration)) + 
   geom_boxplot() +
   labs(
-    title = &quot;Distribution of Concentration Values for each Pollutant Type&quot;,
     x = &quot;Pollutant Type&quot;,
-    y = &quot;Concentration(in ppm)&quot;
-  ) +
-  scale_color_viridis(discrete = TRUE) +
-  theme_bw() </code></pre>
-<p><img src="exploratory-analysis_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
-<pre class="r"><code>modified_pollution %&gt;% 
+    y = &quot;Concentration (ppb)&quot;,) + theme_bw() 
+
+ppm_plot =
+   modified_pollution %&gt;% 
   pivot_longer(
     no2:co,
     names_to = &quot;pollutant_type&quot;,
     values_to = &quot;concentration&quot;
   ) %&gt;% 
+  group_by(pollutant_type) %&gt;% 
+  filter(pollutant_type %in% c(&quot;o3&quot;, &quot;co&quot;)) %&gt;%
+  ggplot(aes(x = pollutant_type, y = concentration)) + 
+  geom_boxplot() +
+  labs(
+    x = &quot;Pollutant Type&quot;,
+    y = &quot;Concentration (ppm)&quot;,) + theme_bw()
+
+ppb_plot + ppm_plot + plot_annotation(title = 
+                                        &quot;Distribution of Concentration Values for each Pollutant Type&quot;)</code></pre>
+<p><img src="exploratory-analysis_files/figure-html/unnamed-chunk-3-1.png" width="90%" /></p>
+<pre class="r"><code>ppm_point =
+  modified_pollution %&gt;% 
+  pivot_longer(
+    no2:co,
+    names_to = &quot;pollutant_type&quot;,
+    values_to = &quot;concentration&quot;
+  ) %&gt;% 
+  filter(pollutant_type %in% c(&quot;o3&quot;, &quot;co&quot;)) %&gt;%
   ggplot(aes(x = year,y = concentration, group = pollutant_type, color = pollutant_type)) +
   geom_point() +
   geom_line() +
   scale_color_viridis(discrete = TRUE) +
   theme_bw() +
   labs(
-    title = &quot;Trends in Polluntant Concentration in the US from 2000-2016&quot;,
+    title = &quot;&quot;,
     x = &quot;Year&quot;,
     y = &quot;Pollutant Concentration(ppm)&quot;
-  ) </code></pre>
-<p><img src="exploratory-analysis_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+  ) 
+
+ppb_point =
+  modified_pollution %&gt;% 
+  pivot_longer(
+    no2:co,
+    names_to = &quot;pollutant_type&quot;,
+    values_to = &quot;concentration&quot;
+  ) %&gt;% 
+  filter(pollutant_type %in% c(&quot;no2&quot;, &quot;so2&quot;)) %&gt;%
+  ggplot(aes(x = year,y = concentration, group = pollutant_type, color = pollutant_type)) +
+  geom_point() +
+  geom_line() +
+  scale_color_viridis(discrete = TRUE) +
+  theme_bw() +
+  labs(
+    title = &quot;&quot;,
+    x = &quot;Year&quot;,
+    y = &quot;Pollutant Concentration(ppb)&quot;
+  ) 
+
+ppb_point / ppm_point + plot_annotation(title = 
+                                        &quot;Trends in Polluntant Concentration in the US from 2000-2016&quot;)</code></pre>
+<p><img src="exploratory-analysis_files/figure-html/unnamed-chunk-4-1.png" width="90%" /></p>
 <p> </p>
 <hr />
 </div>
@@ -674,7 +731,7 @@ death_time =
     x = &quot;Year&quot;,
     y = &quot;Lung Cancer Death Rate(per 100,000)&quot;
   )</code></pre>
-<p><img src="exploratory-analysis_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+<p><img src="exploratory-analysis_files/figure-html/unnamed-chunk-6-1.png" width="90%" /></p>
 <p> </p>
 <hr />
 </div>
@@ -705,7 +762,7 @@ for (i in pollutant_variables) {
   print(plot)
   
 }</code></pre>
-<p><img src="exploratory-analysis_files/figure-html/unnamed-chunk-9-1.png" width="672" /><img src="exploratory-analysis_files/figure-html/unnamed-chunk-9-2.png" width="672" /><img src="exploratory-analysis_files/figure-html/unnamed-chunk-9-3.png" width="672" /><img src="exploratory-analysis_files/figure-html/unnamed-chunk-9-4.png" width="672" /></p>
+<p><img src="exploratory-analysis_files/figure-html/unnamed-chunk-9-1.png" width="90%" /><img src="exploratory-analysis_files/figure-html/unnamed-chunk-9-2.png" width="90%" /><img src="exploratory-analysis_files/figure-html/unnamed-chunk-9-3.png" width="90%" /><img src="exploratory-analysis_files/figure-html/unnamed-chunk-9-4.png" width="90%" /></p>
 <pre class="r"><code>for (i in pollutant_variables) {
   plot =
   ggplot(merged_death_pollution, aes_string(i,  &quot;lung_and_bronchus_female&quot;)) + 
@@ -718,7 +775,7 @@ for (i in pollutant_variables) {
   print(plot)
   
 }</code></pre>
-<p><img src="exploratory-analysis_files/figure-html/unnamed-chunk-10-1.png" width="672" /><img src="exploratory-analysis_files/figure-html/unnamed-chunk-10-2.png" width="672" /><img src="exploratory-analysis_files/figure-html/unnamed-chunk-10-3.png" width="672" /><img src="exploratory-analysis_files/figure-html/unnamed-chunk-10-4.png" width="672" /></p>
+<p><img src="exploratory-analysis_files/figure-html/unnamed-chunk-10-1.png" width="90%" /><img src="exploratory-analysis_files/figure-html/unnamed-chunk-10-2.png" width="90%" /><img src="exploratory-analysis_files/figure-html/unnamed-chunk-10-3.png" width="90%" /><img src="exploratory-analysis_files/figure-html/unnamed-chunk-10-4.png" width="90%" /></p>
 <hr />
 <p> </p>
 </div>
@@ -765,11 +822,11 @@ inc_state %&gt;%
   ) %&gt;% 
   colorbar(title = &quot;Incidence Rate&quot;) %&gt;% 
   layout(
-    title = &quot;Distribution of Lung and Bronchus Cancer Incidence Rate by State in 2013-2017&quot;,
+    title = &quot;Distribution of Lung/Bronchus Cancer Incidence Rate by State in 2013-2017&quot;,
     geo = g
   )</code></pre>
-<div id="htmlwidget-9e61a09b18e50a62c8aa" style="width:672px;height:480px;" class="plotly html-widget"></div>
-<script type="application/json" data-for="htmlwidget-9e61a09b18e50a62c8aa">{"x":{"visdat":{"1df44eef7bd8":["function () ","plotlyVisDat"]},"cur_data":"1df44eef7bd8","attrs":{"1df44eef7bd8":{"locationmode":"USA-states","alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"z":{},"text":{},"locations":{},"color":{},"colors":"viridis","inherit":true}},"layout":{"margin":{"b":40,"l":60,"t":25,"r":10},"mapType":"geo","scene":{"zaxis":{"title":"lung_and_bronchus_both_sexes_combined"}},"geo":{"domain":{"x":[0,1],"y":[0,1]},"scope":"usa","projection":{"type":"albers usa"},"showlakes":true,"lakecolor":"rgba(255,255,255,1)"},"hovermode":"closest","showlegend":false,"legend":{"yanchor":"top","y":0.5},"title":"Distribution of Lung and Bronchus Cancer Incidence Rate by State in 2013-2017"},"source":"A","config":{"modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"data":[{"colorbar":{"title":"Incidence Rate","ticklen":2,"len":0.5,"lenmode":"fraction","y":1,"yanchor":"top"},"colorscale":[["0","rgba(68,1,84,1)"],["0.0416666666666667","rgba(71,17,100,1)"],["0.0833333333333334","rgba(72,31,112,1)"],["0.125","rgba(71,45,123,1)"],["0.166666666666667","rgba(68,58,131,1)"],["0.208333333333333","rgba(64,70,136,1)"],["0.25","rgba(59,82,139,1)"],["0.291666666666667","rgba(54,93,141,1)"],["0.333333333333333","rgba(49,104,142,1)"],["0.375","rgba(44,114,142,1)"],["0.416666666666667","rgba(40,124,142,1)"],["0.458333333333333","rgba(36,134,142,1)"],["0.5","rgba(33,144,141,1)"],["0.541666666666667","rgba(31,154,138,1)"],["0.583333333333333","rgba(32,164,134,1)"],["0.625","rgba(39,173,129,1)"],["0.666666666666667","rgba(53,183,121,1)"],["0.708333333333333","rgba(71,193,110,1)"],["0.75","rgba(93,200,99,1)"],["0.791666666666667","rgba(117,208,84,1)"],["0.833333333333333","rgba(143,214,68,1)"],["0.875","rgba(170,220,50,1)"],["0.916666666666667","rgba(199,224,32,1)"],["0.958333333333333","rgba(227,228,24,1)"],["1","rgba(253,231,37,1)"]],"showscale":true,"locationmode":"USA-states","z":[64.8,55.8,46.7,77.2,41.5,41.4,59.6,66.9,57.7,62.8,45.7,49.5,63.7,72.2,63.3,56.2,91,66.2,72.1,56.4,61.6,63.3,56.1,74.9,72,53.7,57,63.7,55.3,38.5,58.7,67.7,57.7,67.8,67.4,54.1,63.5,69.4,64.4,59,74.5,50.6,26,61.1,56.4,54,79.8,59.1,42.2],"text":["Alabama","Alaska","Arizona","Arkansas","California","Colorado","Connecticut","Delaware","Florida","Georgia","Hawaii","Idaho","Illinois","Indiana","Iowa","Kansas","Kentucky","Louisiana","Maine","Maryland","Massachusetts","Michigan","Minnesota","Mississippi","Missouri","Montana","Nebraska","New Hampshire","New Jersey","New Mexico","New York","North Carolina","North Dakota","Ohio","Oklahoma","Oregon","Pennsylvania","Rhode Island","South Carolina","South Dakota","Tennessee","Texas","Utah","Vermont","Virginia","Washington","West Virginia","Wisconsin","Wyoming"],"locations":["AL","AK","AZ","AR","CA","CO","CT","DE","FL","GA","HI","ID","IL","IN","IA","KS","KY","LA","ME","MD","MA","MI","MN","MS","MO","MT","NE","NH","NJ","NM","NY","NC","ND","OH","OK","OR","PA","RI","SC","SD","TN","TX","UT","VT","VA","WA","WV","WI","WY"],"type":"choropleth","marker":{"line":{"colorbar":{"title":"","ticklen":2},"cmin":26,"cmax":91,"colorscale":[["0","rgba(68,1,84,1)"],["0.0416666666666667","rgba(71,17,100,1)"],["0.0833333333333334","rgba(72,31,112,1)"],["0.125","rgba(71,45,123,1)"],["0.166666666666667","rgba(68,58,131,1)"],["0.208333333333333","rgba(64,70,136,1)"],["0.25","rgba(59,82,139,1)"],["0.291666666666667","rgba(54,93,141,1)"],["0.333333333333333","rgba(49,104,142,1)"],["0.375","rgba(44,114,142,1)"],["0.416666666666667","rgba(40,124,142,1)"],["0.458333333333333","rgba(36,134,142,1)"],["0.5","rgba(33,144,141,1)"],["0.541666666666667","rgba(31,154,138,1)"],["0.583333333333333","rgba(32,164,134,1)"],["0.625","rgba(39,173,129,1)"],["0.666666666666667","rgba(53,183,121,1)"],["0.708333333333333","rgba(71,193,110,1)"],["0.75","rgba(93,200,99,1)"],["0.791666666666667","rgba(117,208,84,1)"],["0.833333333333333","rgba(143,214,68,1)"],["0.875","rgba(170,220,50,1)"],["0.916666666666667","rgba(199,224,32,1)"],["0.958333333333333","rgba(227,228,24,1)"],["1","rgba(253,231,37,1)"]],"showscale":false,"color":[64.8,55.8,46.7,77.2,41.5,41.4,59.6,66.9,57.7,62.8,45.7,49.5,63.7,72.2,63.3,56.2,91,66.2,72.1,56.4,61.6,63.3,56.1,74.9,72,53.7,57,63.7,55.3,38.5,58.7,67.7,57.7,67.8,67.4,54.1,63.5,69.4,64.4,59,74.5,50.6,26,61.1,56.4,54,79.8,59.1,42.2]}},"geo":"geo","frame":null}],"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.2,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+<div id="htmlwidget-021cbda941edc809c8eb" style="width:90%;height:460.8px;" class="plotly html-widget"></div>
+<script type="application/json" data-for="htmlwidget-021cbda941edc809c8eb">{"x":{"visdat":{"4814641f3":["function () ","plotlyVisDat"]},"cur_data":"4814641f3","attrs":{"4814641f3":{"locationmode":"USA-states","alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"z":{},"text":{},"locations":{},"color":{},"colors":"viridis","inherit":true}},"layout":{"margin":{"b":40,"l":60,"t":25,"r":10},"mapType":"geo","scene":{"zaxis":{"title":"lung_and_bronchus_both_sexes_combined"}},"geo":{"domain":{"x":[0,1],"y":[0,1]},"scope":"usa","projection":{"type":"albers usa"},"showlakes":true,"lakecolor":"rgba(255,255,255,1)"},"hovermode":"closest","showlegend":false,"legend":{"yanchor":"top","y":0.5},"title":"Distribution of Lung/Bronchus Cancer Incidence Rate by State in 2013-2017"},"source":"A","config":{"modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"data":[{"colorbar":{"title":"Incidence Rate","ticklen":2,"len":0.5,"lenmode":"fraction","y":1,"yanchor":"top"},"colorscale":[["0","rgba(68,1,84,1)"],["0.0416666666666667","rgba(71,17,100,1)"],["0.0833333333333334","rgba(72,31,112,1)"],["0.125","rgba(71,45,123,1)"],["0.166666666666667","rgba(68,58,131,1)"],["0.208333333333333","rgba(64,70,136,1)"],["0.25","rgba(59,82,139,1)"],["0.291666666666667","rgba(54,93,141,1)"],["0.333333333333333","rgba(49,104,142,1)"],["0.375","rgba(44,114,142,1)"],["0.416666666666667","rgba(40,124,142,1)"],["0.458333333333333","rgba(36,134,142,1)"],["0.5","rgba(33,144,141,1)"],["0.541666666666667","rgba(31,154,138,1)"],["0.583333333333333","rgba(32,164,134,1)"],["0.625","rgba(39,173,129,1)"],["0.666666666666667","rgba(53,183,121,1)"],["0.708333333333333","rgba(71,193,110,1)"],["0.75","rgba(93,200,99,1)"],["0.791666666666667","rgba(117,208,84,1)"],["0.833333333333333","rgba(143,214,68,1)"],["0.875","rgba(170,220,50,1)"],["0.916666666666667","rgba(199,224,32,1)"],["0.958333333333333","rgba(227,228,24,1)"],["1","rgba(253,231,37,1)"]],"showscale":true,"locationmode":"USA-states","z":[64.8,55.8,46.7,77.2,41.5,41.4,59.6,66.9,57.7,62.8,45.7,49.5,63.7,72.2,63.3,56.2,91,66.2,72.1,56.4,61.6,63.3,56.1,74.9,72,53.7,57,63.7,55.3,38.5,58.7,67.7,57.7,67.8,67.4,54.1,63.5,69.4,64.4,59,74.5,50.6,26,61.1,56.4,54,79.8,59.1,42.2],"text":["Alabama","Alaska","Arizona","Arkansas","California","Colorado","Connecticut","Delaware","Florida","Georgia","Hawaii","Idaho","Illinois","Indiana","Iowa","Kansas","Kentucky","Louisiana","Maine","Maryland","Massachusetts","Michigan","Minnesota","Mississippi","Missouri","Montana","Nebraska","New Hampshire","New Jersey","New Mexico","New York","North Carolina","North Dakota","Ohio","Oklahoma","Oregon","Pennsylvania","Rhode Island","South Carolina","South Dakota","Tennessee","Texas","Utah","Vermont","Virginia","Washington","West Virginia","Wisconsin","Wyoming"],"locations":["AL","AK","AZ","AR","CA","CO","CT","DE","FL","GA","HI","ID","IL","IN","IA","KS","KY","LA","ME","MD","MA","MI","MN","MS","MO","MT","NE","NH","NJ","NM","NY","NC","ND","OH","OK","OR","PA","RI","SC","SD","TN","TX","UT","VT","VA","WA","WV","WI","WY"],"type":"choropleth","marker":{"line":{"colorbar":{"title":"","ticklen":2},"cmin":26,"cmax":91,"colorscale":[["0","rgba(68,1,84,1)"],["0.0416666666666667","rgba(71,17,100,1)"],["0.0833333333333334","rgba(72,31,112,1)"],["0.125","rgba(71,45,123,1)"],["0.166666666666667","rgba(68,58,131,1)"],["0.208333333333333","rgba(64,70,136,1)"],["0.25","rgba(59,82,139,1)"],["0.291666666666667","rgba(54,93,141,1)"],["0.333333333333333","rgba(49,104,142,1)"],["0.375","rgba(44,114,142,1)"],["0.416666666666667","rgba(40,124,142,1)"],["0.458333333333333","rgba(36,134,142,1)"],["0.5","rgba(33,144,141,1)"],["0.541666666666667","rgba(31,154,138,1)"],["0.583333333333333","rgba(32,164,134,1)"],["0.625","rgba(39,173,129,1)"],["0.666666666666667","rgba(53,183,121,1)"],["0.708333333333333","rgba(71,193,110,1)"],["0.75","rgba(93,200,99,1)"],["0.791666666666667","rgba(117,208,84,1)"],["0.833333333333333","rgba(143,214,68,1)"],["0.875","rgba(170,220,50,1)"],["0.916666666666667","rgba(199,224,32,1)"],["0.958333333333333","rgba(227,228,24,1)"],["1","rgba(253,231,37,1)"]],"showscale":false,"color":[64.8,55.8,46.7,77.2,41.5,41.4,59.6,66.9,57.7,62.8,45.7,49.5,63.7,72.2,63.3,56.2,91,66.2,72.1,56.4,61.6,63.3,56.1,74.9,72,53.7,57,63.7,55.3,38.5,58.7,67.7,57.7,67.8,67.4,54.1,63.5,69.4,64.4,59,74.5,50.6,26,61.1,56.4,54,79.8,59.1,42.2]}},"geo":"geo","frame":null}],"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.2,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
 </div>
 
 
