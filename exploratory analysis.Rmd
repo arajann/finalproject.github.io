@@ -2,7 +2,7 @@
 title: "exploratory_analysis"
 author: "Anand Rajan"
 date: "12/5/2021"
-output: github_document
+output: html_document
 
 ---
 
@@ -48,24 +48,22 @@ modified_pollution %>%
   knitr::kable(caption="United States Pollutant Concentration from 2000-2016")
 ```
 
+
 ```{r}
 modified_pollution %>% 
-  pivot_longer(
+   pivot_longer(
     no2:co,
     names_to = "pollutant_type",
     values_to="concentration"
-  ) %>% 
-  ggplot(aes(x=year,y=concentration, group=pollutant_type, color=pollutant_type)) +
-  geom_point() +
-  geom_line() +
-  scale_color_viridis(discrete=TRUE) +
-  theme_bw() +
-  labs(
-    title="Trends in Polluntant Concentration in the US from 2000-2016",
-    x="Year",
-    y="Pollutant Concentration(ppm)"
-  ) 
+  )  %>% 
+  group_by(pollutant_type) %>% 
+   summarize(
+    mean_concentration = mean(concentration),
+    median_concentration = median(concentration),
+    sd_concentration = sd(concentration)) %>% 
+  knitr::kable(digits=3)
 ```
+
 Comparing Distributions of Pollutant Concentrations 
 
 ```{r}
@@ -87,6 +85,24 @@ modified_pollution %>%
   theme_bw() 
 ```
 
+```{r}
+modified_pollution %>% 
+  pivot_longer(
+    no2:co,
+    names_to = "pollutant_type",
+    values_to="concentration"
+  ) %>% 
+  ggplot(aes(x=year,y=concentration, group=pollutant_type, color=pollutant_type)) +
+  geom_point() +
+  geom_line() +
+  scale_color_viridis(discrete=TRUE) +
+  theme_bw() +
+  labs(
+    title="Trends in Polluntant Concentration in the US from 2000-2016",
+    x="Year",
+    y="Pollutant Concentration(ppm)"
+  ) 
+```
 
 ## Exploring Trends in Death From Lung Cancer
 
