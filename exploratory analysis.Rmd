@@ -4,6 +4,7 @@ output:
   html_document:
     toc: true
     toc_float: true
+    code_folding: hide
 ---
 
 ```{r setup, include=FALSE}
@@ -13,7 +14,7 @@ library(wesanderson)
 library(viridis)
 library(plotly) 
         
-knitr::opts_chunk$set(warning = FALSE, echo = TRUE)
+knitr::opts_chunk$set(warning = FALSE, message = FALSE)
     
 ```
 
@@ -26,10 +27,10 @@ modified_pollution =
   select(state, date_local, no2_mean, o3_mean, 
          so2_mean, co_mean) %>%
   rename(
-    no2=no2_mean,
-    co=co_mean,
-    o3=o3_mean,
-    so2=so2_mean
+    no2 = no2_mean,
+    co = co_mean,
+    o3 = o3_mean,
+    so2 = so2_mean
   ) %>% 
   separate(date_local, into = c("year", "month", "day"), sep = "\\-") %>%
   select(-c("month", "day")) %>%
@@ -45,7 +46,7 @@ modified_pollution =
   )
 
 modified_pollution %>% 
-  knitr::kable(caption="United States Pollutant Concentration from 2000-2016")
+  knitr::kable(caption = "United States Pollutant Concentration from 2000-2016")
 ```
 
 
@@ -54,14 +55,14 @@ modified_pollution %>%
    pivot_longer(
     no2:co,
     names_to = "pollutant_type",
-    values_to="concentration"
+    values_to = "concentration"
   )  %>% 
   group_by(pollutant_type) %>% 
    summarize(
     mean_concentration = mean(concentration),
     median_concentration = median(concentration),
     sd_concentration = sd(concentration)) %>% 
-  knitr::kable(digits=3)
+  knitr::kable(digits = 3)
 ```
 
 Comparing Distributions of Pollutant Concentrations 
@@ -71,17 +72,17 @@ modified_pollution %>%
   pivot_longer(
     no2:co,
     names_to = "pollutant_type",
-    values_to="concentration"
+    values_to = "concentration"
   ) %>% 
   group_by(pollutant_type) %>% 
-  ggplot(aes(x=pollutant_type, y=concentration)) + 
+  ggplot(aes(x = pollutant_type, y = concentration)) + 
   geom_boxplot() +
   labs(
     title = "Distribution of Concentration Values for each Pollutant Type",
-    x="Pollutant Type",
-    y="Concentration(in ppm)"
+    x = "Pollutant Type",
+    y = "Concentration(in ppm)"
   ) +
-  scale_color_viridis(discrete=TRUE) +
+  scale_color_viridis(discrete = TRUE) +
   theme_bw() 
 ```
 
@@ -90,17 +91,17 @@ modified_pollution %>%
   pivot_longer(
     no2:co,
     names_to = "pollutant_type",
-    values_to="concentration"
+    values_to = "concentration"
   ) %>% 
-  ggplot(aes(x=year,y=concentration, group=pollutant_type, color=pollutant_type)) +
+  ggplot(aes(x = year,y = concentration, group = pollutant_type, color = pollutant_type)) +
   geom_point() +
   geom_line() +
-  scale_color_viridis(discrete=TRUE) +
+  scale_color_viridis(discrete = TRUE) +
   theme_bw() +
   labs(
-    title="Trends in Polluntant Concentration in the US from 2000-2016",
-    x="Year",
-    y="Pollutant Concentration(ppm)"
+    title = "Trends in Polluntant Concentration in the US from 2000-2016",
+    x = "Year",
+    y = "Pollutant Concentration(ppm)"
   ) 
 ```
 
@@ -113,7 +114,9 @@ read_death_time =
              skip = 6) %>%
   janitor::clean_names()
 
-x = c("colorectum_female", "colorectum_male", "liver_and_intrahepatic_bile_duct_female", "liver_and_intrahepatic_bile_duct_male", "lung_and_bronchus_female", "lung_and_bronchus_male", "ovary_female", "uterus_cervix_and_corpus_combined_female")
+x = c("colorectum_female", "colorectum_male", "liver_and_intrahepatic_bile_duct_female",
+      "liver_and_intrahepatic_bile_duct_male", "lung_and_bronchus_female", 
+      "lung_and_bronchus_male", "ovary_female", "uterus_cervix_and_corpus_combined_female")
 
 remove_note = function(column_name) {
   read_death_time = read_death_time %>% 
@@ -126,7 +129,8 @@ for (i in x) {
 death_time =
   read_death_time %>%
   filter(year %in% 2000:2016) %>%
-  select(-c("breast_male", "ovary_male", "prostate_female","uterus_cervix_and_corpus_combined_male")) %>%
+  select(-c("breast_male", "ovary_male", "prostate_female",
+            "uterus_cervix_and_corpus_combined_male")) %>%
   mutate_at(vars(-("year")), as.numeric) %>%
   mutate(
    year = as.numeric(year)
@@ -146,13 +150,13 @@ death_time %>%
     names_to = "gender", 
     values_to = "death_rate"
   ) %>% 
-  ggplot(aes(x=year,y=death_rate, group=gender, color=gender)) + 
+  ggplot(aes(x = year,y = death_rate, group = gender, color = gender)) + 
   geom_point() +
   geom_line() +
   labs(
-    title= "Trend in US Death rate from Lung Cancer, 2000-2016",
-    x= "Year",
-    y="Lung Cancer Death Rate(per 100,000)"
+    title = "Trend in US Death rate from Lung Cancer, 2000-2016",
+    x = "Year",
+    y = "Lung Cancer Death Rate(per 100,000)"
   )
 ```
 
@@ -160,7 +164,7 @@ death_time %>%
 
 
 ```{r}
-merged_death_pollution=
+merged_death_pollution =
 merge(death_time, modified_pollution, by = "year") 
 ```
 
@@ -181,12 +185,13 @@ pollutant_variables =
   as.list()
 
 
-for (i in pollutant_variables){
+for (i in pollutant_variables) {
   plot =
   ggplot(merged_death_pollution, aes_string(i,  "lung_and_bronchus_male")) + 
   geom_point() +
   geom_smooth(method = lm, se = FALSE) +
-  labs(title = "Pollutant Concentration vs. Lung Cancer Death Rate(Male)", y = "Lung Cancer Death Rate(per 100,000)") +
+  labs(title = "Pollutant Concentration vs. Lung Cancer Death Rate(Male)", 
+       y = "Lung Cancer Death Rate(per 100,000)") +
   theme(plot.title = element_text(hjust = 0.5, face = "bold"))
   
   print(plot)
@@ -195,12 +200,13 @@ for (i in pollutant_variables){
 ```
 
 ```{r}
-for (i in pollutant_variables){
+for (i in pollutant_variables) {
   plot =
   ggplot(merged_death_pollution, aes_string(i,  "lung_and_bronchus_female")) + 
   geom_point() +
   geom_smooth(method = lm, se = FALSE) +
-  labs(title = "Pollutant Concentration vs. Lung Cancer Death Rate(Female)", y = "Lung Cancer Death Rate(per 100,000)") +
+  labs(title = "Pollutant Concentration vs. Lung Cancer Death Rate(Female)", 
+       y = "Lung Cancer Death Rate(per 100,000)") +
   theme(plot.title = element_text(hjust = 0.5, face = "bold"))
   
   print(plot)
@@ -231,10 +237,13 @@ inc_state =
   mutate(
     breast_male = if_else(breast_male == "n/a", "0", breast_male),
     cervix_male = if_else(cervix_male == "n/a", "0", cervix_male),
-    colon_excluding_rectum_both_sexes_combined = if_else(colon_excluding_rectum_both_sexes_combined == "n/a", "0", colon_excluding_rectum_both_sexes_combined),
-    colon_excluding_rectum_female = if_else(colon_excluding_rectum_female == "n/a", "0", colon_excluding_rectum_female),
-    colon_excluding_rectum_male = if_else(colon_excluding_rectum_male == "n/a", "0", colon_excluding_rectum_male),
-  ) %>%
+    colon_excluding_rectum_both_sexes_combined = 
+      if_else(colon_excluding_rectum_both_sexes_combined == "n/a", "0",
+              colon_excluding_rectum_both_sexes_combined),
+    colon_excluding_rectum_female = if_else(colon_excluding_rectum_female == "n/a", "0",
+                                            colon_excluding_rectum_female),
+    colon_excluding_rectum_male = if_else(colon_excluding_rectum_male == "n/a", "0",
+                                          colon_excluding_rectum_male)) %>%
   filter(state != "Puerto Rico")
 
 inc_state %>%
