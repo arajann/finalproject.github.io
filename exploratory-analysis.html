@@ -15,9 +15,9 @@
 <title>exploratory_analysis</title>
 
 <script src="site_libs/header-attrs-2.10/header-attrs.js"></script>
-<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<script src="site_libs/jquery-3.5.1/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
+<link href="site_libs/bootstrap-3.3.5/css/journal.min.css" rel="stylesheet" />
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
@@ -33,6 +33,13 @@
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
 <link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<script src="site_libs/htmlwidgets-1.5.4/htmlwidgets.js"></script>
+<script src="site_libs/plotly-binding-4.10.0/plotly.js"></script>
+<script src="site_libs/typedarray-0.1/typedarray.min.js"></script>
+<link href="site_libs/crosstalk-1.1.1/css/crosstalk.css" rel="stylesheet" />
+<script src="site_libs/crosstalk-1.1.1/js/crosstalk.min.js"></script>
+<link href="site_libs/plotly-htmlwidgets-css-2.5.1/plotly-htmlwidgets.css" rel="stylesheet" />
+<script src="site_libs/plotly-main-2.5.1/plotly-latest.min.js"></script>
 <link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
 <link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
 
@@ -252,7 +259,9 @@ $(document).ready(function () {
 </li>
 <li class="dropdown-header">Exploratory Analysis</li>
 <li class="dropdown-header">Dashboard</li>
-<li class="dropdown-header">Plotly</li>
+<li>
+  <a href="pollution_state.html">Pollution By State</a>
+</li>
 <li>
   <a href="mailto:&lt;jhk2201@cumc.columbia.edu&gt;">
     <span class="fa fa-envelope fa-lg"></span>
@@ -504,9 +513,27 @@ $(document).ready(function () {
     x=&quot;Year&quot;,
     y=&quot;Pollutant Concentration(ppm)&quot;
   ) </code></pre>
-<p><img src="exploratory-analysis_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
-<div id="exploring-the-relationship-between-pollutant-concentration-and-death-rate" class="section level3">
-<h3>Exploring the Relationship Between Pollutant Concentration and Death Rate</h3>
+<p><img src="exploratory-analysis_files/figure-html/unnamed-chunk-2-1.png" width="672" /> Comparing Distributions of Pollutant Concentrations</p>
+<pre class="r"><code>modified_pollution %&gt;% 
+  pivot_longer(
+    no2:co,
+    names_to = &quot;pollutant_type&quot;,
+    values_to=&quot;concentration&quot;
+  ) %&gt;% 
+  group_by(pollutant_type) %&gt;% 
+  ggplot(aes(x=pollutant_type, y=concentration)) + 
+  geom_boxplot() +
+  labs(
+    title = &quot;Distribution of Concentration Values for each Pollutant Type&quot;,
+    x=&quot;Pollutant Type&quot;,
+    y=&quot;Concentration(in ppm)&quot;
+  ) +
+  scale_color_viridis(discrete=TRUE) +
+  theme_bw() </code></pre>
+<p><img src="exploratory-analysis_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+</div>
+<div id="exploring-trends-in-death-from-lung-cancer" class="section level2">
+<h2>Exploring Trends in Death From Lung Cancer</h2>
 <pre class="r"><code>read_death_time =
   read_excel(&quot;data/DeathTrend.xlsx&quot;, 
              skip = 6) %&gt;%
@@ -521,16 +548,99 @@ remove_note = function(column_name) {
 
 for (i in x) {
   read_death_time = remove_note(i)} 
+
 death_time =
   read_death_time %&gt;%
   filter(year %in% 2000:2016) %&gt;%
   select(-c(&quot;breast_male&quot;, &quot;ovary_male&quot;, &quot;prostate_female&quot;,&quot;uterus_cervix_and_corpus_combined_male&quot;)) %&gt;%
   mutate_at(vars(-(&quot;year&quot;)), as.numeric) %&gt;%
-  mutate(year = as.factor(year))</code></pre>
+  mutate(
+   year = as.numeric(year)
+  )</code></pre>
+<pre class="r"><code>death_time %&gt;% 
+  rename(
+    male = lung_and_bronchus_male,
+    female = lung_and_bronchus_female
+  ) %&gt;% 
+  pivot_longer(
+    female:male,
+    names_to = &quot;gender&quot;, 
+    values_to = &quot;death_rate&quot;
+  ) %&gt;% 
+  ggplot(aes(x=year,y=death_rate, group=gender, color=gender)) + 
+  geom_point() +
+  geom_line() +
+  labs(
+    title= &quot;Trend in US Death rate from Lung Cancer, 2000-2016&quot;,
+    x= &quot;Year&quot;,
+    y=&quot;Lung Cancer Death Rate(per 100,000)&quot;
+  )</code></pre>
+<p><img src="exploratory-analysis_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+</div>
+<div id="exploring-relationship-between-trend-in-death-rate-from-lung-cancer-to-pollution-concentration" class="section level1">
+<h1>Exploring relationship between trend in death rate from Lung Cancer to Pollution Concentration</h1>
 <pre class="r"><code>merged_death_pollution=
 merge(death_time, modified_pollution, by = &quot;year&quot;) </code></pre>
-<pre class="r"><code>death_state =
-  read_excel(&quot;data/DeathRate.xlsx&quot;, sheet = &quot;State&quot;, 
+<pre class="r"><code>pollutant_variables =
+  merged_death_pollution %&gt;% 
+  select(no2,o3,so2,co) %&gt;% 
+  colnames() %&gt;% 
+  as.vector()</code></pre>
+<p>Create a for loop to plot Pollutant concentration vs. Lung Cancer Death Rate</p>
+<pre class="r"><code>pollutant_variables =
+  pollutant_variables %&gt;% 
+  as.list()
+
+
+for (i in pollutant_variables){
+  plot =
+  ggplot(merged_death_pollution, aes_string(i,  &quot;lung_and_bronchus_male&quot;)) + 
+  geom_point() +
+  geom_smooth(method = lm, se = FALSE) +
+  labs(title = &quot;Pollutant Concentration vs. Lung Cancer Death Rate&quot;, y = &quot;Lung Cancer Death Rate(per 100,000)&quot;) +
+  theme(plot.title = element_text(hjust = 0.5, face = &quot;bold&quot;))
+  
+  print(plot)
+  
+}</code></pre>
+<pre><code>## `geom_smooth()` using formula &#39;y ~ x&#39;</code></pre>
+<p><img src="exploratory-analysis_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+<pre><code>## `geom_smooth()` using formula &#39;y ~ x&#39;</code></pre>
+<p><img src="exploratory-analysis_files/figure-html/unnamed-chunk-8-2.png" width="672" /></p>
+<pre><code>## `geom_smooth()` using formula &#39;y ~ x&#39;</code></pre>
+<p><img src="exploratory-analysis_files/figure-html/unnamed-chunk-8-3.png" width="672" /></p>
+<pre><code>## `geom_smooth()` using formula &#39;y ~ x&#39;</code></pre>
+<p><img src="exploratory-analysis_files/figure-html/unnamed-chunk-8-4.png" width="672" /></p>
+<pre class="r"><code>for (i in pollutant_variables){
+  plot =
+  ggplot(merged_death_pollution, aes_string(i,  &quot;lung_and_bronchus_female&quot;)) + 
+  geom_point() +
+  geom_smooth(method = lm, se = FALSE) +
+  labs(title = &quot;Pollutant Concentration vs. Lung Cancer Death Rate&quot;, y = &quot;Lung Cancer Death Rate(per 100,000)&quot;) +
+  theme(plot.title = element_text(hjust = 0.5, face = &quot;bold&quot;))
+  
+  print(plot)
+  
+}</code></pre>
+<pre><code>## `geom_smooth()` using formula &#39;y ~ x&#39;</code></pre>
+<p><img src="exploratory-analysis_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
+<pre><code>## `geom_smooth()` using formula &#39;y ~ x&#39;</code></pre>
+<p><img src="exploratory-analysis_files/figure-html/unnamed-chunk-9-2.png" width="672" /></p>
+<pre><code>## `geom_smooth()` using formula &#39;y ~ x&#39;</code></pre>
+<p><img src="exploratory-analysis_files/figure-html/unnamed-chunk-9-3.png" width="672" /></p>
+<pre><code>## `geom_smooth()` using formula &#39;y ~ x&#39;</code></pre>
+<p><img src="exploratory-analysis_files/figure-html/unnamed-chunk-9-4.png" width="672" /></p>
+<div id="exploring-incidence-of-lung-cancer" class="section level3">
+<h3>Exploring Incidence of Lung Cancer</h3>
+<pre class="r"><code>g = list(
+  scope = &#39;usa&#39;,
+  projection = list(type = &#39;albers usa&#39;),
+  showlakes = TRUE,
+  lakecolor = toRGB(&#39;white&#39;)
+)
+
+inc_state =
+  read_excel(&quot;data/IncRate.xlsx&quot;, sheet = &quot;State&quot;, 
              skip = 6) %&gt;%
   janitor::clean_names() %&gt;% 
   separate(
@@ -538,824 +648,35 @@ merge(death_time, modified_pollution, by = &quot;year&quot;) </code></pre>
     into = c(&quot;breast_total&quot;, &quot;female_breast_only&quot;),
     sep = &quot;-&quot;
   ) %&gt;% 
-  select(-female_breast_only) %&gt;%
   mutate(
     breast_male = if_else(breast_male == &quot;n/a&quot;, &quot;0&quot;, breast_male),
     cervix_male = if_else(cervix_male == &quot;n/a&quot;, &quot;0&quot;, cervix_male),
+    colon_excluding_rectum_both_sexes_combined = if_else(colon_excluding_rectum_both_sexes_combined == &quot;n/a&quot;, &quot;0&quot;, colon_excluding_rectum_both_sexes_combined),
+    colon_excluding_rectum_female = if_else(colon_excluding_rectum_female == &quot;n/a&quot;, &quot;0&quot;, colon_excluding_rectum_female),
+    colon_excluding_rectum_male = if_else(colon_excluding_rectum_male == &quot;n/a&quot;, &quot;0&quot;, colon_excluding_rectum_male),
   ) %&gt;%
-  mutate_at(vars(-(&quot;state&quot;)), as.numeric) %&gt;%
   filter(state != &quot;Puerto Rico&quot;)</code></pre>
-<pre><code>## Warning: Expected 2 pieces. Additional pieces discarded in 1 rows [41].</code></pre>
-<pre><code>## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
-
-## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
-
-## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
-
-## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
-
-## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
-
-## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
-
-## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
-
-## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
-
-## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
-
-## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
-
-## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
-
-## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
-
-## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
-
-## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
-
-## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
-
-## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
-
-## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
-
-## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
-
-## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
-
-## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
-
-## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
-
-## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
-
-## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
-
-## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
-
-## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
-
-## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
-
-## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
-
-## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
-
-## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
-
-## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
-
-## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
-
-## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
-
-## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
-
-## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
-
-## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
-
-## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
-
-## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
-
-## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
-
-## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
-
-## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
-
-## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
-
-## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
-
-## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
-
-## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
-
-## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
-
-## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
-
-## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
-
-## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
-
-## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
-
-## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
-
-## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
-
-## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
-
-## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
-
-## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
-
-## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
-
-## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
-
-## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
-
-## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
-
-## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
-
-## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
-
-## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
-
-## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
-
-## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
-
-## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
-
-## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
-
-## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
-
-## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
-
-## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion
-
-## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion</code></pre>
-<pre><code>
-
-```r
-death_state %&gt;%  
-  select(state, lung_and_bronchus_female,lung_and_bronchus_male, lung_and_bronchus_both_sexes_combined) %&gt;% 
-  knitr::kable()</code></pre>
-<table>
-<colgroup>
-<col width="19%" />
-<col width="23%" />
-<col width="21%" />
-<col width="35%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th align="left">state</th>
-<th align="right">lung_and_bronchus_female</th>
-<th align="right">lung_and_bronchus_male</th>
-<th align="right">lung_and_bronchus_both_sexes_combined</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="left">All U.S. combined</td>
-<td align="right">32.0</td>
-<td align="right">46.9</td>
-<td align="right">38.5</td>
-</tr>
-<tr class="even">
-<td align="left">Alabama</td>
-<td align="right">35.7</td>
-<td align="right">65.5</td>
-<td align="right">48.5</td>
-</tr>
-<tr class="odd">
-<td align="left">Alaska</td>
-<td align="right">32.0</td>
-<td align="right">41.5</td>
-<td align="right">36.6</td>
-</tr>
-<tr class="even">
-<td align="left">Arizona</td>
-<td align="right">27.1</td>
-<td align="right">36.4</td>
-<td align="right">31.3</td>
-</tr>
-<tr class="odd">
-<td align="left">Arkansas</td>
-<td align="right">41.0</td>
-<td align="right">67.6</td>
-<td align="right">52.8</td>
-</tr>
-<tr class="even">
-<td align="left">California</td>
-<td align="right">24.1</td>
-<td align="right">33.2</td>
-<td align="right">28.1</td>
-</tr>
-<tr class="odd">
-<td align="left">Colorado</td>
-<td align="right">24.5</td>
-<td align="right">29.2</td>
-<td align="right">26.5</td>
-</tr>
-<tr class="even">
-<td align="left">Connecticut</td>
-<td align="right">29.6</td>
-<td align="right">38.0</td>
-<td align="right">33.1</td>
-</tr>
-<tr class="odd">
-<td align="left">Delaware</td>
-<td align="right">37.0</td>
-<td align="right">51.2</td>
-<td align="right">43.2</td>
-</tr>
-<tr class="even">
-<td align="left">District of Columbia</td>
-<td align="right">25.8</td>
-<td align="right">36.4</td>
-<td align="right">30.4</td>
-</tr>
-<tr class="odd">
-<td align="left">Florida</td>
-<td align="right">31.0</td>
-<td align="right">45.3</td>
-<td align="right">37.5</td>
-</tr>
-<tr class="even">
-<td align="left">Georgia</td>
-<td align="right">31.1</td>
-<td align="right">53.9</td>
-<td align="right">40.9</td>
-</tr>
-<tr class="odd">
-<td align="left">Hawaii</td>
-<td align="right">22.6</td>
-<td align="right">37.4</td>
-<td align="right">29.3</td>
-</tr>
-<tr class="even">
-<td align="left">Idaho</td>
-<td align="right">28.6</td>
-<td align="right">36.9</td>
-<td align="right">32.4</td>
-</tr>
-<tr class="odd">
-<td align="left">Illinois</td>
-<td align="right">34.5</td>
-<td align="right">50.0</td>
-<td align="right">41.1</td>
-</tr>
-<tr class="even">
-<td align="left">Indiana</td>
-<td align="right">39.9</td>
-<td align="right">60.5</td>
-<td align="right">48.7</td>
-</tr>
-<tr class="odd">
-<td align="left">Iowa</td>
-<td align="right">34.1</td>
-<td align="right">50.9</td>
-<td align="right">41.3</td>
-</tr>
-<tr class="even">
-<td align="left">Kansas</td>
-<td align="right">35.3</td>
-<td align="right">49.9</td>
-<td align="right">41.6</td>
-</tr>
-<tr class="odd">
-<td align="left">Kentucky</td>
-<td align="right">49.0</td>
-<td align="right">75.3</td>
-<td align="right">60.4</td>
-</tr>
-<tr class="even">
-<td align="left">Louisiana</td>
-<td align="right">36.6</td>
-<td align="right">61.6</td>
-<td align="right">47.5</td>
-</tr>
-<tr class="odd">
-<td align="left">Maine</td>
-<td align="right">40.0</td>
-<td align="right">55.3</td>
-<td align="right">46.7</td>
-</tr>
-<tr class="even">
-<td align="left">Maryland</td>
-<td align="right">32.1</td>
-<td align="right">44.1</td>
-<td align="right">37.2</td>
-</tr>
-<tr class="odd">
-<td align="left">Massachusetts</td>
-<td align="right">33.2</td>
-<td align="right">42.7</td>
-<td align="right">37.1</td>
-</tr>
-<tr class="even">
-<td align="left">Michigan</td>
-<td align="right">37.8</td>
-<td align="right">52.4</td>
-<td align="right">44.1</td>
-</tr>
-<tr class="odd">
-<td align="left">Minnesota</td>
-<td align="right">31.3</td>
-<td align="right">40.2</td>
-<td align="right">35.2</td>
-</tr>
-<tr class="even">
-<td align="left">Mississippi</td>
-<td align="right">38.1</td>
-<td align="right">72.3</td>
-<td align="right">52.8</td>
-</tr>
-<tr class="odd">
-<td align="left">Missouri</td>
-<td align="right">40.4</td>
-<td align="right">59.4</td>
-<td align="right">48.7</td>
-</tr>
-<tr class="even">
-<td align="left">Montana</td>
-<td align="right">34.6</td>
-<td align="right">37.9</td>
-<td align="right">35.9</td>
-</tr>
-<tr class="odd">
-<td align="left">Nebraska</td>
-<td align="right">32.3</td>
-<td align="right">45.3</td>
-<td align="right">37.9</td>
-</tr>
-<tr class="even">
-<td align="left">Nevada</td>
-<td align="right">36.4</td>
-<td align="right">42.6</td>
-<td align="right">39.3</td>
-</tr>
-<tr class="odd">
-<td align="left">New Hampshire</td>
-<td align="right">37.5</td>
-<td align="right">45.9</td>
-<td align="right">41.1</td>
-</tr>
-<tr class="even">
-<td align="left">New Jersey</td>
-<td align="right">29.9</td>
-<td align="right">39.0</td>
-<td align="right">33.7</td>
-</tr>
-<tr class="odd">
-<td align="left">New Mexico</td>
-<td align="right">22.9</td>
-<td align="right">31.7</td>
-<td align="right">26.8</td>
-</tr>
-<tr class="even">
-<td align="left">New York</td>
-<td align="right">28.7</td>
-<td align="right">40.3</td>
-<td align="right">33.6</td>
-</tr>
-<tr class="odd">
-<td align="left">North Carolina</td>
-<td align="right">34.6</td>
-<td align="right">56.8</td>
-<td align="right">44.1</td>
-</tr>
-<tr class="even">
-<td align="left">North Dakota</td>
-<td align="right">29.4</td>
-<td align="right">42.3</td>
-<td align="right">35.1</td>
-</tr>
-<tr class="odd">
-<td align="left">Ohio</td>
-<td align="right">37.9</td>
-<td align="right">58.3</td>
-<td align="right">46.7</td>
-</tr>
-<tr class="even">
-<td align="left">Oklahoma</td>
-<td align="right">40.4</td>
-<td align="right">62.2</td>
-<td align="right">50.0</td>
-</tr>
-<tr class="odd">
-<td align="left">Oregon</td>
-<td align="right">33.3</td>
-<td align="right">40.9</td>
-<td align="right">36.6</td>
-</tr>
-<tr class="even">
-<td align="left">Pennsylvania</td>
-<td align="right">33.8</td>
-<td align="right">50.2</td>
-<td align="right">40.8</td>
-</tr>
-<tr class="odd">
-<td align="left">Rhode Island</td>
-<td align="right">37.1</td>
-<td align="right">49.8</td>
-<td align="right">42.2</td>
-</tr>
-<tr class="even">
-<td align="left">South Carolina</td>
-<td align="right">32.7</td>
-<td align="right">55.8</td>
-<td align="right">42.7</td>
-</tr>
-<tr class="odd">
-<td align="left">South Dakota</td>
-<td align="right">33.5</td>
-<td align="right">47.5</td>
-<td align="right">39.3</td>
-</tr>
-<tr class="even">
-<td align="left">Tennessee</td>
-<td align="right">40.0</td>
-<td align="right">66.1</td>
-<td align="right">51.3</td>
-</tr>
-<tr class="odd">
-<td align="left">Texas</td>
-<td align="right">27.3</td>
-<td align="right">43.0</td>
-<td align="right">34.1</td>
-</tr>
-<tr class="even">
-<td align="left">Utah</td>
-<td align="right">14.9</td>
-<td align="right">21.8</td>
-<td align="right">18.1</td>
-</tr>
-<tr class="odd">
-<td align="left">Vermont</td>
-<td align="right">36.5</td>
-<td align="right">47.7</td>
-<td align="right">41.4</td>
-</tr>
-<tr class="even">
-<td align="left">Virginia</td>
-<td align="right">31.4</td>
-<td align="right">48.5</td>
-<td align="right">38.8</td>
-</tr>
-<tr class="odd">
-<td align="left">Washington</td>
-<td align="right">31.6</td>
-<td align="right">40.4</td>
-<td align="right">35.5</td>
-</tr>
-<tr class="even">
-<td align="left">West Virginia</td>
-<td align="right">43.0</td>
-<td align="right">67.1</td>
-<td align="right">53.6</td>
-</tr>
-<tr class="odd">
-<td align="left">Wisconsin</td>
-<td align="right">33.0</td>
-<td align="right">45.7</td>
-<td align="right">38.5</td>
-</tr>
-<tr class="even">
-<td align="left">Wyoming</td>
-<td align="right">29.3</td>
-<td align="right">33.1</td>
-<td align="right">30.9</td>
-</tr>
-</tbody>
-</table>
-<pre class="r"><code>death_state %&gt;%  
-  select(state, all_cancer_types_combined_both_sexes_combined) %&gt;% 
-  knitr::kable()</code></pre>
-<table>
-<thead>
-<tr class="header">
-<th align="left">state</th>
-<th align="right">all_cancer_types_combined_both_sexes_combined</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="left">All U.S. combined</td>
-<td align="right">155.5</td>
-</tr>
-<tr class="even">
-<td align="left">Alabama</td>
-<td align="right">173.4</td>
-</tr>
-<tr class="odd">
-<td align="left">Alaska</td>
-<td align="right">152.6</td>
-</tr>
-<tr class="even">
-<td align="left">Arizona</td>
-<td align="right">137.9</td>
-</tr>
-<tr class="odd">
-<td align="left">Arkansas</td>
-<td align="right">177.6</td>
-</tr>
-<tr class="even">
-<td align="left">California</td>
-<td align="right">140.3</td>
-</tr>
-<tr class="odd">
-<td align="left">Colorado</td>
-<td align="right">133.9</td>
-</tr>
-<tr class="even">
-<td align="left">Connecticut</td>
-<td align="right">141.2</td>
-</tr>
-<tr class="odd">
-<td align="left">Delaware</td>
-<td align="right">164.8</td>
-</tr>
-<tr class="even">
-<td align="left">District of Columbia</td>
-<td align="right">160.4</td>
-</tr>
-<tr class="odd">
-<td align="left">Florida</td>
-<td align="right">147.3</td>
-</tr>
-<tr class="even">
-<td align="left">Georgia</td>
-<td align="right">159.6</td>
-</tr>
-<tr class="odd">
-<td align="left">Hawaii</td>
-<td align="right">130.1</td>
-</tr>
-<tr class="even">
-<td align="left">Idaho</td>
-<td align="right">153.3</td>
-</tr>
-<tr class="odd">
-<td align="left">Illinois</td>
-<td align="right">161.7</td>
-</tr>
-<tr class="even">
-<td align="left">Indiana</td>
-<td align="right">172.9</td>
-</tr>
-<tr class="odd">
-<td align="left">Iowa</td>
-<td align="right">160.7</td>
-</tr>
-<tr class="even">
-<td align="left">Kansas</td>
-<td align="right">160.8</td>
-</tr>
-<tr class="odd">
-<td align="left">Kentucky</td>
-<td align="right">191.2</td>
-</tr>
-<tr class="even">
-<td align="left">Louisiana</td>
-<td align="right">176.1</td>
-</tr>
-<tr class="odd">
-<td align="left">Maine</td>
-<td align="right">169.2</td>
-</tr>
-<tr class="even">
-<td align="left">Maryland</td>
-<td align="right">155.1</td>
-</tr>
-<tr class="odd">
-<td align="left">Massachusetts</td>
-<td align="right">149.8</td>
-</tr>
-<tr class="even">
-<td align="left">Michigan</td>
-<td align="right">165.9</td>
-</tr>
-<tr class="odd">
-<td align="left">Minnesota</td>
-<td align="right">149.1</td>
-</tr>
-<tr class="even">
-<td align="left">Mississippi</td>
-<td align="right">186.5</td>
-</tr>
-<tr class="odd">
-<td align="left">Missouri</td>
-<td align="right">169.8</td>
-</tr>
-<tr class="even">
-<td align="left">Montana</td>
-<td align="right">151.1</td>
-</tr>
-<tr class="odd">
-<td align="left">Nebraska</td>
-<td align="right">154.9</td>
-</tr>
-<tr class="even">
-<td align="left">Nevada</td>
-<td align="right">157.1</td>
-</tr>
-<tr class="odd">
-<td align="left">New Hampshire</td>
-<td align="right">156.0</td>
-</tr>
-<tr class="even">
-<td align="left">New Jersey</td>
-<td align="right">148.4</td>
-</tr>
-<tr class="odd">
-<td align="left">New Mexico</td>
-<td align="right">140.0</td>
-</tr>
-<tr class="even">
-<td align="left">New York</td>
-<td align="right">144.7</td>
-</tr>
-<tr class="odd">
-<td align="left">North Carolina</td>
-<td align="right">161.5</td>
-</tr>
-<tr class="even">
-<td align="left">North Dakota</td>
-<td align="right">147.0</td>
-</tr>
-<tr class="odd">
-<td align="left">Ohio</td>
-<td align="right">172.3</td>
-</tr>
-<tr class="even">
-<td align="left">Oklahoma</td>
-<td align="right">179.4</td>
-</tr>
-<tr class="odd">
-<td align="left">Oregon</td>
-<td align="right">157.0</td>
-</tr>
-<tr class="even">
-<td align="left">Pennsylvania</td>
-<td align="right">163.4</td>
-</tr>
-<tr class="odd">
-<td align="left">Rhode Island</td>
-<td align="right">158.6</td>
-</tr>
-<tr class="even">
-<td align="left">South Carolina</td>
-<td align="right">165.1</td>
-</tr>
-<tr class="odd">
-<td align="left">South Dakota</td>
-<td align="right">156.9</td>
-</tr>
-<tr class="even">
-<td align="left">Tennessee</td>
-<td align="right">177.4</td>
-</tr>
-<tr class="odd">
-<td align="left">Texas</td>
-<td align="right">148.8</td>
-</tr>
-<tr class="even">
-<td align="left">Utah</td>
-<td align="right">123.9</td>
-</tr>
-<tr class="odd">
-<td align="left">Vermont</td>
-<td align="right">162.8</td>
-</tr>
-<tr class="even">
-<td align="left">Virginia</td>
-<td align="right">155.7</td>
-</tr>
-<tr class="odd">
-<td align="left">Washington</td>
-<td align="right">151.9</td>
-</tr>
-<tr class="even">
-<td align="left">West Virginia</td>
-<td align="right">184.3</td>
-</tr>
-<tr class="odd">
-<td align="left">Wisconsin</td>
-<td align="right">157.3</td>
-</tr>
-<tr class="even">
-<td align="left">Wyoming</td>
-<td align="right">139.4</td>
-</tr>
-</tbody>
-</table>
-<pre class="r"><code>merged_death_pollution %&gt;% 
-  ggplot(aes(x=no2,y=lung_and_bronchus_male)) + geom_point()</code></pre>
-<p><img src="exploratory-analysis_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
-<pre class="r"><code>merged_death_pollution %&gt;% 
-  ggplot(aes(x=no2,y=lung_and_bronchus_female)) + geom_point()</code></pre>
-<p><img src="exploratory-analysis_files/figure-html/unnamed-chunk-7-2.png" width="672" /></p>
-<pre class="r"><code>merged_death_pollution %&gt;% 
-  ggplot(aes(x=so2,y=lung_and_bronchus_male)) + geom_point()</code></pre>
-<p><img src="exploratory-analysis_files/figure-html/unnamed-chunk-7-3.png" width="672" /></p>
-<pre class="r"><code>merged_death_pollution %&gt;% 
-  ggplot(aes(x=so2,y=lung_and_bronchus_female)) + geom_point()</code></pre>
-<p><img src="exploratory-analysis_files/figure-html/unnamed-chunk-7-4.png" width="672" /></p>
-<pre class="r"><code>merged_death_pollution %&gt;% 
-  ggplot(aes(x=o3,y=lung_and_bronchus_male)) + geom_point()</code></pre>
-<p><img src="exploratory-analysis_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
-<pre class="r"><code>merged_death_pollution %&gt;% 
-  ggplot(aes(x=o3,y=lung_and_bronchus_female)) + geom_point()</code></pre>
-<p><img src="exploratory-analysis_files/figure-html/unnamed-chunk-8-2.png" width="672" /></p>
-<pre class="r"><code>merged_death_pollution %&gt;% 
-  ggplot(aes(x=co,y=lung_and_bronchus_male)) + geom_point()</code></pre>
-<p><img src="exploratory-analysis_files/figure-html/unnamed-chunk-8-3.png" width="672" /></p>
-<pre class="r"><code>merged_death_pollution %&gt;% 
-  ggplot(aes(x=co,y=lung_and_bronchus_female)) + geom_point()</code></pre>
-<p><img src="exploratory-analysis_files/figure-html/unnamed-chunk-8-4.png" width="672" /></p>
-<p>Pollution Trends Nationwide</p>
-<pre class="r"><code>no2_trend = 
-modified_pollution %&gt;% 
-  ggplot(aes(x=year,y=no2, colo)) +
-  geom_point() +
-  geom_line()</code></pre>
-<pre class="r"><code>nationwide_so2trend=
-  modified_pollution %&gt;% 
-  ggplot(aes(x=year,y=so2)) + 
-  geom_point() </code></pre>
-<pre class="r"><code>nationwide_o3trend=
-  modified_pollution %&gt;% 
-  ggplot(aes(x=year,y=o3)) +
-  scale_color_viridis(discrete=FALSE) +
-  theme_bw() +
-  geom_point() +
-  labs(
-    title=&quot;Nationwide Trend in Ozone Concentration from 2000-2016&quot;,
-    x=&quot;Year&quot;,
-    y=&quot;Ozone Concentration(ppm)&quot;
+<pre><code>## Warning: Expected 2 pieces. Missing pieces filled with `NA` in 2 rows [18, 25].</code></pre>
+<pre class="r"><code>inc_state %&gt;%
+  select(state, lung_and_bronchus_both_sexes_combined) %&gt;%
+  mutate(code = state.abb[match(state, state.name)],
+         lung_and_bronchus_both_sexes_combined = as.numeric(lung_and_bronchus_both_sexes_combined)) %&gt;%
+  filter(code != is.na(code)) %&gt;%
+  relocate(state, code) %&gt;%
+  plot_geo(., locationmode = &#39;USA-states&#39;) %&gt;% 
+  add_trace(
+    z = ~lung_and_bronchus_both_sexes_combined, text = ~state, locations = ~code,
+    color = ~lung_and_bronchus_both_sexes_combined, colors = &#39;viridis&#39;
+  ) %&gt;% 
+  colorbar(title = &quot;Incidence Rate&quot;) %&gt;% 
+  layout(
+    title = &quot;Distribution of Lung and Bronchus Cancer Incidence Rate by State in 2013-2017&quot;,
+    geo = g
   )</code></pre>
-<pre class="r"><code>nationwide_cotrend=
-  modified_pollution %&gt;% 
-  ggplot(aes(x=year,y=co)) + 
-  geom_point() +
-  geom_smooth(se=FALSE) +
-  scale_color_viridis(discrete=FALSE) +
-  theme_bw() +
-  labs(
-    title=&quot;Nationwide Trend in Carbon Monoxide Concentration from 2000-2016&quot;,
-    x=&quot;Year&quot;,
-    y=&quot;Carbon Monoxide Concentration(ppm)&quot;
-  )</code></pre>
-<pre class="r"><code>pollution = read_csv(&quot;data/uspollution_us_2000_2016.csv&quot;) %&gt;% 
-  janitor::clean_names() %&gt;%
-  select(state, date_local, no2_mean, o3_mean, 
-         so2_mean, co_mean) %&gt;%
-  separate(date_local, into = c(&quot;year&quot;, &quot;month&quot;, &quot;day&quot;), sep = &quot;\\-&quot;) %&gt;%
-  select(-c(&quot;month&quot;, &quot;day&quot;)) %&gt;%
-  group_by(year, state) %&gt;%
-  summarize(across(everything(), mean)) %&gt;%
-  mutate_if(is.numeric, ~round(., 3)) %&gt;%
-  filter(state != &quot;Country Of Mexico&quot;) %&gt;% 
-  mutate(
-    year = as.numeric(year)
-  )</code></pre>
-<pre><code>## New names:
-## * `` -&gt; ...1</code></pre>
-<pre><code>## Rows: 1746661 Columns: 29</code></pre>
-<pre><code>## -- Column specification --------------------------------------------------------
-## Delimiter: &quot;,&quot;
-## chr   (8): Address, State, County, City, NO2 Units, O3 Units, SO2 Units, CO ...
-## dbl  (20): ...1, State Code, County Code, Site Num, NO2 Mean, NO2 1st Max Va...
-## date  (1): Date Local</code></pre>
-<pre><code>## 
-## i Use `spec()` to retrieve the full column specification for this data.
-## i Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
-<pre><code>## `summarise()` has grouped output by &#39;year&#39;. You can override using the `.groups` argument.</code></pre>
-<pre><code>## `mutate_if()` ignored the following grouping variables:
-## Column `year`</code></pre>
-<pre class="r"><code>pollution %&gt;% 
-  filter(
-    year %in% c(&quot;2013&quot;,&quot;2014&quot;,&quot;2015&quot;,&quot;2016&quot;)
-  ) %&gt;% 
-  ggplot(aes(x= year, y=no2_mean, group=state, color=state)) +
-  geom_point(alpha=0.5) +
-  geom_line()</code></pre>
-<p><img src="exploratory-analysis_files/figure-html/unnamed-chunk-14-1.png" width="672" /></p>
-<pre class="r"><code>pollution %&gt;% 
-  filter(
-    year %in% c(&quot;2013&quot;,&quot;2014&quot;,&quot;2015&quot;,&quot;2016&quot;)
-  ) %&gt;% 
-  ggplot(aes(x= year, y=so2_mean, group=state, color=state)) +
-  geom_point(alpha=0.5) +
-  geom_line()</code></pre>
-<p><img src="exploratory-analysis_files/figure-html/unnamed-chunk-15-1.png" width="672" /></p>
-<pre class="r"><code>pollution %&gt;% 
-  filter(
-    year %in% c(&quot;2013&quot;,&quot;2014&quot;,&quot;2015&quot;,&quot;2016&quot;)
-  ) %&gt;% 
-  ggplot(aes(x= year, y=co_mean, group=state, color=state)) +
-  geom_point(alpha=0.5) +
-  geom_line()</code></pre>
-<p><img src="exploratory-analysis_files/figure-html/unnamed-chunk-16-1.png" width="672" /></p>
-<pre class="r"><code>pollution %&gt;% 
-  filter(
-    year %in% c(&quot;2013&quot;,&quot;2014&quot;,&quot;2015&quot;,&quot;2016&quot;)
-  ) %&gt;% 
-  ggplot(aes(x= year, y=o3_mean, group=state, color=state)) +
-  geom_point(alpha=0.5) +
-  geom_line()</code></pre>
-<p><img src="exploratory-analysis_files/figure-html/unnamed-chunk-17-1.png" width="672" /></p>
+<pre><code>## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion</code></pre>
+<pre><code>## Warning: Ignoring 1 observations</code></pre>
+<div id="htmlwidget-b02ef57d19da23cfd2e0" style="width:672px;height:480px;" class="plotly html-widget"></div>
+<script type="application/json" data-for="htmlwidget-b02ef57d19da23cfd2e0">{"x":{"visdat":{"167ce591630":["function () ","plotlyVisDat"]},"cur_data":"167ce591630","attrs":{"167ce591630":{"locationmode":"USA-states","alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"z":{},"text":{},"locations":{},"color":{},"colors":"viridis","inherit":true}},"layout":{"margin":{"b":40,"l":60,"t":25,"r":10},"mapType":"geo","scene":{"zaxis":{"title":"lung_and_bronchus_both_sexes_combined"}},"geo":{"domain":{"x":[0,1],"y":[0,1]},"scope":"usa","projection":{"type":"albers usa"},"showlakes":true,"lakecolor":"rgba(255,255,255,1)"},"hovermode":"closest","showlegend":false,"legend":{"yanchor":"top","y":0.5},"title":"Distribution of Lung and Bronchus Cancer Incidence Rate by State in 2013-2017"},"source":"A","config":{"modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"data":[{"colorbar":{"title":"Incidence Rate","ticklen":2,"len":0.5,"lenmode":"fraction","y":1,"yanchor":"top"},"colorscale":[["0","rgba(68,1,84,1)"],["0.0416666666666667","rgba(71,17,100,1)"],["0.0833333333333334","rgba(72,31,112,1)"],["0.125","rgba(71,45,123,1)"],["0.166666666666667","rgba(68,58,131,1)"],["0.208333333333333","rgba(64,70,136,1)"],["0.25","rgba(59,82,139,1)"],["0.291666666666667","rgba(54,93,141,1)"],["0.333333333333333","rgba(49,104,142,1)"],["0.375","rgba(44,114,142,1)"],["0.416666666666667","rgba(40,124,142,1)"],["0.458333333333333","rgba(36,134,142,1)"],["0.5","rgba(33,144,141,1)"],["0.541666666666667","rgba(31,154,138,1)"],["0.583333333333333","rgba(32,164,134,1)"],["0.625","rgba(39,173,129,1)"],["0.666666666666667","rgba(53,183,121,1)"],["0.708333333333333","rgba(71,193,110,1)"],["0.75","rgba(93,200,99,1)"],["0.791666666666667","rgba(117,208,84,1)"],["0.833333333333333","rgba(143,214,68,1)"],["0.875","rgba(170,220,50,1)"],["0.916666666666667","rgba(199,224,32,1)"],["0.958333333333333","rgba(227,228,24,1)"],["1","rgba(253,231,37,1)"]],"showscale":true,"locationmode":"USA-states","z":[64.8,55.8,46.7,77.2,41.5,41.4,59.6,66.9,57.7,62.8,45.7,49.5,63.7,72.2,63.3,56.2,91,66.2,72.1,56.4,61.6,63.3,56.1,74.9,72,53.7,57,63.7,55.3,38.5,58.7,67.7,57.7,67.8,67.4,54.1,63.5,69.4,64.4,59,74.5,50.6,26,61.1,56.4,54,79.8,59.1,42.2],"text":["Alabama","Alaska","Arizona","Arkansas","California","Colorado","Connecticut","Delaware","Florida","Georgia","Hawaii","Idaho","Illinois","Indiana","Iowa","Kansas","Kentucky","Louisiana","Maine","Maryland","Massachusetts","Michigan","Minnesota","Mississippi","Missouri","Montana","Nebraska","New Hampshire","New Jersey","New Mexico","New York","North Carolina","North Dakota","Ohio","Oklahoma","Oregon","Pennsylvania","Rhode Island","South Carolina","South Dakota","Tennessee","Texas","Utah","Vermont","Virginia","Washington","West Virginia","Wisconsin","Wyoming"],"locations":["AL","AK","AZ","AR","CA","CO","CT","DE","FL","GA","HI","ID","IL","IN","IA","KS","KY","LA","ME","MD","MA","MI","MN","MS","MO","MT","NE","NH","NJ","NM","NY","NC","ND","OH","OK","OR","PA","RI","SC","SD","TN","TX","UT","VT","VA","WA","WV","WI","WY"],"type":"choropleth","marker":{"line":{"colorbar":{"title":"","ticklen":2},"cmin":26,"cmax":91,"colorscale":[["0","rgba(68,1,84,1)"],["0.0416666666666667","rgba(71,17,100,1)"],["0.0833333333333334","rgba(72,31,112,1)"],["0.125","rgba(71,45,123,1)"],["0.166666666666667","rgba(68,58,131,1)"],["0.208333333333333","rgba(64,70,136,1)"],["0.25","rgba(59,82,139,1)"],["0.291666666666667","rgba(54,93,141,1)"],["0.333333333333333","rgba(49,104,142,1)"],["0.375","rgba(44,114,142,1)"],["0.416666666666667","rgba(40,124,142,1)"],["0.458333333333333","rgba(36,134,142,1)"],["0.5","rgba(33,144,141,1)"],["0.541666666666667","rgba(31,154,138,1)"],["0.583333333333333","rgba(32,164,134,1)"],["0.625","rgba(39,173,129,1)"],["0.666666666666667","rgba(53,183,121,1)"],["0.708333333333333","rgba(71,193,110,1)"],["0.75","rgba(93,200,99,1)"],["0.791666666666667","rgba(117,208,84,1)"],["0.833333333333333","rgba(143,214,68,1)"],["0.875","rgba(170,220,50,1)"],["0.916666666666667","rgba(199,224,32,1)"],["0.958333333333333","rgba(227,228,24,1)"],["1","rgba(253,231,37,1)"]],"showscale":false,"color":[64.8,55.8,46.7,77.2,41.5,41.4,59.6,66.9,57.7,62.8,45.7,49.5,63.7,72.2,63.3,56.2,91,66.2,72.1,56.4,61.6,63.3,56.1,74.9,72,53.7,57,63.7,55.3,38.5,58.7,67.7,57.7,67.8,67.4,54.1,63.5,69.4,64.4,59,74.5,50.6,26,61.1,56.4,54,79.8,59.1,42.2]}},"geo":"geo","frame":null}],"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.2,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
 </div>
 </div>
 
