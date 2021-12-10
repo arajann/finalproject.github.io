@@ -1,8 +1,11 @@
 ---
-title: "Model Building for Lung Cancer Incidence"
-author: "Matthew Neky & Anand Rajan"
-date: "12/8/2021"
-output: github_document
+title: "Model Building for Lung Cancer"
+output: 
+  html_document:
+    toc: true
+    toc_float: true
+
+
 ---
 
 ```{r setup, include=FALSE}

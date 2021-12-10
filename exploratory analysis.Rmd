@@ -1,9 +1,9 @@
 ---
-title: "exploratory_analysis"
-author: "Anand Rajan"
-date: "12/5/2021"
-output: github_document
-
+title: "Exploratory Analysis"
+output: 
+  html_document:
+    toc: true
+    toc_float: true
 ---
 
 ```{r setup, include=FALSE}
@@ -14,7 +14,7 @@ library(httr)
 library(wesanderson)
 library(viridis)
         
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(warning = FALSE, echo = TRUE)
 ```
 
 ## Exploring Pollution Data Set

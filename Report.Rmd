@@ -130,6 +130,10 @@ Cancer incidence and mortality data sets were more difficult to clean for analys
 
 ### Exploratory Analysis
 
+For visual plots, check out [Exploratory Analysis](exploratory-analysis.html)!
+
+
+
 &nbsp;
 
 ### Regression Analysis
@@ -139,6 +143,11 @@ Cancer incidence and mortality data sets were more difficult to clean for analys
 ### Discussion
 
 In light of our exploratory and regressed analysis, we attained the following insights:
+
+
+#### Limitations and Challenges
+
+
 
 &nbsp;
 
