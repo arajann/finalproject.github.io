@@ -186,7 +186,7 @@ for (i in pollutant_variables){
   ggplot(merged_death_pollution, aes_string(i,  "lung_and_bronchus_male")) + 
   geom_point() +
   geom_smooth(method = lm, se = FALSE) +
-  labs(title = "Pollutant Concentration vs. Lung Cancer Death Rate", y = "Lung Cancer Death Rate(per 100,000)") +
+  labs(title = "Pollutant Concentration vs. Lung Cancer Death Rate(Male)", y = "Lung Cancer Death Rate(per 100,000)") +
   theme(plot.title = element_text(hjust = 0.5, face = "bold"))
   
   print(plot)
@@ -200,7 +200,7 @@ for (i in pollutant_variables){
   ggplot(merged_death_pollution, aes_string(i,  "lung_and_bronchus_female")) + 
   geom_point() +
   geom_smooth(method = lm, se = FALSE) +
-  labs(title = "Pollutant Concentration vs. Lung Cancer Death Rate", y = "Lung Cancer Death Rate(per 100,000)") +
+  labs(title = "Pollutant Concentration vs. Lung Cancer Death Rate(Female)", y = "Lung Cancer Death Rate(per 100,000)") +
   theme(plot.title = element_text(hjust = 0.5, face = "bold"))
   
   print(plot)
