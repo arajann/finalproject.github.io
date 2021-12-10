@@ -122,9 +122,9 @@ We focused our analyses on the mean values of 4 major pollutants:
 
 #### Data Cleaning
 
-The pollution data was cleaned to have year, state, and the mean values of the 4 pollutants. In order to match the time period of the pollution data, the mortality trend data was cleaned to have observations from 2000 to 2016 only.
+The pollution data was cleaned to have year, state, and the mean values of the 4 pollutants. In order to match the time period of the pollution data, the mortality trend data was cleaned to have observations from 2000 to 2016 only. 
 
-Cancer incidence and mortality data sets were more difficult to clean for analysis as 
+Cancer incidence and mortality data sets were more difficult to clean for analysis as some observation values included notes along with their numeric values.
 
 &nbsp;
 

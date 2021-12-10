@@ -7,8 +7,8 @@ navbar:
       href: Report.html
     - text: "Exploratory Analysis"
       href: 
-    - text: "Dashboard"
-      href: 
+    - text: "Regression Model"
+      href: pollution_linear_models.html
     - text: "Pollution By State"
       href: pollution_state.html
     - icon: fa-envelope fa-lg
