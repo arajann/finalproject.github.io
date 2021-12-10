@@ -233,7 +233,7 @@ inc_state =
 
 For visual plots, check out [Exploratory Analysis](exploratory-analysis.html)!
 
-To explore 
+To explore our initial research questions, we started with visual representations of each data and examining for any noticeable patterns. 
 
 &nbsp;
 
