@@ -11,8 +11,6 @@ navbar:
       href: pollution_linear_models.html
     - text: "Pollution By State"
       href: pollution_state.html
-    - icon: 
-      href: 
     - icon: fa-github fa-lg
       href: https://github.com/arajann/finalproject/
 output:
