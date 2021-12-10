@@ -7,8 +7,10 @@ output:
     code_folding: hide
 ---
 
-&nbsp;
 
+Anand Rajan (ar4173), Matt Neky (mjn2142), Joe Kim (jhk2201), Alyssa Watson (aw3253), Yoo Rim Oh (yo2336)
+
+&nbsp;
 
 # Motivation
 
@@ -226,6 +228,8 @@ inc_state =
   filter(state != "Puerto Rico") %>%
   select(-c("female_breast_only", starts_with("colon"), starts_with("rectum")))
 ```
+
+These cleaned up datasets were further wrangled as needed for analysis.
 
 &nbsp;
 
