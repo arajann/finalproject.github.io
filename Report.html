@@ -329,6 +329,7 @@ div.tocify {
         <li>
   <a href="Report.html">Report</a>
 </li>
+<li class="dropdown-header">Webcast</li>
 <li>
   <a href="exploratory-analysis.html">Exploratory Analysis</a>
 </li>
@@ -337,9 +338,6 @@ div.tocify {
 </li>
 <li>
   <a href="pollution_state.html">Pollution By State</a>
-</li>
-<li>
-  <a></a>
 </li>
 <li>
   <a href="https://github.com/arajann/finalproject/">
@@ -464,7 +462,7 @@ Turner et.al (2020): Air Pollution-Related Cancer: Potential Pathways and Mechan
 </div>
 <div id="data-cleaning" class="section level2">
 <h2>Data Cleaning</h2>
-<p>The pollution data was cleaned to have year, state, and the mean values of the 4 pollutants as main variables. Furthermore, observations from <code>Country of Mexico</code> was excluded to match available state data from cancer mortality trend dataset.</p>
+<p>The pollution data was available for download in a csv format which was uploaded to repo using git LFS due to its size. Then this data was cleaned to have year, state, and the mean values of the 4 pollutants as main variables. Furthermore, observations from <code>Country of Mexico</code> was excluded to match available state data from cancer mortality trend dataset.</p>
 <pre class="r"><code>pollution = read_csv(&quot;data/uspollution_us_2000_2016.csv&quot;) %&gt;% 
   janitor::clean_names() %&gt;%
   select(state, date_local, no2_mean, o3_mean, 
@@ -494,7 +492,7 @@ Turner et.al (2020): Air Pollution-Related Cancer: Potential Pathways and Mechan
     co = mean(co_mean)
   ) %&gt;%
   mutate_if(is.numeric, ~round(., 3))</code></pre>
-<p>In order to match the time period of the pollution data containing observations from 2000 to 2016, the mortality trend data was cleaned to have observations from 2000 to 2016 only as well. Moreover, our function <code>remove_note</code> allowed cleaning observation points with notes added to only have the numeric value.</p>
+<p>All cancer related data from the Cancer Statistics Center were all available in excel format for download. In order to match the time period of the pollution data containing observations from 2000 to 2016, the mortality trend data was cleaned to have observations from 2000 to 2016 only as well. Moreover, our function <code>remove_note</code> allowed cleaning observation points with notes added to only have the numeric value.</p>
 <pre class="r"><code>read_death_time =
   read_excel(&quot;data/DeathTrend.xlsx&quot;, 
              skip = 6) %&gt;%
@@ -567,11 +565,7 @@ inc_state =
 <p>In light of our exploratory and regressed analysis, we attained the following insights:</p>
 <div id="limitations-and-challenges" class="section level2">
 <h2>Limitations and Challenges</h2>
-<p> </p>
 </div>
-</div>
-<div id="conclusions" class="section level1">
-<h1>Conclusions</h1>
 </div>
 
 

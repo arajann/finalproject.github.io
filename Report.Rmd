@@ -117,7 +117,7 @@ We focused our analyses on the mean values of 4 major pollutants:
 
 ## Data Cleaning
 
-The pollution data was cleaned to have year, state, and the mean values of the 4 pollutants as main variables. Furthermore, observations from `Country of Mexico` was excluded to match available state data from cancer mortality trend dataset. 
+The pollution data was available for download in a csv format which was uploaded to repo using git LFS due to its size. Then this data was cleaned to have year, state, and the mean values of the 4 pollutants as main variables. Furthermore, observations from `Country of Mexico` was excluded to match available state data from cancer mortality trend dataset. 
 
 ```{r include = FALSE}
 library(tidyverse)
@@ -163,7 +163,7 @@ pollution1 =
 ```
 
 
-In order to match the time period of the pollution data containing observations from 2000 to 2016, the mortality trend data was cleaned to have observations from 2000 to 2016 only as well. Moreover, our function `remove_note` allowed cleaning observation points with notes added to only have the numeric value.
+All cancer related data from the Cancer Statistics Center were all available in excel format for download. In order to match the time period of the pollution data containing observations from 2000 to 2016, the mortality trend data was cleaned to have observations from 2000 to 2016 only as well. Moreover, our function `remove_note` allowed cleaning observation points with notes added to only have the numeric value.
 
 ```{r death trend data cleaning example}
 read_death_time =
@@ -250,9 +250,6 @@ In light of our exploratory and regressed analysis, we attained the following in
 
 
 
-&nbsp;
-
-# Conclusions
 
 
 
