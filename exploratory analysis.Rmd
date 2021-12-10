@@ -1,38 +1,25 @@
 ---
-<<<<<<< HEAD
 title: "Exploratory Analysis"
 output: 
   html_document:
     toc: true
     toc_float: true
-=======
-title: "exploratory_analysis"
-author: "Anand Rajan"
-date: "12/5/2021"
-output: html_document
-
->>>>>>> ed84d1d1616487aadc02ddd571a6d01d5e74c83a
 ---
 
 ```{r setup, include=FALSE}
 library(tidyverse)
 library(readxl)
-library(rvest)
-library(httr)
 library(wesanderson)
 library(viridis)
-<<<<<<< HEAD
+library(plotly) 
         
 knitr::opts_chunk$set(warning = FALSE, echo = TRUE)
-=======
-library(plotly)       
-knitr::opts_chunk$set(echo = TRUE)
->>>>>>> ed84d1d1616487aadc02ddd571a6d01d5e74c83a
+    
 ```
 
 ## Exploring Pollution Data Set
 
-```{r}
+```{r }
 modified_pollution =
   read_csv("data/uspollution_us_2000_2016.csv") %>% 
   janitor::clean_names() %>%

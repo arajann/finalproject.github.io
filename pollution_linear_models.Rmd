@@ -1,16 +1,9 @@
 ---
-<<<<<<< HEAD
 title: "Model Building for Lung Cancer"
 output: 
   html_document:
     toc: true
     toc_float: true
-
-
-=======
-title: "Model Building for Lung Cancer Incidence"
-output: github_document
->>>>>>> ed84d1d1616487aadc02ddd571a6d01d5e74c83a
 ---
 
 ```{r setup, include=FALSE}
