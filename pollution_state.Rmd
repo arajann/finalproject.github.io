@@ -49,7 +49,7 @@ g = list(
 Column {data-width=500}
 -----------------------------------------------------------------------
 
-### Distribution of Mean NO2 by State in 2013-2017
+### NO2
 
 ```{r NO2}
 pollution1 %>%
@@ -69,7 +69,7 @@ pollution1 %>%
   )
 ```
 
-### Distribution of Mean O3 by State in 2013-2017
+### O3
 
 ```{r O3}
 pollution1 %>%
@@ -93,7 +93,7 @@ pollution1 %>%
 Column {data-width=500}
 -----------------------------------------------------------------------
 
-### Distribution of Mean SO2 by State in 2013-2017
+### SO2
 
 ```{r SO2}
 pollution1 %>%
@@ -113,7 +113,7 @@ pollution1 %>%
   )
 ```
 
-### Distribution of Mean CO by State in 2013-2017
+### CO
 
 ```{r CO}
 pollution1 %>%

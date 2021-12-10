@@ -45,7 +45,7 @@ Turner et.al (2020): Air Pollution-Related Cancer: Potential Pathways and Mechan
 
 # Research Questions 
 
-Some ideas for the questions, not definite
+Some initial questions we considered to explore data available:
 
 - What is the relationship between incidence rate and mortality rate of different types of cancer?
 - What has been the general trend of cancer incidence, cancer mortality, and pollution levels over time?
