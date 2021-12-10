@@ -1,9 +1,17 @@
 ---
+<<<<<<< HEAD
 title: "Exploratory Analysis"
 output: 
   html_document:
     toc: true
     toc_float: true
+=======
+title: "exploratory_analysis"
+author: "Anand Rajan"
+date: "12/5/2021"
+output: html_document
+
+>>>>>>> ed84d1d1616487aadc02ddd571a6d01d5e74c83a
 ---
 
 ```{r setup, include=FALSE}
@@ -13,8 +21,13 @@ library(rvest)
 library(httr)
 library(wesanderson)
 library(viridis)
+<<<<<<< HEAD
         
 knitr::opts_chunk$set(warning = FALSE, echo = TRUE)
+=======
+library(plotly)       
+knitr::opts_chunk$set(echo = TRUE)
+>>>>>>> ed84d1d1616487aadc02ddd571a6d01d5e74c83a
 ```
 
 ## Exploring Pollution Data Set
@@ -48,6 +61,43 @@ modified_pollution %>%
   knitr::kable(caption="United States Pollutant Concentration from 2000-2016")
 ```
 
+
+```{r}
+modified_pollution %>% 
+   pivot_longer(
+    no2:co,
+    names_to = "pollutant_type",
+    values_to="concentration"
+  )  %>% 
+  group_by(pollutant_type) %>% 
+   summarize(
+    mean_concentration = mean(concentration),
+    median_concentration = median(concentration),
+    sd_concentration = sd(concentration)) %>% 
+  knitr::kable(digits=3)
+```
+
+Comparing Distributions of Pollutant Concentrations 
+
+```{r}
+modified_pollution %>% 
+  pivot_longer(
+    no2:co,
+    names_to = "pollutant_type",
+    values_to="concentration"
+  ) %>% 
+  group_by(pollutant_type) %>% 
+  ggplot(aes(x=pollutant_type, y=concentration)) + 
+  geom_boxplot() +
+  labs(
+    title = "Distribution of Concentration Values for each Pollutant Type",
+    x="Pollutant Type",
+    y="Concentration(in ppm)"
+  ) +
+  scale_color_viridis(discrete=TRUE) +
+  theme_bw() 
+```
+
 ```{r}
 modified_pollution %>% 
   pivot_longer(
@@ -67,8 +117,8 @@ modified_pollution %>%
   ) 
 ```
 
+## Exploring Trends in Death From Lung Cancer
 
-### Exploring the Relationship Between Pollutant Concentration and Death Rate 
   
 ```{r}
 read_death_time =
@@ -85,28 +135,105 @@ remove_note = function(column_name) {
 
 for (i in x) {
   read_death_time = remove_note(i)} 
+
 death_time =
   read_death_time %>%
   filter(year %in% 2000:2016) %>%
   select(-c("breast_male", "ovary_male", "prostate_female","uterus_cervix_and_corpus_combined_male")) %>%
   mutate_at(vars(-("year")), as.numeric) %>%
-  mutate(year = as.factor(year))
+  mutate(
+   year = as.numeric(year)
+  )
+
+
 ```
   
+```{r}
+death_time %>% 
+  rename(
+    male = lung_and_bronchus_male,
+    female = lung_and_bronchus_female
+  ) %>% 
+  pivot_longer(
+    female:male,
+    names_to = "gender", 
+    values_to = "death_rate"
+  ) %>% 
+  ggplot(aes(x=year,y=death_rate, group=gender, color=gender)) + 
+  geom_point() +
+  geom_line() +
+  labs(
+    title= "Trend in US Death rate from Lung Cancer, 2000-2016",
+    x= "Year",
+    y="Lung Cancer Death Rate(per 100,000)"
+  )
+```
+
+# Exploring relationship between trend in death rate from Lung Cancer to Pollution Concentration
+
 
 ```{r}
 merged_death_pollution=
 merge(death_time, modified_pollution, by = "year") 
 ```
 
-  
-  
-  
-  
+```{r}
+pollutant_variables =
+  merged_death_pollution %>% 
+  select(no2,o3,so2,co) %>% 
+  colnames() %>% 
+  as.vector()
+```
+
+Create a for loop to plot Pollutant concentration vs. Lung Cancer Death Rate
+
 
 ```{r}
-death_state =
-  read_excel("data/DeathRate.xlsx", sheet = "State", 
+pollutant_variables =
+  pollutant_variables %>% 
+  as.list()
+
+
+for (i in pollutant_variables){
+  plot =
+  ggplot(merged_death_pollution, aes_string(i,  "lung_and_bronchus_male")) + 
+  geom_point() +
+  geom_smooth(method = lm, se = FALSE) +
+  labs(title = "Pollutant Concentration vs. Lung Cancer Death Rate(Male)", y = "Lung Cancer Death Rate(per 100,000)") +
+  theme(plot.title = element_text(hjust = 0.5, face = "bold"))
+  
+  print(plot)
+  
+}
+```
+
+```{r}
+for (i in pollutant_variables){
+  plot =
+  ggplot(merged_death_pollution, aes_string(i,  "lung_and_bronchus_female")) + 
+  geom_point() +
+  geom_smooth(method = lm, se = FALSE) +
+  labs(title = "Pollutant Concentration vs. Lung Cancer Death Rate(Female)", y = "Lung Cancer Death Rate(per 100,000)") +
+  theme(plot.title = element_text(hjust = 0.5, face = "bold"))
+  
+  print(plot)
+  
+}
+```
+
+
+### Exploring Incidence of Lung Cancer 
+
+```{r}
+g = list(
+  scope = 'usa',
+  projection = list(type = 'albers usa'),
+  showlakes = TRUE,
+  lakecolor = toRGB('white')
+)
+
+inc_state =
+  read_excel("data/IncRate.xlsx", sheet = "State", 
              skip = 6) %>%
   janitor::clean_names() %>% 
   separate(
@@ -114,181 +241,34 @@ death_state =
     into = c("breast_total", "female_breast_only"),
     sep = "-"
   ) %>% 
-  select(-female_breast_only) %>%
   mutate(
     breast_male = if_else(breast_male == "n/a", "0", breast_male),
     cervix_male = if_else(cervix_male == "n/a", "0", cervix_male),
+    colon_excluding_rectum_both_sexes_combined = if_else(colon_excluding_rectum_both_sexes_combined == "n/a", "0", colon_excluding_rectum_both_sexes_combined),
+    colon_excluding_rectum_female = if_else(colon_excluding_rectum_female == "n/a", "0", colon_excluding_rectum_female),
+    colon_excluding_rectum_male = if_else(colon_excluding_rectum_male == "n/a", "0", colon_excluding_rectum_male),
   ) %>%
-  mutate_at(vars(-("state")), as.numeric) %>%
   filter(state != "Puerto Rico")
-```
 
-```
-
-```{r}
-
-death_state %>%  
-  select(state, lung_and_bronchus_female,lung_and_bronchus_male, lung_and_bronchus_both_sexes_combined) %>% 
-  knitr::kable()
-
-death_state %>%  
-  select(state, all_cancer_types_combined_both_sexes_combined) %>% 
-  knitr::kable()
-
-
-
-  
-  
-```
-
-
-
-  
-
-
-```{r}
-merged_death_pollution %>% 
-  ggplot(aes(x=no2,y=lung_and_bronchus_male)) + geom_point()
-
-merged_death_pollution %>% 
-  ggplot(aes(x=no2,y=lung_and_bronchus_female)) + geom_point()
-
-merged_death_pollution %>% 
-  ggplot(aes(x=so2,y=lung_and_bronchus_male)) + geom_point()
-
-merged_death_pollution %>% 
-  ggplot(aes(x=so2,y=lung_and_bronchus_female)) + geom_point()
-
-```
-
-```{r}
-merged_death_pollution %>% 
-  ggplot(aes(x=o3,y=lung_and_bronchus_male)) + geom_point()
-
-merged_death_pollution %>% 
-  ggplot(aes(x=o3,y=lung_and_bronchus_female)) + geom_point()
-
-merged_death_pollution %>% 
-  ggplot(aes(x=co,y=lung_and_bronchus_male)) + geom_point()
-  
-merged_death_pollution %>% 
-  ggplot(aes(x=co,y=lung_and_bronchus_female)) + geom_point()
-```
-
-
-
-Pollution Trends Nationwide
-
-```{r}
-no2_trend = 
-modified_pollution %>% 
-  ggplot(aes(x=year,y=no2, colo)) +
-  geom_point() +
-  geom_line()
-```
-```{r}
-nationwide_so2trend=
-  modified_pollution %>% 
-  ggplot(aes(x=year,y=so2)) + 
-  geom_point() 
-```
-
-
-```{r}
-nationwide_o3trend=
-  modified_pollution %>% 
-  ggplot(aes(x=year,y=o3)) +
-  scale_color_viridis(discrete=FALSE) +
-  theme_bw() +
-  geom_point() +
-  labs(
-    title="Nationwide Trend in Ozone Concentration from 2000-2016",
-    x="Year",
-    y="Ozone Concentration(ppm)"
+inc_state %>%
+  select(state, lung_and_bronchus_both_sexes_combined) %>%
+  mutate(code = state.abb[match(state, state.name)],
+         lung_and_bronchus_both_sexes_combined = as.numeric(lung_and_bronchus_both_sexes_combined)) %>%
+  filter(code != is.na(code)) %>%
+  relocate(state, code) %>%
+  plot_geo(., locationmode = 'USA-states') %>% 
+  add_trace(
+    z = ~lung_and_bronchus_both_sexes_combined, text = ~state, locations = ~code,
+    color = ~lung_and_bronchus_both_sexes_combined, colors = 'viridis'
+  ) %>% 
+  colorbar(title = "Incidence Rate") %>% 
+  layout(
+    title = "Distribution of Lung and Bronchus Cancer Incidence Rate by State in 2013-2017",
+    geo = g
   )
- 
-
 ```
 
-```{r}
-nationwide_cotrend=
-  modified_pollution %>% 
-  ggplot(aes(x=year,y=co)) + 
-  geom_point() +
-  geom_smooth(se=FALSE) +
-  scale_color_viridis(discrete=FALSE) +
-  theme_bw() +
-  labs(
-    title="Nationwide Trend in Carbon Monoxide Concentration from 2000-2016",
-    x="Year",
-    y="Carbon Monoxide Concentration(ppm)"
-  )
-
-
-```
-
-
-```{r}
-pollution = read_csv("data/uspollution_us_2000_2016.csv") %>% 
-  janitor::clean_names() %>%
-  select(state, date_local, no2_mean, o3_mean, 
-         so2_mean, co_mean) %>%
-  separate(date_local, into = c("year", "month", "day"), sep = "\\-") %>%
-  select(-c("month", "day")) %>%
-  group_by(year, state) %>%
-  summarize(across(everything(), mean)) %>%
-  mutate_if(is.numeric, ~round(., 3)) %>%
-  filter(state != "Country Of Mexico") %>% 
-  mutate(
-    year = as.numeric(year)
-  )
-
-```
-
-```{r}
-
-pollution %>% 
-  filter(
-    year %in% c("2013","2014","2015","2016")
-  ) %>% 
-  ggplot(aes(x= year, y=no2_mean, group=state, color=state)) +
-  geom_point(alpha=0.5) +
-  geom_line()
-
-```
-
-```{r}
-pollution %>% 
-  filter(
-    year %in% c("2013","2014","2015","2016")
-  ) %>% 
-  ggplot(aes(x= year, y=so2_mean, group=state, color=state)) +
-  geom_point(alpha=0.5) +
-  geom_line()
-```
-
-
-
-```{r}
-pollution %>% 
-  filter(
-    year %in% c("2013","2014","2015","2016")
-  ) %>% 
-  ggplot(aes(x= year, y=co_mean, group=state, color=state)) +
-  geom_point(alpha=0.5) +
-  geom_line()
-```
-
-
-```{r}
-pollution %>% 
-  filter(
-    year %in% c("2013","2014","2015","2016")
-  ) %>% 
-  ggplot(aes(x= year, y=o3_mean, group=state, color=state)) +
-  geom_point(alpha=0.5) +
-  geom_line()
-```
-
+  
+  
 
 

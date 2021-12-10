@@ -1,4 +1,5 @@
 ---
+<<<<<<< HEAD
 title: "Model Building for Lung Cancer"
 output: 
   html_document:
@@ -6,6 +7,10 @@ output:
     toc_float: true
 
 
+=======
+title: "Model Building for Lung Cancer Incidence"
+output: github_document
+>>>>>>> ed84d1d1616487aadc02ddd571a6d01d5e74c83a
 ---
 
 ```{r setup, include=FALSE}
@@ -18,7 +23,10 @@ library(viridis)
 knitr::opts_chunk$set(warning = FALSE, message = FALSE)
 ```
 
-## Importing and Merging Data
+To continue our analysis we will build a linear model that assesses the relationship between pollutant concentration and incidence of lung cancer. We will merge the data set with incidence rate by state with the pollution data set that has been aggregated by state over the 15 year period. In essence we would like to answer whether states that had higher mean pollutant concentrations over this 15 year period were significantly associated with higher lung cancer incidence. Thus, from building the model we can assess whether concentrations of the various pollutants are significantly associated with increased incidence rates of lung cancer.  We will evaluate the predictive accuracy of the model, and cross validate the fitted model to other potential models.  
+
+
+## Importing and Merging Pollution Dataset with Lung Cancer Incidence Dataset 
 
 ```{r}
 inc_state =
@@ -72,28 +80,12 @@ pollution_incidence = read_csv("data/uspollution_us_2000_2016.csv") %>%
     lung_and_bronchus_male = as.numeric(lung_and_bronchus_male)
   )
 
-
-str(pollution_incidence)
-```
-
-### Linear Models
-
-```{r}
-model1 = lm(all_cancer_types_combined_both_sexes_combined ~ no2 + o3 + so2 + co, data = pollution_incidence)
-model1 %>% broom::glance()
-
-model2 = lm(lung_and_bronchus_both_sexes_combined ~ no2 + o3 + so2 + co, data = pollution_incidence)
-model2 %>% broom::glance()
-
-model3 = lm(colorectum_both_sexes_combined ~ no2 + o3 + so2 + co, data = pollution_incidence)
-model3 %>% broom::glance()
-
 ```
 
 
-## Building a Model for Lung Incidence 
+## Building a Model to analyze the relationship betweenn Lung Cancer Incidence and Pollutant concentration
 
-Lets begin by exploring each pollutant to see if there exists linear relationship between the pollutant concentration and incidence of lung cancer
+Let's begin by exploring each pollutant to see if there exists linear relationship between the pollutant concentration and incidence of lung cancer
 
 ```{r}
 continuous_variables =
@@ -104,6 +96,8 @@ continuous_variables =
   as.vector()
 
 ```
+
+Creating a for loop to create scatter plots that evaluate each pollutant concentration vs lung cancer incidence
 
 ```{r}
 continuous_variables =
@@ -122,30 +116,34 @@ for (i in continuous_variables) {
   
 }
 
-
-
 ```
 
-From reviewing the scatter plots, none of the pollutants show a particularly strong linear relationship with incidence of lung cancer,however we will proceed forward with a model that includes all the pollutants. 
+Well, this is not the best start. From reviewing the scatter plots, none of the pollutants show a particularly strong linear relationship with incidence of lung cancer. Each plot has a linear model fitted, but as we can see none of the linear associations are strong, however we will proceed forward with a model that includes all the pollutants.The lack of strong linear association will be noted in the final discussion of the prediction accuracy of the fitted model.
 
 ```{r}
 fitted_model = lm(lung_and_bronchus_both_sexes_combined ~ no2 + o3 + so2 + co, data = pollution_incidence)
+```
 
-fitted_model %>% 
-  broom::glance()
-
+```{r}
 fitted_model %>% 
   broom::tidy() %>% 
   select(term, estimate,p.value) %>%
   knitr::kable(digits=3)
 ```
 
-As we see the p-values for each of the slopes are significant except the slope for Carbon Monoxide. Moreover, the p-value for the overall model is significant(p-value=0.0126). Thus we will continue with the current model and compared to other comparison models 
+```{r}
+fitted_model %>% 
+  broom::glance() %>% 
+   knitr::kable(digits=3)
+```
+
+From looking at the table of values for the fitted model, we see that beta coefficients for so2 and o3 indicate a positive relationship with lung cancer incidence, whereas the beta coefficients for no2 and co indicate a negative relationship with lung cancer incidence. But more importantly, the only significant beta coefficients are for no2 and so2 using the threshold of alpha-level = 0.05. If look further at the analysis for the model, we see the R^2 value is quite low, This indicates the linear model does not not explain variation in lung cancer incidence well, thus prediction accuracy of the model is low. However, given the p-value for the overall model(p-value=0.041) is significant. Thus we will proceed to look at the residual plot for the fitted model.
+
 
 ```{r}
 pollution_incidence %>% 
   add_residuals(fitted_model) %>% 
-  add_predictions(model2) %>% 
+  add_predictions(fitted_model) %>% 
   ggplot(aes(x=pred, y=resid)) +
   geom_point() +
   geom_smooth(method = "lm", se = FALSE) +
@@ -157,18 +155,18 @@ pollution_incidence %>%
   scale_color_viridis(discrete=TRUE) +
   theme_bw()
 ```
-From the plot we see the assumption of homescedasticity is not violated, thus we can proceed forward with this model. 
+The plot indicates a random scatter of residuals. Therefore, the assumption of homescedasticity is not violated.
 
-Comparison Models
+## Cross Validate 
+
+We will cross validate the fitted model to models that are a combination of the different predictors. O3 and so2 were grouped together because of the scatter plots before that indicate slight positive relationships. Similarly no2 and co were grouped together because of the scatter plots that indicated slightly negative relationships.
 
 ```{r}
-comparison_model = lm(lung_and_bronchus_both_sexes_combined ~ no2 + o3 + so2, data = pollution_incidence)  
-comparison_model2 = lm(lung_and_bronchus_both_sexes_combined ~ o3 + so2, data = pollution_incidence) %>% 
-  broom::tidy()
+comparison_model = lm(lung_and_bronchus_both_sexes_combined ~ o3 + so2, data = pollution_incidence)  
+comparison_model2 = lm(lung_and_bronchus_both_sexes_combined ~ no2 + co, data = pollution_incidence)
 
 ```
 
-#Cross Validate
 
 ```{r}
 cv_df = crossv_mc(pollution_incidence,100) 
@@ -187,8 +185,8 @@ cv_df =
   cv_df %>% 
   mutate(
     fitted_model = map(train, ~lm(lung_and_bronchus_both_sexes_combined ~ no2 + o3 + so2 + co, data = pollution_incidence)),
-    comparison_model = map(train, ~lm(lung_and_bronchus_both_sexes_combined ~ no2 + o3 + so2, data = pollution_incidence)),
-    comparison_model2  = map(train, ~lm(lung_and_bronchus_both_sexes_combined ~ o3 + so2, data = pollution_incidence))) %>% 
+    comparison_model = map(train, ~lm(lung_and_bronchus_both_sexes_combined ~ o3 + so2, data = pollution_incidence)),
+    comparison_model2  = map(train, ~lm(lung_and_bronchus_both_sexes_combined ~ no2 + co, data = pollution_incidence))) %>% 
   mutate(
     rmse_fitted_model = map2_dbl(fitted_model, test,~rmse(model=.x, data=.y)),
     rmse_comparison_model = map2_dbl(comparison_model, test, ~rmse(model=.x, data=.y)),
@@ -206,21 +204,46 @@ cv_df %>%
   ggplot(aes(x = model, y = rmse)) + geom_boxplot()
 ```
 
+From the boxplot, we see that the fitted model has a lower RMSE compared to the comparison models. Despite the fitted model being better,the mean RMSE value is equal to 10, which is not good. Thus the overall predictive accuracy of the fitted model is quite low. We will now evaluate whether stratifying lung cancer incidence by gender affects the predictive accuracy of the model. 
 
+
+### Lung Cancer Incidnce Stratified by Gender 
+
+Female Model
 
 ```{r}
 female_model = lm(lung_and_bronchus_female ~ no2 + o3 + so2 + co, data=pollution_incidence)
-
-female_model %>% 
-  broom::glance()
-
-model_male = lm(lung_and_bronchus_male ~ no2 + o3 + so2 + co, data=pollution_incidence) 
-
-model_male %>% 
-  broom::glance()
 ```
 
+```{r}
+female_model %>% 
+  broom::tidy() %>% 
+  knitr::kable(digits=3)
+```
 
+```{r}
+female_model %>% 
+  broom::glance() %>% 
+  knitr::kable(digits=3)
+```
 
+Male Model
 
+```{r}
+male_model = lm(lung_and_bronchus_male ~ no2 + o3 + so2 + co, data=pollution_incidence) 
+```
+
+```{r}
+male_model %>%
+  broom::tidy() %>% 
+  knitr::kable(digits=3)
+```
+
+```{r}
+male_model %>%
+  broom::glance() %>% 
+  knitr::kable(digits=3)
+```
+
+From looking at the beta coefficients and model analyses for both models, predictive accuracy did not improve. 
 

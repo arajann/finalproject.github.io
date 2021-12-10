@@ -325,6 +325,14 @@ div.tocify {
         <li>
   <a href="Report.html">Report</a>
 </li>
+<<<<<<< HEAD
+=======
+<li class="dropdown-header">Exploratory Analysis</li>
+<li class="dropdown-header">Dashboard</li>
+<li>
+  <a href="pollution_state.html">Pollution By State</a>
+</li>
+>>>>>>> ed84d1d1616487aadc02ddd571a6d01d5e74c83a
 <li>
   <a href="exploratory-analysis.html">Exploratory Analysis</a>
 </li>
@@ -352,13 +360,18 @@ div.tocify {
 
 
 
+<<<<<<< HEAD
 <h1 class="title toc-ignore">Model Building for Lung Cancer</h1>
+=======
+<h1 class="title toc-ignore">Model Building for Lung Cancer Incidence</h1>
+>>>>>>> ed84d1d1616487aadc02ddd571a6d01d5e74c83a
 
 </div>
 
 
-<div id="importing-and-merging-data" class="section level2">
-<h2>Importing and Merging Data</h2>
+<p>To continue our analysis we will build a linear model that assesses the relationship between pollutant concentration and incidence of lung cancer. We will merge the data set with incidence rate by state with the pollution data set that has been aggregated by state over the 15 year period. In essence we would like to answer whether states that had higher mean pollutant concentrations over this 15 year period were significantly associated with higher lung cancer incidence. Thus, from building the model we can assess whether concentrations of the various pollutants are significantly associated with increased incidence rates of lung cancer. We will evaluate the predictive accuracy of the model, and cross validate the fitted model to other potential models.</p>
+<div id="importing-and-merging-pollution-dataset-with-lung-cancer-incidence-dataset" class="section level2">
+<h2>Importing and Merging Pollution Dataset with Lung Cancer Incidence Dataset</h2>
 <pre class="r"><code>inc_state =
   read_excel(&quot;data/IncRate.xlsx&quot;, sheet = &quot;State&quot;, 
              skip = 6) %&gt;%
@@ -404,122 +417,18 @@ div.tocify {
     lung_and_bronchus_both_sexes_combined = as.numeric(lung_and_bronchus_both_sexes_combined),
     lung_and_bronchus_female = as.numeric(lung_and_bronchus_female),
     lung_and_bronchus_male = as.numeric(lung_and_bronchus_male)
-  )
-
-
-str(pollution_incidence)</code></pre>
-<pre><code>## &#39;data.frame&#39;:    44 obs. of  77 variables:
-##  $ state                                               : chr  &quot;Alabama&quot; &quot;Alaska&quot; &quot;Arizona&quot; &quot;Arkansas&quot; ...
-##  $ no2                                                 : num  10.02 11.39 19.03 9.54 13.33 ...
-##  $ o3                                                  : num  0.0222 0.012 0.0249 0.0257 0.0261 ...
-##  $ so2                                                 : num  0.945 6.056 1.313 1.483 1.112 ...
-##  $ co                                                  : num  0.212 0.43 0.493 0.418 0.441 ...
-##  $ all_cancer_types_combined_both_sexes_combined       : chr  &quot;451.2&quot; &quot;416.9&quot; &quot;386.3&quot; &quot;472.8&quot; ...
-##  $ all_cancer_types_combined_female                    : chr  &quot;403.3&quot; &quot;403.2&quot; &quot;370.1&quot; &quot;424.8&quot; ...
-##  $ all_cancer_types_combined_male                      : chr  &quot;517.6&quot; &quot;437.2&quot; &quot;409.8&quot; &quot;537.2&quot; ...
-##  $ brain_and_other_nervous_system_both_sexes_combined  : chr  &quot;6.2&quot; &quot;6.3&quot; &quot;6&quot; &quot;6.8&quot; ...
-##  $ brain_and_other_nervous_system_female               : chr  &quot;5.5&quot; &quot;5.6&quot; &quot;4.9&quot; &quot;5.5&quot; ...
-##  $ brain_and_other_nervous_system_male                 : chr  &quot;7.2&quot; &quot;7&quot; &quot;7&quot; &quot;8.3&quot; ...
-##  $ breast_total                                        : chr  &quot;121.6 &quot; &quot;120.1 &quot; &quot;114.3 &quot; &quot;118.2 &quot; ...
-##  $ breast_female                                       : chr  &quot;121.6&quot; &quot;120.1&quot; &quot;114.3&quot; &quot;118.2&quot; ...
-##  $ breast_male                                         : chr  &quot;0&quot; &quot;0&quot; &quot;0&quot; &quot;0&quot; ...
-##  $ cervix_both_sexes_combined                          : chr  &quot;9.4&quot; &quot;7.2&quot; &quot;6.5&quot; &quot;9.5&quot; ...
-##  $ cervix_female                                       : chr  &quot;9.4&quot; &quot;7.2&quot; &quot;6.5&quot; &quot;9.5&quot; ...
-##  $ cervix_male                                         : chr  &quot;0&quot; &quot;0&quot; &quot;0&quot; &quot;0&quot; ...
-##  $ colorectum_both_sexes_combined                      : chr  &quot;43.6&quot; &quot;42.9&quot; &quot;32.5&quot; &quot;44.1&quot; ...
-##  $ colorectum_female                                   : chr  &quot;37.9&quot; &quot;40.7&quot; &quot;28.3&quot; &quot;37.9&quot; ...
-##  $ colorectum_male                                     : chr  &quot;50.4&quot; &quot;45.1&quot; &quot;37.2&quot; &quot;51.2&quot; ...
-##  $ esophagus_both_sexes_combined                       : chr  &quot;4.5&quot; &quot;5.8&quot; &quot;4.3&quot; &quot;4.4&quot; ...
-##  $ esophagus_female                                    : chr  &quot;1.6&quot; &quot;2.9&quot; &quot;1.7&quot; &quot;1.5&quot; ...
-##  $ esophagus_male                                      : chr  &quot;8.1&quot; &quot;8.8&quot; &quot;7.2&quot; &quot;7.8&quot; ...
-##  $ hodgkin_lymphoma_both_sexes_combined                : chr  &quot;2.4&quot; &quot;1.8&quot; &quot;2.2&quot; &quot;2.7&quot; ...
-##  $ hodgkin_lymphoma_female                             : chr  &quot;2.1&quot; &quot;1.6&quot; &quot;1.9&quot; &quot;2.4&quot; ...
-##  $ hodgkin_lymphoma_male                               : chr  &quot;2.7&quot; &quot;2&quot; &quot;2.5&quot; &quot;3&quot; ...
-##  $ kidney_and_renal_pelvis_both_sexes_combined         : chr  &quot;17.9&quot; &quot;18.2&quot; &quot;15.9&quot; &quot;20.2&quot; ...
-##  $ kidney_and_renal_pelvis_female                      : chr  &quot;12.8&quot; &quot;13.7&quot; &quot;10.9&quot; &quot;14&quot; ...
-##  $ kidney_and_renal_pelvis_male                        : chr  &quot;23.9&quot; &quot;22.6&quot; &quot;21.5&quot; &quot;27.4&quot; ...
-##  $ larynx_both_sexes_combined                          : chr  &quot;4.1&quot; &quot;2.6&quot; &quot;2.1&quot; &quot;4&quot; ...
-##  $ larynx_female                                       : chr  &quot;1.6&quot; &quot;0.9&quot; &quot;0.8&quot; &quot;1.8&quot; ...
-##  $ larynx_male                                         : chr  &quot;7.2&quot; &quot;4.3&quot; &quot;3.7&quot; &quot;6.6&quot; ...
-##  $ leukemia_both_sexes_combined                        : chr  &quot;12.3&quot; &quot;11.7&quot; &quot;11&quot; &quot;14.5&quot; ...
-##  $ leukemia_female                                     : chr  &quot;9.7&quot; &quot;9.1&quot; &quot;8.7&quot; &quot;11.2&quot; ...
-##  $ leukemia_male                                       : chr  &quot;15.6&quot; &quot;14.2&quot; &quot;13.8&quot; &quot;18.5&quot; ...
-##  $ liver_and_intrahepatic_bile_duct_both_sexes_combined: chr  &quot;7.7&quot; &quot;9.1&quot; &quot;7.9&quot; &quot;7.8&quot; ...
-##  $ liver_and_intrahepatic_bile_duct_female             : chr  &quot;4.3&quot; &quot;5.5&quot; &quot;4.4&quot; &quot;4.1&quot; ...
-##  $ liver_and_intrahepatic_bile_duct_male               : chr  &quot;11.9&quot; &quot;12.6&quot; &quot;11.9&quot; &quot;12&quot; ...
-##  $ lung_and_bronchus_both_sexes_combined               : num  64.8 55.8 46.7 77.2 41.5 41.4 59.6 66.9 57.7 62.8 ...
-##  $ lung_and_bronchus_female                            : num  50 47.6 43 62.7 37.8 39.6 55.8 60.8 50.5 50.6 ...
-##  $ lung_and_bronchus_male                              : num  84.1 64.8 51.2 95.8 46.4 44.1 65 75.3 66.5 79 ...
-##  $ melanoma_of_the_skin_both_sexes_combined            : chr  &quot;21.6&quot; &quot;14.3&quot; &quot;24.5&quot; &quot;21.7&quot; ...
-##  $ melanoma_of_the_skin_female                         : chr  &quot;17&quot; &quot;12.3&quot; &quot;17.4&quot; &quot;17&quot; ...
-##  $ melanoma_of_the_skin_male                           : chr  &quot;28.2&quot; &quot;16.7&quot; &quot;33&quot; &quot;28.3&quot; ...
-##  $ myeloma_both_sexes_combined                         : chr  &quot;7.1&quot; &quot;4.9&quot; &quot;5.1&quot; &quot;6.8&quot; ...
-##  $ myeloma_female                                      : chr  &quot;6.1&quot; &quot;4&quot; &quot;4&quot; &quot;5.7&quot; ...
-##  $ myeloma_male                                        : chr  &quot;8.5&quot; &quot;5.8&quot; &quot;6.3&quot; &quot;8.3&quot; ...
-##  $ non_hodgkin_lymphoma_both_sexes_combined            : chr  &quot;16.2&quot; &quot;17.1&quot; &quot;15.5&quot; &quot;18.2&quot; ...
-##  $ non_hodgkin_lymphoma_female                         : chr  &quot;13.4&quot; &quot;13.5&quot; &quot;12.9&quot; &quot;15.2&quot; ...
-##  $ non_hodgkin_lymphoma_male                           : chr  &quot;19.8&quot; &quot;21&quot; &quot;18.5&quot; &quot;22&quot; ...
-##  $ oral_cavity_and_pharynx_both_sexes_combined         : chr  &quot;13.2&quot; &quot;10.7&quot; &quot;9.2&quot; &quot;13.8&quot; ...
-##  $ oral_cavity_and_pharynx_female                      : chr  &quot;7.1&quot; &quot;5.9&quot; &quot;4.8&quot; &quot;7.3&quot; ...
-##  $ oral_cavity_and_pharynx_male                        : chr  &quot;20.3&quot; &quot;15&quot; &quot;14.1&quot; &quot;21.1&quot; ...
-##  $ ovary_both_sexes_combined                           : chr  &quot;11.5&quot; &quot;9.9&quot; &quot;10.5&quot; &quot;11.2&quot; ...
-##  $ ovary_female                                        : chr  &quot;11.5&quot; &quot;9.9&quot; &quot;10.5&quot; &quot;11.2&quot; ...
-##  $ ovary_male                                          : chr  &quot;n/a&quot; &quot;n/a&quot; &quot;n/a&quot; &quot;n/a&quot; ...
-##  $ pancreas_both_sexes_combined                        : chr  &quot;12.7&quot; &quot;12.7&quot; &quot;11.6&quot; &quot;12.7&quot; ...
-##  $ pancreas_female                                     : chr  &quot;11&quot; &quot;11.5&quot; &quot;10.1&quot; &quot;10.8&quot; ...
-##  $ pancreas_male                                       : chr  &quot;14.8&quot; &quot;13.9&quot; &quot;13.4&quot; &quot;14.8&quot; ...
-##  $ prostate_both_sexes_combined                        : chr  &quot;121&quot; &quot;83.4&quot; &quot;79.1&quot; &quot;112.4&quot; ...
-##  $ prostate_female                                     : chr  &quot;n/a&quot; &quot;n/a&quot; &quot;n/a&quot; &quot;n/a&quot; ...
-##  $ prostate_male                                       : chr  &quot;121&quot; &quot;83.4&quot; &quot;79.1&quot; &quot;112.4&quot; ...
-##  $ stomach_both_sexes_combined                         : chr  &quot;6.8&quot; &quot;8&quot; &quot;5.3&quot; &quot;6.3&quot; ...
-##  $ stomach_female                                      : chr  &quot;5.1&quot; &quot;5.3&quot; &quot;3.8&quot; &quot;4.3&quot; ...
-##  $ stomach_male                                        : chr  &quot;8.8&quot; &quot;10.8&quot; &quot;7.1&quot; &quot;8.8&quot; ...
-##  $ testis_both_sexes_combined                          : chr  &quot;4.3&quot; &quot;6&quot; &quot;5.3&quot; &quot;5.3&quot; ...
-##  $ testis_female                                       : chr  &quot;n/a&quot; &quot;n/a&quot; &quot;n/a&quot; &quot;n/a&quot; ...
-##  $ testis_male                                         : chr  &quot;4.3&quot; &quot;6&quot; &quot;5.3&quot; &quot;5.3&quot; ...
-##  $ thyroid_both_sexes_combined                         : chr  &quot;9.7&quot; &quot;12.4&quot; &quot;13.8&quot; &quot;12&quot; ...
-##  $ thyroid_female                                      : chr  &quot;14.1&quot; &quot;19.2&quot; &quot;20.9&quot; &quot;17.6&quot; ...
-##  $ thyroid_male                                        : chr  &quot;5&quot; &quot;6.3&quot; &quot;6.6&quot; &quot;6.3&quot; ...
-##  $ urinary_bladder_both_sexes_combined                 : chr  &quot;18.3&quot; &quot;21&quot; &quot;18.6&quot; &quot;19.9&quot; ...
-##  $ urinary_bladder_female                              : chr  &quot;7.5&quot; &quot;8.8&quot; &quot;7.6&quot; &quot;8&quot; ...
-##  $ urinary_bladder_male                                : chr  &quot;32.7&quot; &quot;34.4&quot; &quot;31.6&quot; &quot;35.1&quot; ...
-##  $ uterine_corpus_both_sexes_combined                  : chr  &quot;19.9&quot; &quot;24.2&quot; &quot;22.9&quot; &quot;24.1&quot; ...
-##  $ uterine_corpus_female                               : chr  &quot;19.9&quot; &quot;24.2&quot; &quot;22.9&quot; &quot;24.1&quot; ...
-##  $ uterine_corpus_male                                 : chr  &quot;n/a&quot; &quot;n/a&quot; &quot;n/a&quot; &quot;n/a&quot; ...</code></pre>
-<div id="linear-models" class="section level3">
-<h3>Linear Models</h3>
-<pre class="r"><code>model1 = lm(all_cancer_types_combined_both_sexes_combined ~ no2 + o3 + so2 + co, data = pollution_incidence)
-model1 %&gt;% broom::glance()</code></pre>
-<pre><code>## # A tibble: 1 x 12
-##   r.squared adj.r.squared sigma statistic p.value    df logLik   AIC   BIC
-##       &lt;dbl&gt;         &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
-## 1     0.131        0.0423  30.4      1.47   0.228     4  -210.  432.  443.
-## # ... with 3 more variables: deviance &lt;dbl&gt;, df.residual &lt;int&gt;, nobs &lt;int&gt;</code></pre>
-<pre class="r"><code>model2 = lm(lung_and_bronchus_both_sexes_combined ~ no2 + o3 + so2 + co, data = pollution_incidence)
-model2 %&gt;% broom::glance()</code></pre>
-<pre><code>## # A tibble: 1 x 12
-##   r.squared adj.r.squared sigma statistic p.value    df logLik   AIC   BIC
-##       &lt;dbl&gt;         &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
-## 1     0.221         0.141  10.7      2.77  0.0407     4  -164.  340.  351.
-## # ... with 3 more variables: deviance &lt;dbl&gt;, df.residual &lt;int&gt;, nobs &lt;int&gt;</code></pre>
-<pre class="r"><code>model3 = lm(colorectum_both_sexes_combined ~ no2 + o3 + so2 + co, data = pollution_incidence)
-model3 %&gt;% broom::glance()</code></pre>
-<pre><code>## # A tibble: 1 x 12
-##   r.squared adj.r.squared sigma statistic p.value    df logLik   AIC   BIC
-##       &lt;dbl&gt;         &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
-## 1     0.305         0.233  3.52      4.27 0.00581     4  -115.  242.  253.
-## # ... with 3 more variables: deviance &lt;dbl&gt;, df.residual &lt;int&gt;, nobs &lt;int&gt;</code></pre>
+  )</code></pre>
 </div>
-</div>
-<div id="building-a-model-for-lung-incidence" class="section level2">
-<h2>Building a Model for Lung Incidence</h2>
-<p>Lets begin by exploring each pollutant to see if there exists linear relationship between the pollutant concentration and incidence of lung cancer</p>
+<div id="building-a-model-to-analyze-the-relationship-betweenn-lung-cancer-incidence-and-pollutant-concentration" class="section level2">
+<h2>Building a Model to analyze the relationship betweenn Lung Cancer Incidence and Pollutant concentration</h2>
+<p>Let’s begin by exploring each pollutant to see if there exists linear relationship between the pollutant concentration and incidence of lung cancer</p>
 <pre class="r"><code>continuous_variables =
   pollution_incidence %&gt;% 
   select(is.numeric) %&gt;% 
   select(-lung_and_bronchus_both_sexes_combined,-lung_and_bronchus_female, -lung_and_bronchus_male) %&gt;% 
   colnames() %&gt;% 
   as.vector()</code></pre>
+<p>Creating a for loop to create scatter plots that evaluate each pollutant concentration vs lung cancer incidence</p>
 <pre class="r"><code>continuous_variables =
   continuous_variables %&gt;% 
   as.list()
@@ -535,17 +444,9 @@ for (i in continuous_variables) {
   print(plot)
   
 }</code></pre>
-<p><img src="pollution_linear_models_files/figure-html/unnamed-chunk-5-1.png" width="672" /><img src="pollution_linear_models_files/figure-html/unnamed-chunk-5-2.png" width="672" /><img src="pollution_linear_models_files/figure-html/unnamed-chunk-5-3.png" width="672" /><img src="pollution_linear_models_files/figure-html/unnamed-chunk-5-4.png" width="672" /></p>
-<p>From reviewing the scatter plots, none of the pollutants show a particularly strong linear relationship with incidence of lung cancer,however we will proceed forward with a model that includes all the pollutants.</p>
-<pre class="r"><code>fitted_model = lm(lung_and_bronchus_both_sexes_combined ~ no2 + o3 + so2 + co, data = pollution_incidence)
-
-fitted_model %&gt;% 
-  broom::glance()</code></pre>
-<pre><code>## # A tibble: 1 x 12
-##   r.squared adj.r.squared sigma statistic p.value    df logLik   AIC   BIC
-##       &lt;dbl&gt;         &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
-## 1     0.221         0.141  10.7      2.77  0.0407     4  -164.  340.  351.
-## # ... with 3 more variables: deviance &lt;dbl&gt;, df.residual &lt;int&gt;, nobs &lt;int&gt;</code></pre>
+<p><img src="pollution_linear_models_files/figure-html/unnamed-chunk-4-1.png" width="672" /><img src="pollution_linear_models_files/figure-html/unnamed-chunk-4-2.png" width="672" /><img src="pollution_linear_models_files/figure-html/unnamed-chunk-4-3.png" width="672" /><img src="pollution_linear_models_files/figure-html/unnamed-chunk-4-4.png" width="672" /></p>
+<p>Well, this is not the best start. From reviewing the scatter plots, none of the pollutants show a particularly strong linear relationship with incidence of lung cancer. Each plot has a linear model fitted, but as we can see none of the linear associations are strong, however we will proceed forward with a model that includes all the pollutants.The lack of strong linear association will be noted in the final discussion of the prediction accuracy of the fitted model.</p>
+<pre class="r"><code>fitted_model = lm(lung_and_bronchus_both_sexes_combined ~ no2 + o3 + so2 + co, data = pollution_incidence)</code></pre>
 <pre class="r"><code>fitted_model %&gt;% 
   broom::tidy() %&gt;% 
   select(term, estimate,p.value) %&gt;%
@@ -586,10 +487,61 @@ fitted_model %&gt;%
 </tr>
 </tbody>
 </table>
-<p>As we see the p-values for each of the slopes are significant except the slope for Carbon Monoxide. Moreover, the p-value for the overall model is significant(p-value=0.0126). Thus we will continue with the current model and compared to other comparison models</p>
+<pre class="r"><code>fitted_model %&gt;% 
+  broom::glance() %&gt;% 
+   knitr::kable(digits=3)</code></pre>
+<table>
+<colgroup>
+<col width="9%" />
+<col width="13%" />
+<col width="6%" />
+<col width="9%" />
+<col width="7%" />
+<col width="2%" />
+<col width="8%" />
+<col width="7%" />
+<col width="6%" />
+<col width="8%" />
+<col width="11%" />
+<col width="4%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="right">r.squared</th>
+<th align="right">adj.r.squared</th>
+<th align="right">sigma</th>
+<th align="right">statistic</th>
+<th align="right">p.value</th>
+<th align="right">df</th>
+<th align="right">logLik</th>
+<th align="right">AIC</th>
+<th align="right">BIC</th>
+<th align="right">deviance</th>
+<th align="right">df.residual</th>
+<th align="right">nobs</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">0.221</td>
+<td align="right">0.141</td>
+<td align="right">10.705</td>
+<td align="right">2.766</td>
+<td align="right">0.041</td>
+<td align="right">4</td>
+<td align="right">-164.092</td>
+<td align="right">340.185</td>
+<td align="right">350.89</td>
+<td align="right">4469.614</td>
+<td align="right">39</td>
+<td align="right">44</td>
+</tr>
+</tbody>
+</table>
+<p>From looking at the table of values for the fitted model, we see that beta coefficients for so2 and o3 indicate a positive relationship with lung cancer incidence, whereas the beta coefficients for no2 and co indicate a negative relationship with lung cancer incidence. But more importantly, the only significant beta coefficients are for no2 and so2 using the threshold of alpha-level = 0.05. If look further at the analysis for the model, we see the R^2 value is quite low, This indicates the linear model does not not explain variation in lung cancer incidence well, thus prediction accuracy of the model is low. However, given the p-value for the overall model(p-value=0.041) is significant. Thus we will proceed to look at the residual plot for the fitted model.</p>
 <pre class="r"><code>pollution_incidence %&gt;% 
   add_residuals(fitted_model) %&gt;% 
-  add_predictions(model2) %&gt;% 
+  add_predictions(fitted_model) %&gt;% 
   ggplot(aes(x=pred, y=resid)) +
   geom_point() +
   geom_smooth(method = &quot;lm&quot;, se = FALSE) +
@@ -600,12 +552,13 @@ fitted_model %&gt;%
   ) +
   scale_color_viridis(discrete=TRUE) +
   theme_bw()</code></pre>
-<p><img src="pollution_linear_models_files/figure-html/unnamed-chunk-7-1.png" width="672" /> From the plot we see the assumption of homescedasticity is not violated, thus we can proceed forward with this model.</p>
-<p>Comparison Models</p>
-<pre class="r"><code>comparison_model = lm(lung_and_bronchus_both_sexes_combined ~ no2 + o3 + so2, data = pollution_incidence)  
-comparison_model2 = lm(lung_and_bronchus_both_sexes_combined ~ o3 + so2, data = pollution_incidence) %&gt;% 
-  broom::tidy()</code></pre>
-<p>#Cross Validate</p>
+<p><img src="pollution_linear_models_files/figure-html/unnamed-chunk-8-1.png" width="672" /> The plot indicates a random scatter of residuals. Therefore, the assumption of homescedasticity is not violated.</p>
+</div>
+<div id="cross-validate" class="section level2">
+<h2>Cross Validate</h2>
+<p>We will cross validate the fitted model to models that are a combination of the different predictors. O3 and so2 were grouped together because of the scatter plots before that indicate slight positive relationships. Similarly no2 and co were grouped together because of the scatter plots that indicated slightly negative relationships.</p>
+<pre class="r"><code>comparison_model = lm(lung_and_bronchus_both_sexes_combined ~ o3 + so2, data = pollution_incidence)  
+comparison_model2 = lm(lung_and_bronchus_both_sexes_combined ~ no2 + co, data = pollution_incidence)</code></pre>
 <pre class="r"><code>cv_df = crossv_mc(pollution_incidence,100) 
 
 cv_df =
@@ -618,8 +571,8 @@ cv_df =
   cv_df %&gt;% 
   mutate(
     fitted_model = map(train, ~lm(lung_and_bronchus_both_sexes_combined ~ no2 + o3 + so2 + co, data = pollution_incidence)),
-    comparison_model = map(train, ~lm(lung_and_bronchus_both_sexes_combined ~ no2 + o3 + so2, data = pollution_incidence)),
-    comparison_model2  = map(train, ~lm(lung_and_bronchus_both_sexes_combined ~ o3 + so2, data = pollution_incidence))) %&gt;% 
+    comparison_model = map(train, ~lm(lung_and_bronchus_both_sexes_combined ~ o3 + so2, data = pollution_incidence)),
+    comparison_model2  = map(train, ~lm(lung_and_bronchus_both_sexes_combined ~ no2 + co, data = pollution_incidence))) %&gt;% 
   mutate(
     rmse_fitted_model = map2_dbl(fitted_model, test,~rmse(model=.x, data=.y)),
     rmse_comparison_model = map2_dbl(comparison_model, test, ~rmse(model=.x, data=.y)),
@@ -635,25 +588,220 @@ cv_df %&gt;%
     names_prefix = &quot;rmse_&quot;) %&gt;% 
   mutate(model = fct_inorder(model)) %&gt;% 
   ggplot(aes(x = model, y = rmse)) + geom_boxplot()</code></pre>
-<p><img src="pollution_linear_models_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
-<pre class="r"><code>female_model = lm(lung_and_bronchus_female ~ no2 + o3 + so2 + co, data=pollution_incidence)
-
-female_model %&gt;% 
-  broom::glance()</code></pre>
-<pre><code>## # A tibble: 1 x 12
-##   r.squared adj.r.squared sigma statistic p.value    df logLik   AIC   BIC
-##       &lt;dbl&gt;         &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
-## 1     0.195         0.112  9.13      2.36  0.0703     4  -157.  326.  337.
-## # ... with 3 more variables: deviance &lt;dbl&gt;, df.residual &lt;int&gt;, nobs &lt;int&gt;</code></pre>
-<pre class="r"><code>model_male = lm(lung_and_bronchus_male ~ no2 + o3 + so2 + co, data=pollution_incidence) 
-
-model_male %&gt;% 
-  broom::glance()</code></pre>
-<pre><code>## # A tibble: 1 x 12
-##   r.squared adj.r.squared sigma statistic p.value    df logLik   AIC   BIC
-##       &lt;dbl&gt;         &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
-## 1     0.218         0.138  14.0      2.72  0.0433     4  -176.  364.  374.
-## # ... with 3 more variables: deviance &lt;dbl&gt;, df.residual &lt;int&gt;, nobs &lt;int&gt;</code></pre>
+<p><img src="pollution_linear_models_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
+<p>From the boxplot, we see that the fitted model has a lower RMSE compared to the comparison models. Despite the fitted model being better,the mean RMSE value is equal to 10, which is not good. Thus the overall predictive accuracy of the fitted model is quite low. We will now evaluate whether stratifying lung cancer incidence by gender affects the predictive accuracy of the model.</p>
+<div id="lung-cancer-incidnce-stratified-by-gender" class="section level3">
+<h3>Lung Cancer Incidnce Stratified by Gender</h3>
+<p>Female Model</p>
+<pre class="r"><code>female_model = lm(lung_and_bronchus_female ~ no2 + o3 + so2 + co, data=pollution_incidence)</code></pre>
+<pre class="r"><code>female_model %&gt;% 
+  broom::tidy() %&gt;% 
+  knitr::kable(digits=3)</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">term</th>
+<th align="right">estimate</th>
+<th align="right">std.error</th>
+<th align="right">statistic</th>
+<th align="right">p.value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">(Intercept)</td>
+<td align="right">54.464</td>
+<td align="right">12.441</td>
+<td align="right">4.378</td>
+<td align="right">0.000</td>
+</tr>
+<tr class="even">
+<td align="left">no2</td>
+<td align="right">-0.640</td>
+<td align="right">0.402</td>
+<td align="right">-1.594</td>
+<td align="right">0.119</td>
+</tr>
+<tr class="odd">
+<td align="left">o3</td>
+<td align="right">133.212</td>
+<td align="right">362.366</td>
+<td align="right">0.368</td>
+<td align="right">0.715</td>
+</tr>
+<tr class="even">
+<td align="left">so2</td>
+<td align="right">3.745</td>
+<td align="right">1.341</td>
+<td align="right">2.794</td>
+<td align="right">0.008</td>
+</tr>
+<tr class="odd">
+<td align="left">co</td>
+<td align="right">-15.525</td>
+<td align="right">16.843</td>
+<td align="right">-0.922</td>
+<td align="right">0.362</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>female_model %&gt;% 
+  broom::glance() %&gt;% 
+  knitr::kable(digits=3)</code></pre>
+<table>
+<colgroup>
+<col width="9%" />
+<col width="13%" />
+<col width="5%" />
+<col width="9%" />
+<col width="7%" />
+<col width="2%" />
+<col width="8%" />
+<col width="7%" />
+<col width="7%" />
+<col width="8%" />
+<col width="11%" />
+<col width="4%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="right">r.squared</th>
+<th align="right">adj.r.squared</th>
+<th align="right">sigma</th>
+<th align="right">statistic</th>
+<th align="right">p.value</th>
+<th align="right">df</th>
+<th align="right">logLik</th>
+<th align="right">AIC</th>
+<th align="right">BIC</th>
+<th align="right">deviance</th>
+<th align="right">df.residual</th>
+<th align="right">nobs</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">0.195</td>
+<td align="right">0.112</td>
+<td align="right">9.129</td>
+<td align="right">2.357</td>
+<td align="right">0.07</td>
+<td align="right">4</td>
+<td align="right">-157.085</td>
+<td align="right">326.169</td>
+<td align="right">336.874</td>
+<td align="right">3250.356</td>
+<td align="right">39</td>
+<td align="right">44</td>
+</tr>
+</tbody>
+</table>
+<p>Male Model</p>
+<pre class="r"><code>male_model = lm(lung_and_bronchus_male ~ no2 + o3 + so2 + co, data=pollution_incidence) </code></pre>
+<pre class="r"><code>male_model %&gt;%
+  broom::tidy() %&gt;% 
+  knitr::kable(digits=3)</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">term</th>
+<th align="right">estimate</th>
+<th align="right">std.error</th>
+<th align="right">statistic</th>
+<th align="right">p.value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">(Intercept)</td>
+<td align="right">72.236</td>
+<td align="right">19.060</td>
+<td align="right">3.790</td>
+<td align="right">0.001</td>
+</tr>
+<tr class="even">
+<td align="left">no2</td>
+<td align="right">-1.496</td>
+<td align="right">0.615</td>
+<td align="right">-2.430</td>
+<td align="right">0.020</td>
+</tr>
+<tr class="odd">
+<td align="left">o3</td>
+<td align="right">156.136</td>
+<td align="right">555.152</td>
+<td align="right">0.281</td>
+<td align="right">0.780</td>
+</tr>
+<tr class="even">
+<td align="left">so2</td>
+<td align="right">5.611</td>
+<td align="right">2.054</td>
+<td align="right">2.732</td>
+<td align="right">0.009</td>
+</tr>
+<tr class="odd">
+<td align="left">co</td>
+<td align="right">-2.349</td>
+<td align="right">25.804</td>
+<td align="right">-0.091</td>
+<td align="right">0.928</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>male_model %&gt;%
+  broom::glance() %&gt;% 
+  knitr::kable(digits=3)</code></pre>
+<table style="width:100%;">
+<colgroup>
+<col width="9%" />
+<col width="13%" />
+<col width="6%" />
+<col width="9%" />
+<col width="7%" />
+<col width="2%" />
+<col width="8%" />
+<col width="7%" />
+<col width="7%" />
+<col width="8%" />
+<col width="11%" />
+<col width="4%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="right">r.squared</th>
+<th align="right">adj.r.squared</th>
+<th align="right">sigma</th>
+<th align="right">statistic</th>
+<th align="right">p.value</th>
+<th align="right">df</th>
+<th align="right">logLik</th>
+<th align="right">AIC</th>
+<th align="right">BIC</th>
+<th align="right">deviance</th>
+<th align="right">df.residual</th>
+<th align="right">nobs</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">0.218</td>
+<td align="right">0.138</td>
+<td align="right">13.986</td>
+<td align="right">2.72</td>
+<td align="right">0.043</td>
+<td align="right">4</td>
+<td align="right">-175.854</td>
+<td align="right">363.709</td>
+<td align="right">374.414</td>
+<td align="right">7628.856</td>
+<td align="right">39</td>
+<td align="right">44</td>
+</tr>
+</tbody>
+</table>
+<p>From looking at the beta coefficients and model analyses for both models, predictive accuracy did not improve.</p>
+</div>
 </div>
 
 

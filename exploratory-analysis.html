@@ -13,8 +13,13 @@
 
 <title>Exploratory Analysis</title>
 
+<<<<<<< HEAD
 <script src="site_libs/header-attrs-2.11/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+=======
+<script src="site_libs/header-attrs-2.10/header-attrs.js"></script>
+<script src="site_libs/jquery-3.5.1/jquery.min.js"></script>
+>>>>>>> ed84d1d1616487aadc02ddd571a6d01d5e74c83a
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/journal.min.css" rel="stylesheet" />
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
@@ -35,6 +40,13 @@
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
 <link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<script src="site_libs/htmlwidgets-1.5.4/htmlwidgets.js"></script>
+<script src="site_libs/plotly-binding-4.10.0/plotly.js"></script>
+<script src="site_libs/typedarray-0.1/typedarray.min.js"></script>
+<link href="site_libs/crosstalk-1.1.1/css/crosstalk.css" rel="stylesheet" />
+<script src="site_libs/crosstalk-1.1.1/js/crosstalk.min.js"></script>
+<link href="site_libs/plotly-htmlwidgets-css-2.5.1/plotly-htmlwidgets.css" rel="stylesheet" />
+<script src="site_libs/plotly-main-2.5.1/plotly-latest.min.js"></script>
 <link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
 <link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
 
@@ -325,9 +337,13 @@ div.tocify {
         <li>
   <a href="Report.html">Report</a>
 </li>
+<<<<<<< HEAD
 <li>
   <a href="exploratory-analysis.html">Exploratory Analysis</a>
 </li>
+=======
+<li class="dropdown-header">Exploratory Analysis</li>
+>>>>>>> ed84d1d1616487aadc02ddd571a6d01d5e74c83a
 <li>
   <a href="pollution_linear_models.html">Regression Model</a>
 </li>
@@ -550,9 +566,27 @@ div.tocify {
     x=&quot;Year&quot;,
     y=&quot;Pollutant Concentration(ppm)&quot;
   ) </code></pre>
-<p><img src="exploratory-analysis_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
-<div id="exploring-the-relationship-between-pollutant-concentration-and-death-rate" class="section level3">
-<h3>Exploring the Relationship Between Pollutant Concentration and Death Rate</h3>
+<p><img src="exploratory-analysis_files/figure-html/unnamed-chunk-2-1.png" width="672" /> Comparing Distributions of Pollutant Concentrations</p>
+<pre class="r"><code>modified_pollution %&gt;% 
+  pivot_longer(
+    no2:co,
+    names_to = &quot;pollutant_type&quot;,
+    values_to=&quot;concentration&quot;
+  ) %&gt;% 
+  group_by(pollutant_type) %&gt;% 
+  ggplot(aes(x=pollutant_type, y=concentration)) + 
+  geom_boxplot() +
+  labs(
+    title = &quot;Distribution of Concentration Values for each Pollutant Type&quot;,
+    x=&quot;Pollutant Type&quot;,
+    y=&quot;Concentration(in ppm)&quot;
+  ) +
+  scale_color_viridis(discrete=TRUE) +
+  theme_bw() </code></pre>
+<p><img src="exploratory-analysis_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+</div>
+<div id="exploring-trends-in-death-from-lung-cancer" class="section level2">
+<h2>Exploring Trends in Death From Lung Cancer</h2>
 <pre class="r"><code>read_death_time =
   read_excel(&quot;data/DeathTrend.xlsx&quot;, 
              skip = 6) %&gt;%
@@ -567,16 +601,99 @@ remove_note = function(column_name) {
 
 for (i in x) {
   read_death_time = remove_note(i)} 
+
 death_time =
   read_death_time %&gt;%
   filter(year %in% 2000:2016) %&gt;%
   select(-c(&quot;breast_male&quot;, &quot;ovary_male&quot;, &quot;prostate_female&quot;,&quot;uterus_cervix_and_corpus_combined_male&quot;)) %&gt;%
   mutate_at(vars(-(&quot;year&quot;)), as.numeric) %&gt;%
-  mutate(year = as.factor(year))</code></pre>
+  mutate(
+   year = as.numeric(year)
+  )</code></pre>
+<pre class="r"><code>death_time %&gt;% 
+  rename(
+    male = lung_and_bronchus_male,
+    female = lung_and_bronchus_female
+  ) %&gt;% 
+  pivot_longer(
+    female:male,
+    names_to = &quot;gender&quot;, 
+    values_to = &quot;death_rate&quot;
+  ) %&gt;% 
+  ggplot(aes(x=year,y=death_rate, group=gender, color=gender)) + 
+  geom_point() +
+  geom_line() +
+  labs(
+    title= &quot;Trend in US Death rate from Lung Cancer, 2000-2016&quot;,
+    x= &quot;Year&quot;,
+    y=&quot;Lung Cancer Death Rate(per 100,000)&quot;
+  )</code></pre>
+<p><img src="exploratory-analysis_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+</div>
+<div id="exploring-relationship-between-trend-in-death-rate-from-lung-cancer-to-pollution-concentration" class="section level1">
+<h1>Exploring relationship between trend in death rate from Lung Cancer to Pollution Concentration</h1>
 <pre class="r"><code>merged_death_pollution=
 merge(death_time, modified_pollution, by = &quot;year&quot;) </code></pre>
-<pre class="r"><code>death_state =
-  read_excel(&quot;data/DeathRate.xlsx&quot;, sheet = &quot;State&quot;, 
+<pre class="r"><code>pollutant_variables =
+  merged_death_pollution %&gt;% 
+  select(no2,o3,so2,co) %&gt;% 
+  colnames() %&gt;% 
+  as.vector()</code></pre>
+<p>Create a for loop to plot Pollutant concentration vs. Lung Cancer Death Rate</p>
+<pre class="r"><code>pollutant_variables =
+  pollutant_variables %&gt;% 
+  as.list()
+
+
+for (i in pollutant_variables){
+  plot =
+  ggplot(merged_death_pollution, aes_string(i,  &quot;lung_and_bronchus_male&quot;)) + 
+  geom_point() +
+  geom_smooth(method = lm, se = FALSE) +
+  labs(title = &quot;Pollutant Concentration vs. Lung Cancer Death Rate&quot;, y = &quot;Lung Cancer Death Rate(per 100,000)&quot;) +
+  theme(plot.title = element_text(hjust = 0.5, face = &quot;bold&quot;))
+  
+  print(plot)
+  
+}</code></pre>
+<pre><code>## `geom_smooth()` using formula &#39;y ~ x&#39;</code></pre>
+<p><img src="exploratory-analysis_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+<pre><code>## `geom_smooth()` using formula &#39;y ~ x&#39;</code></pre>
+<p><img src="exploratory-analysis_files/figure-html/unnamed-chunk-8-2.png" width="672" /></p>
+<pre><code>## `geom_smooth()` using formula &#39;y ~ x&#39;</code></pre>
+<p><img src="exploratory-analysis_files/figure-html/unnamed-chunk-8-3.png" width="672" /></p>
+<pre><code>## `geom_smooth()` using formula &#39;y ~ x&#39;</code></pre>
+<p><img src="exploratory-analysis_files/figure-html/unnamed-chunk-8-4.png" width="672" /></p>
+<pre class="r"><code>for (i in pollutant_variables){
+  plot =
+  ggplot(merged_death_pollution, aes_string(i,  &quot;lung_and_bronchus_female&quot;)) + 
+  geom_point() +
+  geom_smooth(method = lm, se = FALSE) +
+  labs(title = &quot;Pollutant Concentration vs. Lung Cancer Death Rate&quot;, y = &quot;Lung Cancer Death Rate(per 100,000)&quot;) +
+  theme(plot.title = element_text(hjust = 0.5, face = &quot;bold&quot;))
+  
+  print(plot)
+  
+}</code></pre>
+<pre><code>## `geom_smooth()` using formula &#39;y ~ x&#39;</code></pre>
+<p><img src="exploratory-analysis_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
+<pre><code>## `geom_smooth()` using formula &#39;y ~ x&#39;</code></pre>
+<p><img src="exploratory-analysis_files/figure-html/unnamed-chunk-9-2.png" width="672" /></p>
+<pre><code>## `geom_smooth()` using formula &#39;y ~ x&#39;</code></pre>
+<p><img src="exploratory-analysis_files/figure-html/unnamed-chunk-9-3.png" width="672" /></p>
+<pre><code>## `geom_smooth()` using formula &#39;y ~ x&#39;</code></pre>
+<p><img src="exploratory-analysis_files/figure-html/unnamed-chunk-9-4.png" width="672" /></p>
+<div id="exploring-incidence-of-lung-cancer" class="section level3">
+<h3>Exploring Incidence of Lung Cancer</h3>
+<pre class="r"><code>g = list(
+  scope = &#39;usa&#39;,
+  projection = list(type = &#39;albers usa&#39;),
+  showlakes = TRUE,
+  lakecolor = toRGB(&#39;white&#39;)
+)
+
+inc_state =
+  read_excel(&quot;data/IncRate.xlsx&quot;, sheet = &quot;State&quot;, 
              skip = 6) %&gt;%
   janitor::clean_names() %&gt;% 
   separate(
@@ -584,13 +701,15 @@ merge(death_time, modified_pollution, by = &quot;year&quot;) </code></pre>
     into = c(&quot;breast_total&quot;, &quot;female_breast_only&quot;),
     sep = &quot;-&quot;
   ) %&gt;% 
-  select(-female_breast_only) %&gt;%
   mutate(
     breast_male = if_else(breast_male == &quot;n/a&quot;, &quot;0&quot;, breast_male),
     cervix_male = if_else(cervix_male == &quot;n/a&quot;, &quot;0&quot;, cervix_male),
+    colon_excluding_rectum_both_sexes_combined = if_else(colon_excluding_rectum_both_sexes_combined == &quot;n/a&quot;, &quot;0&quot;, colon_excluding_rectum_both_sexes_combined),
+    colon_excluding_rectum_female = if_else(colon_excluding_rectum_female == &quot;n/a&quot;, &quot;0&quot;, colon_excluding_rectum_female),
+    colon_excluding_rectum_male = if_else(colon_excluding_rectum_male == &quot;n/a&quot;, &quot;0&quot;, colon_excluding_rectum_male),
   ) %&gt;%
-  mutate_at(vars(-(&quot;state&quot;)), as.numeric) %&gt;%
   filter(state != &quot;Puerto Rico&quot;)</code></pre>
+<<<<<<< HEAD
 <pre><code>
 
 ```r
@@ -1251,19 +1370,29 @@ modified_pollution %&gt;%
 <pre class="r"><code>pollution %&gt;% 
   filter(
     year %in% c(&quot;2013&quot;,&quot;2014&quot;,&quot;2015&quot;,&quot;2016&quot;)
+=======
+<pre><code>## Warning: Expected 2 pieces. Missing pieces filled with `NA` in 2 rows [18, 25].</code></pre>
+<pre class="r"><code>inc_state %&gt;%
+  select(state, lung_and_bronchus_both_sexes_combined) %&gt;%
+  mutate(code = state.abb[match(state, state.name)],
+         lung_and_bronchus_both_sexes_combined = as.numeric(lung_and_bronchus_both_sexes_combined)) %&gt;%
+  filter(code != is.na(code)) %&gt;%
+  relocate(state, code) %&gt;%
+  plot_geo(., locationmode = &#39;USA-states&#39;) %&gt;% 
+  add_trace(
+    z = ~lung_and_bronchus_both_sexes_combined, text = ~state, locations = ~code,
+    color = ~lung_and_bronchus_both_sexes_combined, colors = &#39;viridis&#39;
+>>>>>>> ed84d1d1616487aadc02ddd571a6d01d5e74c83a
   ) %&gt;% 
-  ggplot(aes(x= year, y=co_mean, group=state, color=state)) +
-  geom_point(alpha=0.5) +
-  geom_line()</code></pre>
-<p><img src="exploratory-analysis_files/figure-html/unnamed-chunk-16-1.png" width="672" /></p>
-<pre class="r"><code>pollution %&gt;% 
-  filter(
-    year %in% c(&quot;2013&quot;,&quot;2014&quot;,&quot;2015&quot;,&quot;2016&quot;)
-  ) %&gt;% 
-  ggplot(aes(x= year, y=o3_mean, group=state, color=state)) +
-  geom_point(alpha=0.5) +
-  geom_line()</code></pre>
-<p><img src="exploratory-analysis_files/figure-html/unnamed-chunk-17-1.png" width="672" /></p>
+  colorbar(title = &quot;Incidence Rate&quot;) %&gt;% 
+  layout(
+    title = &quot;Distribution of Lung and Bronchus Cancer Incidence Rate by State in 2013-2017&quot;,
+    geo = g
+  )</code></pre>
+<pre><code>## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion</code></pre>
+<pre><code>## Warning: Ignoring 1 observations</code></pre>
+<div id="htmlwidget-f89e7ce428728e9326d8" style="width:672px;height:480px;" class="plotly html-widget"></div>
+<script type="application/json" data-for="htmlwidget-f89e7ce428728e9326d8">{"x":{"visdat":{"63746f1b59dd":["function () ","plotlyVisDat"]},"cur_data":"63746f1b59dd","attrs":{"63746f1b59dd":{"locationmode":"USA-states","alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"z":{},"text":{},"locations":{},"color":{},"colors":"viridis","inherit":true}},"layout":{"margin":{"b":40,"l":60,"t":25,"r":10},"mapType":"geo","scene":{"zaxis":{"title":"lung_and_bronchus_both_sexes_combined"}},"geo":{"domain":{"x":[0,1],"y":[0,1]},"scope":"usa","projection":{"type":"albers usa"},"showlakes":true,"lakecolor":"rgba(255,255,255,1)"},"hovermode":"closest","showlegend":false,"legend":{"yanchor":"top","y":0.5},"title":"Distribution of Lung and Bronchus Cancer Incidence Rate by State in 2013-2017"},"source":"A","config":{"modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"data":[{"colorbar":{"title":"Incidence Rate","ticklen":2,"len":0.5,"lenmode":"fraction","y":1,"yanchor":"top"},"colorscale":[["0","rgba(68,1,84,1)"],["0.0416666666666667","rgba(71,17,100,1)"],["0.0833333333333334","rgba(72,31,112,1)"],["0.125","rgba(71,45,123,1)"],["0.166666666666667","rgba(68,58,131,1)"],["0.208333333333333","rgba(64,70,136,1)"],["0.25","rgba(59,82,139,1)"],["0.291666666666667","rgba(54,93,141,1)"],["0.333333333333333","rgba(49,104,142,1)"],["0.375","rgba(44,114,142,1)"],["0.416666666666667","rgba(40,124,142,1)"],["0.458333333333333","rgba(36,134,142,1)"],["0.5","rgba(33,144,141,1)"],["0.541666666666667","rgba(31,154,138,1)"],["0.583333333333333","rgba(32,164,134,1)"],["0.625","rgba(39,173,129,1)"],["0.666666666666667","rgba(53,183,121,1)"],["0.708333333333333","rgba(71,193,110,1)"],["0.75","rgba(93,200,99,1)"],["0.791666666666667","rgba(117,208,84,1)"],["0.833333333333333","rgba(143,214,68,1)"],["0.875","rgba(170,220,50,1)"],["0.916666666666667","rgba(199,224,32,1)"],["0.958333333333333","rgba(227,228,24,1)"],["1","rgba(253,231,37,1)"]],"showscale":true,"locationmode":"USA-states","z":[64.8,55.8,46.7,77.2,41.5,41.4,59.6,66.9,57.7,62.8,45.7,49.5,63.7,72.2,63.3,56.2,91,66.2,72.1,56.4,61.6,63.3,56.1,74.9,72,53.7,57,63.7,55.3,38.5,58.7,67.7,57.7,67.8,67.4,54.1,63.5,69.4,64.4,59,74.5,50.6,26,61.1,56.4,54,79.8,59.1,42.2],"text":["Alabama","Alaska","Arizona","Arkansas","California","Colorado","Connecticut","Delaware","Florida","Georgia","Hawaii","Idaho","Illinois","Indiana","Iowa","Kansas","Kentucky","Louisiana","Maine","Maryland","Massachusetts","Michigan","Minnesota","Mississippi","Missouri","Montana","Nebraska","New Hampshire","New Jersey","New Mexico","New York","North Carolina","North Dakota","Ohio","Oklahoma","Oregon","Pennsylvania","Rhode Island","South Carolina","South Dakota","Tennessee","Texas","Utah","Vermont","Virginia","Washington","West Virginia","Wisconsin","Wyoming"],"locations":["AL","AK","AZ","AR","CA","CO","CT","DE","FL","GA","HI","ID","IL","IN","IA","KS","KY","LA","ME","MD","MA","MI","MN","MS","MO","MT","NE","NH","NJ","NM","NY","NC","ND","OH","OK","OR","PA","RI","SC","SD","TN","TX","UT","VT","VA","WA","WV","WI","WY"],"type":"choropleth","marker":{"line":{"colorbar":{"title":"","ticklen":2},"cmin":26,"cmax":91,"colorscale":[["0","rgba(68,1,84,1)"],["0.0416666666666667","rgba(71,17,100,1)"],["0.0833333333333334","rgba(72,31,112,1)"],["0.125","rgba(71,45,123,1)"],["0.166666666666667","rgba(68,58,131,1)"],["0.208333333333333","rgba(64,70,136,1)"],["0.25","rgba(59,82,139,1)"],["0.291666666666667","rgba(54,93,141,1)"],["0.333333333333333","rgba(49,104,142,1)"],["0.375","rgba(44,114,142,1)"],["0.416666666666667","rgba(40,124,142,1)"],["0.458333333333333","rgba(36,134,142,1)"],["0.5","rgba(33,144,141,1)"],["0.541666666666667","rgba(31,154,138,1)"],["0.583333333333333","rgba(32,164,134,1)"],["0.625","rgba(39,173,129,1)"],["0.666666666666667","rgba(53,183,121,1)"],["0.708333333333333","rgba(71,193,110,1)"],["0.75","rgba(93,200,99,1)"],["0.791666666666667","rgba(117,208,84,1)"],["0.833333333333333","rgba(143,214,68,1)"],["0.875","rgba(170,220,50,1)"],["0.916666666666667","rgba(199,224,32,1)"],["0.958333333333333","rgba(227,228,24,1)"],["1","rgba(253,231,37,1)"]],"showscale":false,"color":[64.8,55.8,46.7,77.2,41.5,41.4,59.6,66.9,57.7,62.8,45.7,49.5,63.7,72.2,63.3,56.2,91,66.2,72.1,56.4,61.6,63.3,56.1,74.9,72,53.7,57,63.7,55.3,38.5,58.7,67.7,57.7,67.8,67.4,54.1,63.5,69.4,64.4,59,74.5,50.6,26,61.1,56.4,54,79.8,59.1,42.2]}},"geo":"geo","frame":null}],"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.2,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
 </div>
 </div>
 
