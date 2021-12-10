@@ -33,6 +33,7 @@
 <link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
 <script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
 <link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
 <link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
@@ -220,6 +221,9 @@ $(document).ready(function () {
 </style>
 
 <!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
 
 
 
@@ -348,6 +352,14 @@ div.tocify {
 
 <div id="header">
 
+<div class="btn-group pull-right float-right">
+<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu dropdown-menu-right" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
+
 
 
 <h1 class="title toc-ignore">The Effect of Concentrations of Various Air Pollutants on Cancer Prevalence at the State Level over Time</h1>
@@ -382,7 +394,7 @@ Turner et.al (2020): Air Pollution-Related Cancer: Potential Pathways and Mechan
 </div>
 <div id="research-questions" class="section level1">
 <h1>Research Questions</h1>
-<p>Some ideas for the questions, not definite</p>
+<p>Some initial questions we considered to explore data available:</p>
 <ul>
 <li>What is the relationship between incidence rate and mortality rate of different types of cancer?</li>
 <li>What has been the general trend of cancer incidence, cancer mortality, and pollution levels over time?</li>
@@ -450,14 +462,98 @@ Turner et.al (2020): Air Pollution-Related Cancer: Potential Pathways and Mechan
 </div>
 <div id="data-cleaning" class="section level2">
 <h2>Data Cleaning</h2>
-<p>The pollution data was cleaned to have year, state, and the mean values of the 4 pollutants. In order to match the time period of the pollution data, the mortality trend data was cleaned to have observations from 2000 to 2016 only.</p>
-<p>Cancer incidence and mortality data sets were more difficult to clean for analysis as some observation values included notes along with their numeric values.</p>
+<p>The pollution data was available for download in a csv format which was uploaded to repo using git LFS due to its size. Then this data was cleaned to have year, state, and the mean values of the 4 pollutants as main variables. Furthermore, observations from <code>Country of Mexico</code> was excluded to match available state data from cancer mortality trend dataset.</p>
+<pre class="r"><code>pollution = read_csv(&quot;data/uspollution_us_2000_2016.csv&quot;) %&gt;% 
+  janitor::clean_names() %&gt;%
+  select(state, date_local, no2_mean, o3_mean, 
+         so2_mean, co_mean) %&gt;%
+  separate(date_local, into = c(&quot;year&quot;, &quot;month&quot;, &quot;day&quot;), sep = &quot;\\-&quot;) %&gt;%
+  select(-c(&quot;month&quot;, &quot;day&quot;)) %&gt;%
+  group_by(year, state) %&gt;%
+  summarize(across(everything(), mean)) %&gt;%
+  mutate_if(is.numeric, ~round(., 3)) %&gt;%
+  filter(state != &quot;Country Of Mexico&quot;) %&gt;% 
+  mutate(
+    year = as.numeric(year)
+  )</code></pre>
+<p>Additionally, to explore the relationship among different pollutant levels and cancer incidence, especially lung cancer, another version of pollution data aggregated to have mean pollutant levels from 2013 to 2017 collectively was prepared.</p>
+<pre class="r"><code>pollution1 =
+  pollution %&gt;% 
+  filter(
+    year %in% (2013:2017)
+  ) %&gt;% 
+  ungroup() %&gt;% 
+  select(state:co_mean) %&gt;% 
+  group_by(state) %&gt;% 
+  summarize(
+    no2 = mean(no2_mean),
+    o3 = mean(o3_mean),
+    so2 = mean(so2_mean),
+    co = mean(co_mean)
+  ) %&gt;%
+  mutate_if(is.numeric, ~round(., 3))</code></pre>
+<p>All cancer related data from the Cancer Statistics Center were all available in excel format for download. In order to match the time period of the pollution data containing observations from 2000 to 2016, the mortality trend data was cleaned to have observations from 2000 to 2016 only as well. Moreover, our function <code>remove_note</code> allowed cleaning observation points with notes added to only have the numeric value.</p>
+<pre class="r"><code>read_death_time =
+  read_excel(&quot;data/DeathTrend.xlsx&quot;, 
+             skip = 6) %&gt;%
+  janitor::clean_names()
+
+x = c(&quot;colorectum_female&quot;, &quot;colorectum_male&quot;, &quot;liver_and_intrahepatic_bile_duct_female&quot;, &quot;liver_and_intrahepatic_bile_duct_male&quot;, &quot;lung_and_bronchus_female&quot;, &quot;lung_and_bronchus_male&quot;, &quot;ovary_female&quot;, &quot;uterus_cervix_and_corpus_combined_female&quot;)
+
+remove_note = function(column_name) {
+  read_death_time = read_death_time %&gt;% 
+    separate(column_name, into = c(column_name, &quot;note&quot;), sep = &quot;\\-&quot;) %&gt;% 
+    select(-note)}
+
+for (i in x) {
+  read_death_time = remove_note(i)} 
+
+death_time =
+  read_death_time %&gt;%
+  filter(year %in% 2000:2016) %&gt;%
+  select(-c(&quot;breast_male&quot;, &quot;ovary_male&quot;, &quot;prostate_female&quot;,&quot;uterus_cervix_and_corpus_combined_male&quot;)) %&gt;%
+  mutate_at(vars(-(&quot;year&quot;)), as.numeric) %&gt;%
+  mutate(year = as.factor(year))</code></pre>
+<p>Cancer incidence and mortality datasets per state and per cancer types were similarly cleaned to have only the numeric observation values. More specifically for data per cancer type, the incidence rates for the <code>Colon (excluding rectum)</code> and <code>Rectum</code> were excluded to match similarly formatted death rate per cancer type dataset. Also, observations for <code>Puerto Rico</code> were excluded from incidence and death rate per state dataset to match the state variable available in the pollution dataset.</p>
+<pre class="r"><code>inc_cancer =
+  read_excel(&quot;data/IncRate.xlsx&quot;, sheet = &quot;All US&quot;, 
+             skip = 6) %&gt;%
+  janitor::clean_names() %&gt;% 
+  mutate(
+    male = if_else(male == &quot;n/a&quot;, &quot;0&quot;, male),
+    female = if_else(female == &quot;n/a&quot;, &quot;0&quot;, female)
+  ) %&gt;%
+  separate(both_sexes_combined, into = c(&quot;both_sexes_combined&quot;, &quot;note&quot;), sep = &quot;\\-&quot;) %&gt;%
+  select(-note) %&gt;%
+  mutate_at(vars(-(&quot;cancer_type&quot;)), as.numeric) %&gt;%
+  filter(cancer_type != &quot;Colon (excluding rectum)&quot;,
+         cancer_type != &quot;Rectum&quot;)
+
+inc_state =
+  read_excel(&quot;data/IncRate.xlsx&quot;, sheet = &quot;State&quot;, 
+             skip = 6) %&gt;%
+  janitor::clean_names() %&gt;% 
+  separate(
+    col = breast_both_sexes_combined,
+    into = c(&quot;breast_total&quot;, &quot;female_breast_only&quot;),
+    sep = &quot;-&quot;
+  ) %&gt;% 
+  mutate(
+    breast_male = if_else(breast_male == &quot;n/a&quot;, &quot;0&quot;, breast_male),
+    cervix_male = if_else(cervix_male == &quot;n/a&quot;, &quot;0&quot;, cervix_male),
+    colon_excluding_rectum_both_sexes_combined = if_else(colon_excluding_rectum_both_sexes_combined == &quot;n/a&quot;, &quot;0&quot;, colon_excluding_rectum_both_sexes_combined),
+    colon_excluding_rectum_female = if_else(colon_excluding_rectum_female == &quot;n/a&quot;, &quot;0&quot;, colon_excluding_rectum_female),
+    colon_excluding_rectum_male = if_else(colon_excluding_rectum_male == &quot;n/a&quot;, &quot;0&quot;, colon_excluding_rectum_male),
+  ) %&gt;%
+  filter(state != &quot;Puerto Rico&quot;) %&gt;%
+  select(-c(&quot;female_breast_only&quot;, starts_with(&quot;colon&quot;), starts_with(&quot;rectum&quot;)))</code></pre>
 <p> </p>
 </div>
 </div>
 <div id="exploratory-analysis" class="section level1">
 <h1>Exploratory Analysis</h1>
 <p>For visual plots, check out <a href="exploratory-analysis.html">Exploratory Analysis</a>!</p>
+<p>To explore our initial research questions, we started with visual representations of each datasets and observing for any noticeable patterns.</p>
 <p> </p>
 </div>
 <div id="regression-analysis" class="section level1">
@@ -469,11 +565,7 @@ Turner et.al (2020): Air Pollution-Related Cancer: Potential Pathways and Mechan
 <p>In light of our exploratory and regressed analysis, we attained the following insights:</p>
 <div id="limitations-and-challenges" class="section level2">
 <h2>Limitations and Challenges</h2>
-<p> </p>
 </div>
-</div>
-<div id="conclusions" class="section level1">
-<h1>Conclusions</h1>
 </div>
 
 
@@ -511,6 +603,11 @@ $(document).ready(function () {
 </script>
 
 <!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
 
 <script>
 $(document).ready(function ()  {
