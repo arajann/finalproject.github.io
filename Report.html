@@ -358,22 +358,18 @@ div.tocify {
 
 
 <p> </p>
-<div id="report" class="section level3">
-<h3><strong>Report</strong></h3>
+<div id="motivation" class="section level1">
+<h1>Motivation</h1>
 <p> </p>
-</div>
-<div id="motivation" class="section level3">
-<h3>Motivation</h3>
-<p> </p>
-<div id="background-and-related-works" class="section level4">
-<h4>Background and Related Works</h4>
+<div id="background-and-related-works" class="section level2">
+<h2>Background and Related Works</h2>
 <p>Given the rapid progression of climate change, we have seen widespread effects on the environment, in which long-term exposure subsequently have harmful health effects that is a cause for public health concern. Major air pollutants have serious adverse effects on population health and has been linked by substantial evidence to be a large contributor to an increased burden of cancer.</p>
 <p>Common air pollutants are responsible for pervasive inflammation throughout the body (<a href="https://www.health.nsw.gov.au/environment/air/Pages/outdoor-air-pollution.aspx">NSW, 2021</a>), and long-term exposure has been linked to increased mortality for all cancers, but particularly hazardous for cancers of the lung, liver, colorectal, bladder, kidney, and larynx (<a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6266691/">Kim et. al, 2018</a>).</p>
 <p>Lung cancer is the currently the leading cause of cancer-related mortality and most commonly diagnosed. Liver cancer also accounts largely for a high number of cancer-related deaths (8.2%) behind lung and breast cancer (<a href="https://acsjournals.onlinelibrary.wiley.com/doi/10.3322/caac.21632">Turner et.al, 2020</a>) while overall pancreatic cancer has increased for both men and women between 2013-2017 as reported in the <a href="https://seer.cancer.gov/report_to_nation/infographics/trends_incidence.html">2021 National Cancer Institute Annual Report to the Nation</a>.</p>
 <p> </p>
 </div>
-<div id="project-motivations" class="section level4">
-<h4>Project Motivations</h4>
+<div id="project-motivations" class="section level2">
+<h2>Project Motivations</h2>
 <p>Current research and trends clearly demonstrate that air pollution is associated with the increase in both incidence and mortality for certain cancers. Thus, we will to take a closer look at trends of levels of major air pollutants that are of major public health concern <a href="https://www.who.int/health-topics/air-pollution#tab=tab_1">as declared by the WHO</a>: NO2, SO2, CO and 03, and compare these trends to incidence and mortality of lung, liver and pancreatic cancer data by state, with respect to time.</p>
 <p>Our motivation for this project is to more robustly investigate the aforementioned theories by further analyzing and evaluating the associations between pollutants and certain cancer types at the population level with respect to time.</p>
 <p>The implications of such an analysis can provide justification for further research on the effects of major air pollutants on cancer survival and motivate urgency for environmental policy to slow the progression of climate change to improve quality of life and deleterious consequences on population health.</p>
@@ -386,24 +382,25 @@ Turner et.al (2020): Air Pollution-Related Cancer: Potential Pathways and Mechan
 <p> </p>
 </div>
 </div>
-<div id="research-questions" class="section level3">
-<h3>Research Questions</h3>
+<div id="research-questions" class="section level1">
+<h1>Research Questions</h1>
 <p>Some ideas for the questions, not definite</p>
 <ul>
 <li>What is the relationship between incidence rate and mortality rate of different types of cancer?</li>
 <li>What has been the general trend of cancer incidence, cancer mortality, and pollution levels over time?</li>
-<li>What is the geographical spread of cancer rates and pollution levels look like in US?</li>
-<li>Is there any evidence of association between cancer rates and air pollution?</li>
+<li>What is the geographical spread of cancer incidence and pollution levels in US?</li>
+<li>Is there any evidence of association between cancer incidence (especially lung cancer) and air pollution?</li>
 </ul>
 <p> </p>
 </div>
-<div id="data" class="section level3">
-<h3>Data</h3>
-<div id="data-source" class="section level4">
-<h4>Data Source</h4>
+<div id="data" class="section level1">
+<h1>Data</h1>
+<div id="data-source" class="section level2">
+<h2>Data Source</h2>
 <p>Our project consists of data from two main sources:</p>
 <p>Regarding cancer statistics, we retrieved data from <a href="https://cancerstatisticscenter.cancer.org/#!/">American Cancer Society Cancer Statistics Center</a>. Raw data sets were available for download in excel format. The three data sets give us information on aggregated mortality and incidence rates from 2013 to 2017, aggregated mortality and incidence rates of various cancers at the state level from 2013 to 2017, and trends of mortality related to various cancers over time from 1930 to 2018. According to the file and website, the data source is the North American Association of Central Cancer registries.</p>
-<p><em>Cancer Data Code:</em></p>
+<div id="cancer-data-code" class="section level3">
+<h3><em>Cancer Data Code:</em></h3>
 <p>Average annual rate per 100,000, age adjusted to the 2000 US standard population.</p>
 <p>Incidence/Death Rate Per Cancer Type:</p>
 <ul>
@@ -430,7 +427,9 @@ Turner et.al (2020): Air Pollution-Related Cancer: Potential Pathways and Mechan
 <li><strong>Carbon Monoxide (CO)</strong> : measured in parts per million</li>
 <li><strong>Ozone (O3)</strong> : measured in parts per million</li>
 </ul>
-<p><em>Pollution Data Code:</em></p>
+</div>
+<div id="pollution-data-code" class="section level3">
+<h3><em>Pollution Data Code:</em></h3>
 <ul>
 <li><p><code>State Code</code>: The code allocated by US EPA to each state</p></li>
 <li><p><code>County code</code> : The code of counties in a specific state allocated by US EPA</p></li>
@@ -450,32 +449,33 @@ Turner et.al (2020): Air Pollution-Related Cancer: Potential Pathways and Mechan
 </ul></li>
 </ul>
 </div>
-<div id="data-cleaning" class="section level4">
-<h4>Data Cleaning</h4>
+</div>
+<div id="data-cleaning" class="section level2">
+<h2>Data Cleaning</h2>
 <p>The pollution data was cleaned to have year, state, and the mean values of the 4 pollutants. In order to match the time period of the pollution data, the mortality trend data was cleaned to have observations from 2000 to 2016 only.</p>
 <p>Cancer incidence and mortality data sets were more difficult to clean for analysis as some observation values included notes along with their numeric values.</p>
 <p> </p>
 </div>
 </div>
-<div id="exploratory-analysis" class="section level3">
-<h3>Exploratory Analysis</h3>
+<div id="exploratory-analysis" class="section level1">
+<h1>Exploratory Analysis</h1>
 <p>For visual plots, check out <a href="exploratory-analysis.html">Exploratory Analysis</a>!</p>
 <p> </p>
 </div>
-<div id="regression-analysis" class="section level3">
-<h3>Regression Analysis</h3>
+<div id="regression-analysis" class="section level1">
+<h1>Regression Analysis</h1>
 <p> </p>
 </div>
-<div id="discussion" class="section level3">
-<h3>Discussion</h3>
+<div id="discussion" class="section level1">
+<h1>Discussion</h1>
 <p>In light of our exploratory and regressed analysis, we attained the following insights:</p>
-<div id="limitations-and-challenges" class="section level4">
-<h4>Limitations and Challenges</h4>
+<div id="limitations-and-challenges" class="section level2">
+<h2>Limitations and Challenges</h2>
 <p> </p>
 </div>
 </div>
-<div id="conclusions" class="section level3">
-<h3>Conclusions</h3>
+<div id="conclusions" class="section level1">
+<h1>Conclusions</h1>
 </div>
 
 
