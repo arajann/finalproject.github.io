@@ -7,6 +7,8 @@ output:
     code_folding: hide
 ---
 
+&nbsp;
+
 ```{r setup, include=FALSE}
 library(tidyverse)
 library(readxl)
@@ -17,6 +19,8 @@ library(plotly)
 knitr::opts_chunk$set(warning = FALSE, message = FALSE)
     
 ```
+
+------
 
 # Exploring Pollution Data Set
 
@@ -66,6 +70,10 @@ modified_pollution %>%
   knitr::kable(digits = 3)
 ```
 
+&nbsp;
+
+-----
+
 # Comparing Distributions of Pollutant Concentrations 
 
 ```{r}
@@ -105,6 +113,10 @@ modified_pollution %>%
     y = "Pollutant Concentration(ppm)"
   ) 
 ```
+
+&nbsp;
+
+-----
 
 # Exploring Trends in Death From Lung Cancer
 
@@ -161,6 +173,10 @@ death_time %>%
   )
 ```
 
+&nbsp;
+
+------
+
 # Exploring relationship between trend in death rate from Lung Cancer to Pollution Concentration
 
 
@@ -215,6 +231,8 @@ for (i in pollutant_variables) {
 }
 ```
 
+-----
+&nbsp;
 
 # Exploring Incidence of Lung Cancer 
 
