@@ -424,7 +424,477 @@ div.tocify {
     lung_and_bronchus_both_sexes_combined = as.numeric(lung_and_bronchus_both_sexes_combined),
     lung_and_bronchus_female = as.numeric(lung_and_bronchus_female),
     lung_and_bronchus_male = as.numeric(lung_and_bronchus_male)
-  )</code></pre>
+  ) %&gt;% 
+  select(state,lung_and_bronchus_both_sexes_combined,lung_and_bronchus_male,lung_and_bronchus_female,no2,co,so2,o3)
+
+pollution_incidence %&gt;% 
+  knitr::kable(digits =3)</code></pre>
+<table>
+<colgroup>
+<col width="11%" />
+<col width="30%" />
+<col width="18%" />
+<col width="19%" />
+<col width="5%" />
+<col width="4%" />
+<col width="4%" />
+<col width="4%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">state</th>
+<th align="right">lung_and_bronchus_both_sexes_combined</th>
+<th align="right">lung_and_bronchus_male</th>
+<th align="right">lung_and_bronchus_female</th>
+<th align="right">no2</th>
+<th align="right">co</th>
+<th align="right">so2</th>
+<th align="right">o3</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Alabama</td>
+<td align="right">64.8</td>
+<td align="right">84.1</td>
+<td align="right">50.0</td>
+<td align="right">10.020</td>
+<td align="right">0.212</td>
+<td align="right">0.945</td>
+<td align="right">0.022</td>
+</tr>
+<tr class="even">
+<td align="left">Alaska</td>
+<td align="right">55.8</td>
+<td align="right">64.8</td>
+<td align="right">47.6</td>
+<td align="right">11.388</td>
+<td align="right">0.430</td>
+<td align="right">6.056</td>
+<td align="right">0.012</td>
+</tr>
+<tr class="odd">
+<td align="left">Arizona</td>
+<td align="right">46.7</td>
+<td align="right">51.2</td>
+<td align="right">43.0</td>
+<td align="right">19.032</td>
+<td align="right">0.493</td>
+<td align="right">1.313</td>
+<td align="right">0.025</td>
+</tr>
+<tr class="even">
+<td align="left">Arkansas</td>
+<td align="right">77.2</td>
+<td align="right">95.8</td>
+<td align="right">62.7</td>
+<td align="right">9.540</td>
+<td align="right">0.418</td>
+<td align="right">1.483</td>
+<td align="right">0.026</td>
+</tr>
+<tr class="odd">
+<td align="left">California</td>
+<td align="right">41.5</td>
+<td align="right">46.4</td>
+<td align="right">37.8</td>
+<td align="right">13.328</td>
+<td align="right">0.441</td>
+<td align="right">1.112</td>
+<td align="right">0.026</td>
+</tr>
+<tr class="even">
+<td align="left">Colorado</td>
+<td align="right">41.4</td>
+<td align="right">44.1</td>
+<td align="right">39.6</td>
+<td align="right">19.886</td>
+<td align="right">0.467</td>
+<td align="right">1.627</td>
+<td align="right">0.022</td>
+</tr>
+<tr class="odd">
+<td align="left">Connecticut</td>
+<td align="right">59.6</td>
+<td align="right">65.0</td>
+<td align="right">55.8</td>
+<td align="right">9.971</td>
+<td align="right">0.279</td>
+<td align="right">1.159</td>
+<td align="right">0.028</td>
+</tr>
+<tr class="even">
+<td align="left">Delaware</td>
+<td align="right">66.9</td>
+<td align="right">75.3</td>
+<td align="right">60.8</td>
+<td align="right">11.643</td>
+<td align="right">0.265</td>
+<td align="right">0.969</td>
+<td align="right">0.026</td>
+</tr>
+<tr class="odd">
+<td align="left">Florida</td>
+<td align="right">57.7</td>
+<td align="right">66.5</td>
+<td align="right">50.5</td>
+<td align="right">7.454</td>
+<td align="right">0.450</td>
+<td align="right">0.479</td>
+<td align="right">0.027</td>
+</tr>
+<tr class="even">
+<td align="left">Georgia</td>
+<td align="right">62.8</td>
+<td align="right">79.0</td>
+<td align="right">50.6</td>
+<td align="right">11.849</td>
+<td align="right">0.329</td>
+<td align="right">0.530</td>
+<td align="right">0.020</td>
+</tr>
+<tr class="odd">
+<td align="left">Hawaii</td>
+<td align="right">45.7</td>
+<td align="right">57.3</td>
+<td align="right">36.3</td>
+<td align="right">3.182</td>
+<td align="right">0.369</td>
+<td align="right">1.020</td>
+<td align="right">0.025</td>
+</tr>
+<tr class="even">
+<td align="left">Idaho</td>
+<td align="right">49.5</td>
+<td align="right">54.3</td>
+<td align="right">45.7</td>
+<td align="right">8.553</td>
+<td align="right">0.198</td>
+<td align="right">0.420</td>
+<td align="right">0.024</td>
+</tr>
+<tr class="odd">
+<td align="left">Illinois</td>
+<td align="right">63.7</td>
+<td align="right">73.8</td>
+<td align="right">56.3</td>
+<td align="right">15.460</td>
+<td align="right">0.403</td>
+<td align="right">2.753</td>
+<td align="right">0.023</td>
+</tr>
+<tr class="even">
+<td align="left">Indiana</td>
+<td align="right">72.2</td>
+<td align="right">86.4</td>
+<td align="right">61.4</td>
+<td align="right">12.393</td>
+<td align="right">0.382</td>
+<td align="right">3.289</td>
+<td align="right">0.030</td>
+</tr>
+<tr class="odd">
+<td align="left">Iowa</td>
+<td align="right">63.3</td>
+<td align="right">74.7</td>
+<td align="right">54.5</td>
+<td align="right">7.060</td>
+<td align="right">0.223</td>
+<td align="right">0.408</td>
+<td align="right">0.027</td>
+</tr>
+<tr class="even">
+<td align="left">Kansas</td>
+<td align="right">56.2</td>
+<td align="right">64.9</td>
+<td align="right">49.7</td>
+<td align="right">11.564</td>
+<td align="right">0.393</td>
+<td align="right">2.578</td>
+<td align="right">0.025</td>
+</tr>
+<tr class="odd">
+<td align="left">Kentucky</td>
+<td align="right">91.0</td>
+<td align="right">109.0</td>
+<td align="right">77.5</td>
+<td align="right">11.511</td>
+<td align="right">0.204</td>
+<td align="right">2.686</td>
+<td align="right">0.026</td>
+</tr>
+<tr class="even">
+<td align="left">Louisiana</td>
+<td align="right">66.2</td>
+<td align="right">82.6</td>
+<td align="right">53.6</td>
+<td align="right">13.697</td>
+<td align="right">0.404</td>
+<td align="right">2.257</td>
+<td align="right">0.023</td>
+</tr>
+<tr class="odd">
+<td align="left">Maine</td>
+<td align="right">72.1</td>
+<td align="right">80.3</td>
+<td align="right">65.8</td>
+<td align="right">4.961</td>
+<td align="right">0.225</td>
+<td align="right">0.882</td>
+<td align="right">0.025</td>
+</tr>
+<tr class="even">
+<td align="left">Maryland</td>
+<td align="right">56.4</td>
+<td align="right">62.9</td>
+<td align="right">51.7</td>
+<td align="right">10.717</td>
+<td align="right">0.309</td>
+<td align="right">1.942</td>
+<td align="right">0.027</td>
+</tr>
+<tr class="odd">
+<td align="left">Massachusetts</td>
+<td align="right">61.6</td>
+<td align="right">65.5</td>
+<td align="right">59.2</td>
+<td align="right">18.458</td>
+<td align="right">0.312</td>
+<td align="right">2.470</td>
+<td align="right">0.021</td>
+</tr>
+<tr class="even">
+<td align="left">Michigan</td>
+<td align="right">63.3</td>
+<td align="right">71.8</td>
+<td align="right">56.9</td>
+<td align="right">16.505</td>
+<td align="right">0.333</td>
+<td align="right">3.314</td>
+<td align="right">0.026</td>
+</tr>
+<tr class="odd">
+<td align="left">Minnesota</td>
+<td align="right">56.1</td>
+<td align="right">61.5</td>
+<td align="right">52.2</td>
+<td align="right">6.702</td>
+<td align="right">0.225</td>
+<td align="right">0.601</td>
+<td align="right">0.028</td>
+</tr>
+<tr class="even">
+<td align="left">Missouri</td>
+<td align="right">72.0</td>
+<td align="right">83.6</td>
+<td align="right">63.2</td>
+<td align="right">14.005</td>
+<td align="right">0.423</td>
+<td align="right">3.031</td>
+<td align="right">0.027</td>
+</tr>
+<tr class="odd">
+<td align="left">New Hampshire</td>
+<td align="right">63.7</td>
+<td align="right">67.2</td>
+<td align="right">61.8</td>
+<td align="right">7.366</td>
+<td align="right">0.337</td>
+<td align="right">1.409</td>
+<td align="right">0.028</td>
+</tr>
+<tr class="even">
+<td align="left">New Jersey</td>
+<td align="right">55.3</td>
+<td align="right">60.8</td>
+<td align="right">51.7</td>
+<td align="right">18.907</td>
+<td align="right">0.414</td>
+<td align="right">3.576</td>
+<td align="right">0.023</td>
+</tr>
+<tr class="odd">
+<td align="left">New Mexico</td>
+<td align="right">38.5</td>
+<td align="right">43.9</td>
+<td align="right">34.3</td>
+<td align="right">12.343</td>
+<td align="right">0.211</td>
+<td align="right">0.613</td>
+<td align="right">0.032</td>
+</tr>
+<tr class="even">
+<td align="left">New York</td>
+<td align="right">58.7</td>
+<td align="right">66.2</td>
+<td align="right">53.4</td>
+<td align="right">18.750</td>
+<td align="right">0.357</td>
+<td align="right">4.382</td>
+<td align="right">0.024</td>
+</tr>
+<tr class="odd">
+<td align="left">North Carolina</td>
+<td align="right">67.7</td>
+<td align="right">82.8</td>
+<td align="right">56.4</td>
+<td align="right">10.857</td>
+<td align="right">0.378</td>
+<td align="right">1.669</td>
+<td align="right">0.030</td>
+</tr>
+<tr class="even">
+<td align="left">North Dakota</td>
+<td align="right">57.7</td>
+<td align="right">65.4</td>
+<td align="right">52.3</td>
+<td align="right">4.773</td>
+<td align="right">0.169</td>
+<td align="right">0.221</td>
+<td align="right">0.026</td>
+</tr>
+<tr class="odd">
+<td align="left">Ohio</td>
+<td align="right">67.8</td>
+<td align="right">80.0</td>
+<td align="right">58.7</td>
+<td align="right">10.629</td>
+<td align="right">0.283</td>
+<td align="right">2.551</td>
+<td align="right">0.026</td>
+</tr>
+<tr class="even">
+<td align="left">Oklahoma</td>
+<td align="right">67.4</td>
+<td align="right">80.5</td>
+<td align="right">57.1</td>
+<td align="right">6.835</td>
+<td align="right">0.139</td>
+<td align="right">0.814</td>
+<td align="right">0.031</td>
+</tr>
+<tr class="odd">
+<td align="left">Oregon</td>
+<td align="right">54.1</td>
+<td align="right">58.7</td>
+<td align="right">50.6</td>
+<td align="right">9.718</td>
+<td align="right">0.306</td>
+<td align="right">0.982</td>
+<td align="right">0.019</td>
+</tr>
+<tr class="even">
+<td align="left">Pennsylvania</td>
+<td align="right">63.5</td>
+<td align="right">73.4</td>
+<td align="right">56.4</td>
+<td align="right">11.809</td>
+<td align="right">0.231</td>
+<td align="right">3.658</td>
+<td align="right">0.026</td>
+</tr>
+<tr class="odd">
+<td align="left">Rhode Island</td>
+<td align="right">69.4</td>
+<td align="right">75.4</td>
+<td align="right">65.6</td>
+<td align="right">6.986</td>
+<td align="right">0.222</td>
+<td align="right">0.470</td>
+<td align="right">0.030</td>
+</tr>
+<tr class="even">
+<td align="left">South Carolina</td>
+<td align="right">64.4</td>
+<td align="right">80.1</td>
+<td align="right">52.3</td>
+<td align="right">2.909</td>
+<td align="right">0.139</td>
+<td align="right">0.721</td>
+<td align="right">0.032</td>
+</tr>
+<tr class="odd">
+<td align="left">South Dakota</td>
+<td align="right">59.0</td>
+<td align="right">66.7</td>
+<td align="right">54.1</td>
+<td align="right">5.253</td>
+<td align="right">0.186</td>
+<td align="right">0.482</td>
+<td align="right">0.030</td>
+</tr>
+<tr class="even">
+<td align="left">Tennessee</td>
+<td align="right">74.5</td>
+<td align="right">91.6</td>
+<td align="right">61.4</td>
+<td align="right">1.800</td>
+<td align="right">0.414</td>
+<td align="right">0.815</td>
+<td align="right">0.037</td>
+</tr>
+<tr class="odd">
+<td align="left">Texas</td>
+<td align="right">50.6</td>
+<td align="right">61.3</td>
+<td align="right">42.2</td>
+<td align="right">12.242</td>
+<td align="right">0.270</td>
+<td align="right">1.117</td>
+<td align="right">0.026</td>
+</tr>
+<tr class="even">
+<td align="left">Utah</td>
+<td align="right">26.0</td>
+<td align="right">30.2</td>
+<td align="right">22.5</td>
+<td align="right">17.066</td>
+<td align="right">0.376</td>
+<td align="right">0.475</td>
+<td align="right">0.028</td>
+</tr>
+<tr class="odd">
+<td align="left">Virginia</td>
+<td align="right">56.4</td>
+<td align="right">65.9</td>
+<td align="right">49.2</td>
+<td align="right">9.888</td>
+<td align="right">0.331</td>
+<td align="right">2.262</td>
+<td align="right">0.028</td>
+</tr>
+<tr class="even">
+<td align="left">Washington</td>
+<td align="right">54.0</td>
+<td align="right">58.8</td>
+<td align="right">50.3</td>
+<td align="right">11.220</td>
+<td align="right">0.216</td>
+<td align="right">0.590</td>
+<td align="right">0.020</td>
+</tr>
+<tr class="odd">
+<td align="left">Wisconsin</td>
+<td align="right">59.1</td>
+<td align="right">66.6</td>
+<td align="right">53.5</td>
+<td align="right">16.009</td>
+<td align="right">0.334</td>
+<td align="right">2.560</td>
+<td align="right">0.019</td>
+</tr>
+<tr class="even">
+<td align="left">Wyoming</td>
+<td align="right">42.2</td>
+<td align="right">45.2</td>
+<td align="right">40.0</td>
+<td align="right">3.209</td>
+<td align="right">0.098</td>
+<td align="right">0.331</td>
+<td align="right">0.038</td>
+</tr>
+</tbody>
+</table>
 <hr />
 </div>
 <div id="plotting-each-pollutant-concentration-vs.-lung-cancer-incidence" class="section level2">
@@ -562,7 +1032,8 @@ for (i in continuous_variables) {
   ) +
   scale_color_viridis(discrete = TRUE) +
   theme_bw()</code></pre>
-<p><img src="pollution_linear_models_files/figure-html/unnamed-chunk-8-1.png" width="672" /> The plot indicates a random scatter of residuals. Therefore, the assumption of homescedasticity is not violated.</p>
+<p><img src="pollution_linear_models_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+<p>The plot indicates a random scatter of residuals. Therefore, the assumption of homescedasticity is not violated.</p>
 <hr />
 <p> </p>
 </div>
@@ -612,7 +1083,8 @@ cv_df %&gt;%
 <div id="lung-cancer-incidence-models-stratified-by-gender" class="section level2">
 <h2>Lung Cancer Incidence Models Stratified by Gender</h2>
 <p> </p>
-<p>Female Model</p>
+<div id="female-model" class="section level3">
+<h3>Female Model</h3>
 <pre class="r"><code>female_model = lm(lung_and_bronchus_female ~ no2 + o3 + so2 + co, data = pollution_incidence)</code></pre>
 <pre class="r"><code>female_model %&gt;% 
   broom::tidy() %&gt;% 
@@ -716,7 +1188,9 @@ cv_df %&gt;%
 </tr>
 </tbody>
 </table>
-<p>Male Model</p>
+</div>
+<div id="male-model" class="section level3">
+<h3>Male Model</h3>
 <pre class="r"><code>male_model = lm(lung_and_bronchus_male ~ no2 + o3 + so2 + co, data = pollution_incidence) </code></pre>
 <pre class="r"><code>male_model %&gt;%
   broom::tidy() %&gt;% 
@@ -821,6 +1295,7 @@ cv_df %&gt;%
 </tbody>
 </table>
 <p>From looking at the beta coefficients and model analyses for both models, predictive accuracy did not improve.</p>
+</div>
 </div>
 
 

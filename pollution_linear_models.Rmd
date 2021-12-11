@@ -80,7 +80,11 @@ pollution_incidence = read_csv("data/uspollution_us_2000_2016.csv") %>%
     lung_and_bronchus_both_sexes_combined = as.numeric(lung_and_bronchus_both_sexes_combined),
     lung_and_bronchus_female = as.numeric(lung_and_bronchus_female),
     lung_and_bronchus_male = as.numeric(lung_and_bronchus_male)
-  )
+  ) %>% 
+  select(state,lung_and_bronchus_both_sexes_combined,lung_and_bronchus_male,lung_and_bronchus_female,no2,co,so2,o3)
+
+pollution_incidence %>% 
+  knitr::kable(digits =3)
 
 ```
 
@@ -163,6 +167,8 @@ pollution_incidence %>%
   scale_color_viridis(discrete = TRUE) +
   theme_bw()
 ```
+
+
 The plot indicates a random scatter of residuals. Therefore, the assumption of homescedasticity is not violated.
 
 -----
@@ -231,7 +237,7 @@ From the boxplot, we see that the fitted model has a lower RMSE compared to the 
 
 &nbsp;
 
-Female Model
+### Female Model
 
 ```{r}
 female_model = lm(lung_and_bronchus_female ~ no2 + o3 + so2 + co, data = pollution_incidence)
@@ -249,7 +255,7 @@ female_model %>%
   knitr::kable(digits = 3)
 ```
 
-Male Model
+### Male Model
 
 ```{r}
 male_model = lm(lung_and_bronchus_male ~ no2 + o3 + so2 + co, data = pollution_incidence) 
