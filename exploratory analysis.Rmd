@@ -9,7 +9,7 @@ output:
 
 &nbsp;
 
-To understand the pulltion-related factors that act upon cancer incidence and death, we obtained, cleaned, and analyzed pollution data that spanned from 2000-2016. This data contained concentrations from the known pollutants NO2, O3, SO2, and CO. In the first table under the "Exploring Pollution Data Set" section, you can see the average concentrations of each pollutant in question in the United States for each year over the 17-year span. Below that, we have included another data frame with the means across the entire 17-year span. To compare the distributions of the pollutants to each other, we created a series of boxplots. As you can see, NO2 has the highest average concentration of any of the pollutants in ppm, and also has a skewed-right shape. CO and O3 have much narrowers distributions (in addition to much lower mean concentrations), making their shape harder to discern. SO2, however, appears to be approximately normally distributed. The next plot we created shows the pollution concentration with respect to time. This plot reveals that while NO2 and SO2 have been decreasing in concentration in recent years, that CO and O3 have remained relatively stable. After analyzing pollutants on their own, we combined the pollution data with our data on cancer death and incidence in order to draw conclusions on the correlative effects pollutants have on cancer. The first plot doing this shows the death trend in lung cancer over the same period of time as the previous plot of pollutants. As can be seen, lung cancer has sharply decreased from 2000-2016, which is similar to the trend we see in NO2 and SO2. The next series of plots compares the pollutant concentration to the lung cancer death rate, statifying by gender. 6 of the 8 plots show a positive, linear relationship between the pollutant concentration and death rate. The 2 plots are the exception are both for O3, which shows a negative, linear relationship with death rate. And finally, an interactive map of the US that shows incidence rate of lung/bronchus cancer by state is at the bottom of this page, and gives a visualization of regional incidence trends. From this, it can be seen that southern states and northern midwest states have the highest incidence rates of lung and bronchus cancers. 
+To understand the pulltion-related factors that act upon cancer incidence and death, we obtained, cleaned, and analyzed pollution data that spanned from 2000-2016. This data contained concentrations from the known pollutants NO2, O3, SO2, and CO. 
 
 ```{r setup, include=FALSE}
 library(tidyverse)
@@ -30,6 +30,10 @@ knitr::opts_chunk$set(warning = FALSE,
 ------
 
 # Exploring Pollution Data Set
+
+&nbsp;
+
+In the first table below, you can see the average concentrations of each pollutant in question in the United States for each year over the 17-year span.
 
 ```{r }
 modified_pollution =
@@ -63,6 +67,8 @@ modified_pollution %>%
 ```
 
 
+Below, we have included another data frame with the means across the entire 17-year span. 
+
 ```{r}
 modified_pollution %>% 
    pivot_longer(
@@ -87,6 +93,10 @@ modified_pollution %>%
 -----
 
 # Comparing Distributions of Pollutant Concentrations 
+
+&nbsp;
+
+To compare the distributions of the pollutants to each other, we created a series of boxplots. As you can see, NO2 has the highest average concentration of any of the pollutants in ppm, and also has a skewed-right shape. CO and O3 have much narrowers distributions (in addition to much lower mean concentrations), making their shape harder to discern. SO2, however, appears to be approximately normally distributed. 
 
 ```{r}
 ppb_plot =
@@ -122,6 +132,8 @@ ppm_plot =
 ppb_plot + ppm_plot + plot_annotation(title = 
                                         "Distribution of Concentration Values for each Pollutant Type")
 ```
+
+The next plot we created shows the pollution concentration with respect to time. This plot reveals that while NO2 and SO2 have been decreasing in concentration in recent years, that CO and O3 have remained relatively stable. 
 
 ```{r}
 ppm_point =
@@ -172,7 +184,10 @@ ppb_point / ppm_point + plot_annotation(title =
 
 # Exploring Trends in Death From Lung Cancer
 
-  
+&nbsp;
+
+After analyzing pollutants on their own, we combined the pollution data with our data on cancer death and incidence in order to draw conclusions on the correlative effects pollutants have on cancer. 
+
 ```{r}
 read_death_time =
   read_excel("data/DeathTrend.xlsx", 
@@ -204,6 +219,9 @@ death_time =
 
 ```
   
+The first plot doing this shows the death trend in lung cancer over the same period of time as the previous plot of pollutants. As can be seen, lung cancer has sharply decreased from 2000-2016, which is similar to the trend we see in NO2 and SO2. 
+  
+  
 ```{r}
 death_time %>% 
   rename(
@@ -231,13 +249,15 @@ death_time %>%
 
 # Exploring relationship between trend in death rate from Lung Cancer to Pollution Concentration
 
+&nbsp;
+
+The next series of plots compares the pollutant concentration to the lung cancer death rate, statifying by gender. 6 of the 8 plots show a positive, linear relationship between the pollutant concentration and death rate. The 2 plots are the exception are both for O3, which shows a negative, linear relationship with death rate.    
 
 ```{r}
 merged_death_pollution =
 merge(death_time, modified_pollution, by = "year") 
-```
 
-```{r}
+
 pollutant_variables =
   merged_death_pollution %>% 
   select(no2,o3,so2,co) %>% 
@@ -247,6 +267,7 @@ pollutant_variables =
 
 Create a for loop to plot Pollutant concentration vs. Lung Cancer Death Rate
 
+## Male
 
 ```{r}
 pollutant_variables =
@@ -268,6 +289,8 @@ for (i in pollutant_variables) {
 }
 ```
 
+## Female
+
 ```{r}
 for (i in pollutant_variables) {
   plot =
@@ -287,6 +310,10 @@ for (i in pollutant_variables) {
 &nbsp;
 
 # Exploring Incidence of Lung Cancer 
+
+&nbsp;
+
+And finally, an interactive map of the US that shows incidence rate of lung/bronchus cancer by state is at the bottom of this page, and gives a visualization of regional incidence trends. From this, it can be seen that southern states and northern midwest states have the highest incidence rates of lung and bronchus cancers. Kentucky had the highest incidence of lung and bronchus cancer in 2013-2017 and Utah had the lowest incidence rate.
 
 ```{r}
 g = list(
@@ -337,6 +364,4 @@ inc_state %>%
 ```
 
 *Note. The raw data for incidence rate of cancer by cancer type did not include data point for Nevada in the combined national rates. Original data recommends referring to publications and sources page on American Cancer Society website*
-
-According to the choropleth map, Kentucky had the highest incidence of lung and bronchus cancer in 2013-2017 and similarly higher rates observed in the surrounding states. On the contrary, Utah had the lowest incidence rate.
 
