@@ -3,7 +3,7 @@ title: "Relationship Between Air Pollution and Cancer"
 output: 
   html_document:
     toc: true
-    toc_float: false
+    toc_float: true
 ---
 
 ----------
