@@ -92,7 +92,7 @@ modified_pollution %>%
 
 -----
 
-# Comparing Distributions of Pollutant Concentrations 
+## Comparing Distributions of Pollutant Concentrations 
 
 &nbsp;
 
@@ -178,15 +178,127 @@ ppb_point / ppm_point + plot_annotation(title =
                                         "Trends in Polluntant Concentration in the US from 2000-2016")
 ```
 
-&nbsp;
 
 -----
 
-# Exploring Trends in Death From Lung Cancer
+
+# Exploring Lung Cancer Data
 
 &nbsp;
 
-After analyzing pollutants on their own, we combined the pollution data with our data on cancer death and incidence in order to draw conclusions on the correlative effects pollutants have on cancer. 
+## Exploring Incidence of Lung Cancer 
+
+&nbsp;
+
+Here, an interactive map of the US that shows incidence rate of lung/bronchus cancer by state is at the bottom of this page, and gives a visualization of regional incidence trends. From this, it can be seen that southern states and northern midwest states have the highest incidence rates of lung and bronchus cancers. Kentucky had the highest incidence of lung and bronchus cancer in 2013-2017 and Utah had the lowest incidence rate.
+
+```{r}
+g = list(
+  scope = 'usa',
+  projection = list(type = 'albers usa'),
+  showlakes = TRUE,
+  lakecolor = toRGB('white')
+)
+
+inc_state =
+  read_excel("data/IncRate.xlsx", sheet = "State", 
+             skip = 6) %>%
+  janitor::clean_names() %>% 
+  separate(
+    col = breast_both_sexes_combined,
+    into = c("breast_total", "female_breast_only"),
+    sep = "-"
+  ) %>% 
+  mutate(
+    breast_male = if_else(breast_male == "n/a", "0", breast_male),
+    cervix_male = if_else(cervix_male == "n/a", "0", cervix_male),
+    colon_excluding_rectum_both_sexes_combined = 
+      if_else(colon_excluding_rectum_both_sexes_combined == "n/a", "0",
+              colon_excluding_rectum_both_sexes_combined),
+    colon_excluding_rectum_female = if_else(colon_excluding_rectum_female == "n/a", "0",
+                                            colon_excluding_rectum_female),
+    colon_excluding_rectum_male = if_else(colon_excluding_rectum_male == "n/a", "0",
+                                          colon_excluding_rectum_male)) %>%
+  filter(state != "Puerto Rico")
+
+inc_state %>%
+  select(state, lung_and_bronchus_both_sexes_combined) %>%
+  mutate(code = state.abb[match(state, state.name)],
+         lung_and_bronchus_both_sexes_combined = as.numeric(lung_and_bronchus_both_sexes_combined)) %>%
+  filter(code != is.na(code)) %>%
+  relocate(state, code) %>%
+  plot_geo(., locationmode = 'USA-states') %>% 
+  add_trace(
+    z = ~lung_and_bronchus_both_sexes_combined, text = ~state, locations = ~code,
+    color = ~lung_and_bronchus_both_sexes_combined, colors = 'viridis'
+  ) %>% 
+  colorbar(title = "Incidence Rate per 100,000") %>% 
+  layout(
+    title = "Distribution of Lung/Bronchus Cancer Incidence Rate by State in 2013-2017",
+    geo = g
+  )
+
+```
+
+*Note. The raw data for incidence rate of cancer by cancer type did not include data point for Nevada in the combined national rates. Original data recommends referring to publications and sources page on American Cancer Society website*
+
+&nbsp;
+
+## Exploring Mortality of Lung Cancer 
+
+&nbsp;
+
+Similarly, the interactive map of the mortality rate from lung and bronchus cancer in 2013-2017 shows comparable distribution across the states as the incidence rate.
+
+```{r}
+g = list(
+  scope = 'usa',
+  projection = list(type = 'albers usa'),
+  showlakes = TRUE,
+  lakecolor = toRGB('white')
+)
+
+death_state =
+  read_excel("data/DeathRate.xlsx", sheet = "State", 
+             skip = 6) %>%
+  janitor::clean_names() %>% 
+  separate(
+    col = breast_both_sexes_combined,
+    into = c("breast_total", "female_breast_only"),
+    sep = "-"
+  ) %>% 
+  select(-female_breast_only) %>%
+  mutate(
+    breast_male = if_else(breast_male == "n/a", "0", breast_male),
+    cervix_male = if_else(cervix_male == "n/a", "0", cervix_male),
+  ) %>%
+  mutate_at(vars(-("state")), as.numeric) %>%
+  filter(state != "Puerto Rico")
+
+
+death_state %>%
+  select(state, lung_and_bronchus_both_sexes_combined) %>%
+  mutate(code = state.abb[match(state, state.name)],
+         lung_and_bronchus_both_sexes_combined = as.numeric(lung_and_bronchus_both_sexes_combined)) %>%
+  filter(code != is.na(code)) %>%
+  relocate(state, code) %>%
+  plot_geo(., locationmode = 'USA-states') %>% 
+  add_trace(
+    z = ~lung_and_bronchus_both_sexes_combined, text = ~state, locations = ~code,
+    color = ~lung_and_bronchus_both_sexes_combined, colors = 'viridis'
+  ) %>% 
+  colorbar(title = "Mortality Rate per 100,000") %>% 
+  layout(
+    title = "Distribution of Lung/Bronchus Cancer Mortality Rate by State in 2013-2017",
+    geo = g
+  )
+
+```
+
+
+
+## Exploring Trends in Death From Lung Cancer
+
 
 ```{r}
 read_death_time =
@@ -219,7 +331,7 @@ death_time =
 
 ```
   
-The first plot doing this shows the death trend in lung cancer over the same period of time as the previous plot of pollutants. As can be seen, lung cancer has sharply decreased from 2000-2016, which is similar to the trend we see in NO2 and SO2. 
+Following plot shows the death trend in lung cancer over the same period of time as the previous plot of pollutants. As can be seen, lung cancer has sharply decreased from 2000-2016, which is similar to the trend we see in NO2 and SO2. 
   
   
 ```{r}
@@ -250,6 +362,9 @@ death_time %>%
 # Exploring relationship between trend in death rate from Lung Cancer to Pollution Concentration
 
 &nbsp;
+
+
+After analyzing pollutants and lung cancer mortality/incidence on their own, we combined the pollution data with our data on cancer death and incidence in order to draw conclusions on the correlative effects pollutants have on cancer. 
 
 The next series of plots compares the pollutant concentration to the lung cancer death rate, statifying by gender. 6 of the 8 plots show a positive, linear relationship between the pollutant concentration and death rate. The 2 plots are the exception are both for O3, which shows a negative, linear relationship with death rate.    
 
@@ -307,109 +422,4 @@ for (i in pollutant_variables) {
 ```
 
 -----
-&nbsp;
 
-# Exploring Incidence of Lung Cancer 
-
-&nbsp;
-
-And finally, an interactive map of the US that shows incidence rate of lung/bronchus cancer by state is at the bottom of this page, and gives a visualization of regional incidence trends. From this, it can be seen that southern states and northern midwest states have the highest incidence rates of lung and bronchus cancers. Kentucky had the highest incidence of lung and bronchus cancer in 2013-2017 and Utah had the lowest incidence rate.
-
-```{r}
-g = list(
-  scope = 'usa',
-  projection = list(type = 'albers usa'),
-  showlakes = TRUE,
-  lakecolor = toRGB('white')
-)
-
-inc_state =
-  read_excel("data/IncRate.xlsx", sheet = "State", 
-             skip = 6) %>%
-  janitor::clean_names() %>% 
-  separate(
-    col = breast_both_sexes_combined,
-    into = c("breast_total", "female_breast_only"),
-    sep = "-"
-  ) %>% 
-  mutate(
-    breast_male = if_else(breast_male == "n/a", "0", breast_male),
-    cervix_male = if_else(cervix_male == "n/a", "0", cervix_male),
-    colon_excluding_rectum_both_sexes_combined = 
-      if_else(colon_excluding_rectum_both_sexes_combined == "n/a", "0",
-              colon_excluding_rectum_both_sexes_combined),
-    colon_excluding_rectum_female = if_else(colon_excluding_rectum_female == "n/a", "0",
-                                            colon_excluding_rectum_female),
-    colon_excluding_rectum_male = if_else(colon_excluding_rectum_male == "n/a", "0",
-                                          colon_excluding_rectum_male)) %>%
-  filter(state != "Puerto Rico")
-
-inc_state %>%
-  select(state, lung_and_bronchus_both_sexes_combined) %>%
-  mutate(code = state.abb[match(state, state.name)],
-         lung_and_bronchus_both_sexes_combined = as.numeric(lung_and_bronchus_both_sexes_combined)) %>%
-  filter(code != is.na(code)) %>%
-  relocate(state, code) %>%
-  plot_geo(., locationmode = 'USA-states') %>% 
-  add_trace(
-    z = ~lung_and_bronchus_both_sexes_combined, text = ~state, locations = ~code,
-    color = ~lung_and_bronchus_both_sexes_combined, colors = 'viridis'
-  ) %>% 
-  colorbar(title = "Incidence Rate per 100,000") %>% 
-  layout(
-    title = "Distribution of Lung/Bronchus Cancer Incidence Rate by State in 2013-2017",
-    geo = g
-  )
-
-```
-
-*Note. The raw data for incidence rate of cancer by cancer type did not include data point for Nevada in the combined national rates. Original data recommends referring to publications and sources page on American Cancer Society website*
-
-&nbsp;
-
-Similarly, the interactive map of the mortality rate from lung and bronchus cancer in 2013-2017 shows comparable distribution across the states as the incidence rate.
-
-```{r}
-g = list(
-  scope = 'usa',
-  projection = list(type = 'albers usa'),
-  showlakes = TRUE,
-  lakecolor = toRGB('white')
-)
-
-death_state =
-  read_excel("data/DeathRate.xlsx", sheet = "State", 
-             skip = 6) %>%
-  janitor::clean_names() %>% 
-  separate(
-    col = breast_both_sexes_combined,
-    into = c("breast_total", "female_breast_only"),
-    sep = "-"
-  ) %>% 
-  select(-female_breast_only) %>%
-  mutate(
-    breast_male = if_else(breast_male == "n/a", "0", breast_male),
-    cervix_male = if_else(cervix_male == "n/a", "0", cervix_male),
-  ) %>%
-  mutate_at(vars(-("state")), as.numeric) %>%
-  filter(state != "Puerto Rico")
-
-
-death_state %>%
-  select(state, lung_and_bronchus_both_sexes_combined) %>%
-  mutate(code = state.abb[match(state, state.name)],
-         lung_and_bronchus_both_sexes_combined = as.numeric(lung_and_bronchus_both_sexes_combined)) %>%
-  filter(code != is.na(code)) %>%
-  relocate(state, code) %>%
-  plot_geo(., locationmode = 'USA-states') %>% 
-  add_trace(
-    z = ~lung_and_bronchus_both_sexes_combined, text = ~state, locations = ~code,
-    color = ~lung_and_bronchus_both_sexes_combined, colors = 'viridis'
-  ) %>% 
-  colorbar(title = "Mortality Rate per 100,000") %>% 
-  layout(
-    title = "Distribution of Lung/Bronchus Cancer Mortality Rate by State in 2013-2017",
-    geo = g
-  )
-
-```
