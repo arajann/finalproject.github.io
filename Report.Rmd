@@ -58,6 +58,8 @@ Some initial questions we considered to explore data available:
 
 # Data 
 
+&nbsp;
+
 ## Data Source
 
 Our project consists of data from two main sources: 
@@ -116,6 +118,7 @@ We focused our analyses on the mean values of 4 major pollutants:
   - `1st Max Value` : The maximum value obtained for pollutant concentration in a given day
   - `1st Max Hour` : The hour when the maximum pollutant concentration was recorded in a given day
 
+&nbsp;
 
 ## Data Cleaning
 
@@ -235,9 +238,15 @@ These cleaned up datasets were further wrangled as needed for analysis.
 
 # Exploratory Analysis
 
+To explore our initial research questions, we started with visual representations of each data and examining for any noticeable patterns. 
+
 For visual plots, check out [Exploratory Analysis](exploratory-analysis.html)!
 
-To explore our initial research questions, we started with visual representations of each data and examining for any noticeable patterns. 
+
+&nbsp;
+
+The interactive dashboard of [Pollution By State](pollution_state.html) explores the distribution of the mean pollutant concentration for each of the 4 main pollutants of interest, NO2, SO2, O3, and CO, across US in 2013-2017. Some state data points are left empty as the raw data contained some missing values. 
+
 
 &nbsp;
 
