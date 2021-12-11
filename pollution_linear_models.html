@@ -13,8 +13,8 @@
 
 <title>Model Building for Lung Cancer</title>
 
-<script src="site_libs/header-attrs-2.10/header-attrs.js"></script>
-<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<script src="site_libs/header-attrs-2.11/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/journal.min.css" rel="stylesheet" />
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
@@ -424,28 +424,31 @@ div.tocify {
     lung_and_bronchus_both_sexes_combined = as.numeric(lung_and_bronchus_both_sexes_combined),
     lung_and_bronchus_female = as.numeric(lung_and_bronchus_female),
     lung_and_bronchus_male = as.numeric(lung_and_bronchus_male)
-  ) %&gt;% 
-  select(state,lung_and_bronchus_both_sexes_combined,lung_and_bronchus_male,lung_and_bronchus_female,no2,co,so2,o3)
+  ) 
 
 pollution_incidence %&gt;% 
-  knitr::kable(digits =3)</code></pre>
-<table>
+  select(state,&quot;lung/bronchus combined&quot; = lung_and_bronchus_both_sexes_combined,
+         &quot;lung/bronchus male&quot; = lung_and_bronchus_male,
+         &quot;lung/bronchus female&quot; = lung_and_bronchus_female,
+         no2,co,so2,o3) %&gt;%
+  knitr::kable(digits = 3)</code></pre>
+<table style="width:100%;">
 <colgroup>
-<col width="11%" />
-<col width="30%" />
+<col width="14%" />
+<col width="22%" />
 <col width="18%" />
-<col width="19%" />
+<col width="20%" />
+<col width="6%" />
 <col width="5%" />
-<col width="4%" />
-<col width="4%" />
-<col width="4%" />
+<col width="5%" />
+<col width="5%" />
 </colgroup>
 <thead>
 <tr class="header">
 <th align="left">state</th>
-<th align="right">lung_and_bronchus_both_sexes_combined</th>
-<th align="right">lung_and_bronchus_male</th>
-<th align="right">lung_and_bronchus_female</th>
+<th align="right">lung/bronchus combined</th>
+<th align="right">lung/bronchus male</th>
+<th align="right">lung/bronchus female</th>
 <th align="right">no2</th>
 <th align="right">co</th>
 <th align="right">so2</th>
@@ -1026,14 +1029,14 @@ for (i in continuous_variables) {
   geom_point() +
   geom_smooth(method = &quot;lm&quot;, se = FALSE) +
   labs(
-    title = &quot;Predictions vs Residuals plot&quot;,
+    title = &quot;Residuals vs. Predictions plot&quot;,
     x = &quot;Predictions&quot;,
     y = &quot;Residuals&quot;
   ) +
   scale_color_viridis(discrete = TRUE) +
   theme_bw()</code></pre>
 <p><img src="pollution_linear_models_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
-<p>The plot indicates a random scatter of residuals. Therefore, the assumption of homescedasticity is not violated.</p>
+<p>The plot indicates a random scatter of residuals. Therefore, the assumption of homoscedasticity is not violated.</p>
 <hr />
 <p> </p>
 </div>
@@ -1076,7 +1079,7 @@ cv_df %&gt;%
   mutate(model = fct_inorder(model)) %&gt;% 
   ggplot(aes(x = model, y = rmse)) + geom_boxplot()</code></pre>
 <p><img src="pollution_linear_models_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
-<p>From the boxplot, we see that the fitted model has a lower RMSE compared to the comparison models. Despite the fitted model being better,the mean RMSE value is equal to 10, which is not good. Thus the overall predictive accuracy of the fitted model is quite low. We will now evaluate whether stratifying lung cancer incidence by gender affects the predictive accuracy of the model.</p>
+<p>From the boxplot, we see that the fitted model has a lower RMSE compared to the comparison models. Despite the fitted model being better,the mean RMSE value is approximately equal to 10, which is not good. Thus the overall predictive accuracy of the fitted model is quite low. We will now evaluate whether stratifying lung cancer incidence by gender affects the predictive accuracy of the model.</p>
 <hr />
 <p> </p>
 </div>

@@ -80,11 +80,14 @@ pollution_incidence = read_csv("data/uspollution_us_2000_2016.csv") %>%
     lung_and_bronchus_both_sexes_combined = as.numeric(lung_and_bronchus_both_sexes_combined),
     lung_and_bronchus_female = as.numeric(lung_and_bronchus_female),
     lung_and_bronchus_male = as.numeric(lung_and_bronchus_male)
-  ) %>% 
-  select(state,lung_and_bronchus_both_sexes_combined,lung_and_bronchus_male,lung_and_bronchus_female,no2,co,so2,o3)
+  ) 
 
 pollution_incidence %>% 
-  knitr::kable(digits =3)
+  select(state,"lung/bronchus combined" = lung_and_bronchus_both_sexes_combined,
+         "lung/bronchus male" = lung_and_bronchus_male,
+         "lung/bronchus female" = lung_and_bronchus_female,
+         no2,co,so2,o3) %>%
+  knitr::kable(digits = 3)
 
 ```
 
