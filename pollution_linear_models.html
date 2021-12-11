@@ -13,8 +13,8 @@
 
 <title>Model Building for Lung Cancer</title>
 
-<script src="site_libs/header-attrs-2.11/header-attrs.js"></script>
-<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="site_libs/header-attrs-2.10/header-attrs.js"></script>
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/journal.min.css" rel="stylesheet" />
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
@@ -329,7 +329,6 @@ div.tocify {
         <li>
   <a href="Report.html">Report</a>
 </li>
-<li class="dropdown-header">Webcast</li>
 <li>
   <a href="exploratory-analysis.html">Exploratory Analysis</a>
 </li>
@@ -338,6 +337,12 @@ div.tocify {
 </li>
 <li>
   <a href="pollution_state.html">Pollution By State</a>
+</li>
+<li>
+  <a href="https://www.youtube.com/watch?v=HuIztqndmkU&amp;ab_channel=BullsFreak">
+    <span class="fa fa-youtube fa-lg"></span>
+     
+  </a>
 </li>
 <li>
   <a href="https://github.com/arajann/finalproject/">
@@ -368,8 +373,9 @@ div.tocify {
 
 
 <p> </p>
-<p>To continue our analysis we will build a linear model that assesses the relationship between pollutant concentration and incidence of lung cancer. We will merge the data set with incidence rate by state with the pollution data set that has been aggregated by state over the 17 year period. In essence we would like to answer whether states that had higher mean pollutant concentrations over this 15 year period were significantly associated with higher lung cancer incidence. Thus, from building the model we can assess whether concentrations of the various pollutants are significantly associated with increased incidence rates of lung cancer. We will evaluate the predictive accuracy of the model, and cross validate the fitted model to other potential models.<br />
- </p>
+<p>To continue our analysis we will build a linear model that assesses the relationship between pollutant concentration and incidence of lung cancer. We will merge the data set with incidence rate by state with the pollution data set that has been aggregated by state over the 17 year period. In essence we would like to answer whether states that had higher mean pollutant concentrations over this 15 year period were significantly associated with higher lung cancer incidence. Thus, from building the model we can assess whether concentrations of the various pollutants are significantly associated with increased incidence rates of lung cancer. We will evaluate the predictive accuracy of the model, and cross validate the fitted model to other potential models.</p>
+<p> </p>
+<hr />
 <div id="importing-and-merging-pollution-dataset-with-lung-cancer-incidence-dataset" class="section level2">
 <h2>Importing and Merging Pollution Dataset with Lung Cancer Incidence Dataset</h2>
 <p> </p>
@@ -419,6 +425,7 @@ div.tocify {
     lung_and_bronchus_female = as.numeric(lung_and_bronchus_female),
     lung_and_bronchus_male = as.numeric(lung_and_bronchus_male)
   )</code></pre>
+<hr />
 </div>
 <div id="plotting-each-pollutant-concentration-vs.-lung-cancer-incidence" class="section level2">
 <h2>Plotting each Pollutant concentration vs. Lung Cancer Incidence</h2>
@@ -556,6 +563,7 @@ for (i in continuous_variables) {
   scale_color_viridis(discrete = TRUE) +
   theme_bw()</code></pre>
 <p><img src="pollution_linear_models_files/figure-html/unnamed-chunk-8-1.png" width="672" /> The plot indicates a random scatter of residuals. Therefore, the assumption of homescedasticity is not violated.</p>
+<hr />
 <p> </p>
 </div>
 <div id="cross-validation" class="section level2">
@@ -598,6 +606,7 @@ cv_df %&gt;%
   ggplot(aes(x = model, y = rmse)) + geom_boxplot()</code></pre>
 <p><img src="pollution_linear_models_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
 <p>From the boxplot, we see that the fitted model has a lower RMSE compared to the comparison models. Despite the fitted model being better,the mean RMSE value is equal to 10, which is not good. Thus the overall predictive accuracy of the fitted model is quite low. We will now evaluate whether stratifying lung cancer incidence by gender affects the predictive accuracy of the model.</p>
+<hr />
 <p> </p>
 </div>
 <div id="lung-cancer-incidence-models-stratified-by-gender" class="section level2">
