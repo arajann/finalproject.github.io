@@ -609,9 +609,8 @@ modified_pollution %&gt;%
 </table>
 <p> </p>
 <hr />
-</div>
-<div id="comparing-distributions-of-pollutant-concentrations" class="section level1">
-<h1>Comparing Distributions of Pollutant Concentrations</h1>
+<div id="comparing-distributions-of-pollutant-concentrations" class="section level2">
+<h2>Comparing Distributions of Pollutant Concentrations</h2>
 <p> </p>
 <p>To compare the distributions of the pollutants to each other, we created a series of boxplots. As you can see, NO2 has the highest average concentration of any of the pollutants in ppm, and also has a skewed-right shape. CO and O3 have much narrowers distributions (in addition to much lower mean concentrations), making their shape harder to discern. SO2, however, appears to be approximately normally distributed.</p>
 <pre class="r"><code>ppb_plot =
@@ -689,120 +688,16 @@ ppb_point =
 ppb_point / ppm_point + plot_annotation(title = 
                                         &quot;Trends in Polluntant Concentration in the US from 2000-2016&quot;)</code></pre>
 <p><img src="exploratory-analysis_files/figure-html/unnamed-chunk-4-1.png" width="90%" /></p>
-<p> </p>
 <hr />
 </div>
-<div id="exploring-trends-in-death-from-lung-cancer" class="section level1">
-<h1>Exploring Trends in Death From Lung Cancer</h1>
-<p> </p>
-<p>After analyzing pollutants on their own, we combined the pollution data with our data on cancer death and incidence in order to draw conclusions on the correlative effects pollutants have on cancer.</p>
-<pre class="r"><code>read_death_time =
-  read_excel(&quot;data/DeathTrend.xlsx&quot;, 
-             skip = 6) %&gt;%
-  janitor::clean_names()
-
-x = c(&quot;colorectum_female&quot;, &quot;colorectum_male&quot;, &quot;liver_and_intrahepatic_bile_duct_female&quot;,
-      &quot;liver_and_intrahepatic_bile_duct_male&quot;, &quot;lung_and_bronchus_female&quot;, 
-      &quot;lung_and_bronchus_male&quot;, &quot;ovary_female&quot;, &quot;uterus_cervix_and_corpus_combined_female&quot;)
-
-remove_note = function(column_name) {
-  read_death_time = read_death_time %&gt;% 
-    separate(column_name, into = c(column_name, &quot;note&quot;), sep = &quot;\\-&quot;) %&gt;% 
-    select(-note)}
-
-for (i in x) {
-  read_death_time = remove_note(i)} 
-
-death_time =
-  read_death_time %&gt;%
-  filter(year %in% 2000:2016) %&gt;%
-  select(-c(&quot;breast_male&quot;, &quot;ovary_male&quot;, &quot;prostate_female&quot;,
-            &quot;uterus_cervix_and_corpus_combined_male&quot;)) %&gt;%
-  mutate_at(vars(-(&quot;year&quot;)), as.numeric) %&gt;%
-  mutate(
-   year = as.numeric(year)
-  )</code></pre>
-<p>The first plot doing this shows the death trend in lung cancer over the same period of time as the previous plot of pollutants. As can be seen, lung cancer has sharply decreased from 2000-2016, which is similar to the trend we see in NO2 and SO2.</p>
-<pre class="r"><code>death_time %&gt;% 
-  rename(
-    male = lung_and_bronchus_male,
-    female = lung_and_bronchus_female
-  ) %&gt;% 
-  pivot_longer(
-    female:male,
-    names_to = &quot;gender&quot;, 
-    values_to = &quot;death_rate&quot;
-  ) %&gt;% 
-  ggplot(aes(x = year,y = death_rate, group = gender, color = gender)) + 
-  geom_point() +
-  geom_line() +
-  labs(
-    title = &quot;Trend in US Death rate from Lung Cancer, 2000-2016&quot;,
-    x = &quot;Year&quot;,
-    y = &quot;Lung Cancer Death Rate(per 100,000)&quot;
-  )</code></pre>
-<p><img src="exploratory-analysis_files/figure-html/unnamed-chunk-6-1.png" width="90%" /></p>
-<p> </p>
-<hr />
 </div>
-<div id="exploring-relationship-between-trend-in-death-rate-from-lung-cancer-to-pollution-concentration" class="section level1">
-<h1>Exploring relationship between trend in death rate from Lung Cancer to Pollution Concentration</h1>
+<div id="exploring-lung-cancer-data" class="section level1">
+<h1>Exploring Lung Cancer Data</h1>
 <p> </p>
-<p>The next series of plots compares the pollutant concentration to the lung cancer death rate, statifying by gender. 6 of the 8 plots show a positive, linear relationship between the pollutant concentration and death rate. The 2 plots are the exception are both for O3, which shows a negative, linear relationship with death rate.</p>
-<pre class="r"><code>merged_death_pollution =
-merge(death_time, modified_pollution, by = &quot;year&quot;) 
-
-
-pollutant_variables =
-  merged_death_pollution %&gt;% 
-  select(no2,o3,so2,co) %&gt;% 
-  colnames() %&gt;% 
-  as.vector()</code></pre>
-<p>Create a for loop to plot Pollutant concentration vs. Lung Cancer Death Rate</p>
-<div id="male" class="section level2">
-<h2>Male</h2>
-<pre class="r"><code>pollutant_variables =
-  pollutant_variables %&gt;% 
-  as.list()
-
-
-for (i in pollutant_variables) {
-  plot =
-  ggplot(merged_death_pollution, aes_string(i,  &quot;lung_and_bronchus_male&quot;)) + 
-  geom_point() +
-  geom_smooth(method = lm, se = FALSE) +
-  labs(title = &quot;Pollutant Concentration vs. Lung Cancer Death Rate(Male)&quot;, 
-       y = &quot;Lung Cancer Death Rate(per 100,000)&quot;) +
-  theme(plot.title = element_text(hjust = 0.5, face = &quot;bold&quot;))
-  
-  print(plot)
-  
-}</code></pre>
-<p><img src="exploratory-analysis_files/figure-html/unnamed-chunk-8-1.png" width="90%" /><img src="exploratory-analysis_files/figure-html/unnamed-chunk-8-2.png" width="90%" /><img src="exploratory-analysis_files/figure-html/unnamed-chunk-8-3.png" width="90%" /><img src="exploratory-analysis_files/figure-html/unnamed-chunk-8-4.png" width="90%" /></p>
-</div>
-<div id="female" class="section level2">
-<h2>Female</h2>
-<pre class="r"><code>for (i in pollutant_variables) {
-  plot =
-  ggplot(merged_death_pollution, aes_string(i,  &quot;lung_and_bronchus_female&quot;)) + 
-  geom_point() +
-  geom_smooth(method = lm, se = FALSE) +
-  labs(title = &quot;Pollutant Concentration vs. Lung Cancer Death Rate(Female)&quot;, 
-       y = &quot;Lung Cancer Death Rate(per 100,000)&quot;) +
-  theme(plot.title = element_text(hjust = 0.5, face = &quot;bold&quot;))
-  
-  print(plot)
-  
-}</code></pre>
-<p><img src="exploratory-analysis_files/figure-html/unnamed-chunk-9-1.png" width="90%" /><img src="exploratory-analysis_files/figure-html/unnamed-chunk-9-2.png" width="90%" /><img src="exploratory-analysis_files/figure-html/unnamed-chunk-9-3.png" width="90%" /><img src="exploratory-analysis_files/figure-html/unnamed-chunk-9-4.png" width="90%" /></p>
-<hr />
+<div id="exploring-incidence-of-lung-cancer" class="section level2">
+<h2>Exploring Incidence of Lung Cancer</h2>
 <p> </p>
-</div>
-</div>
-<div id="exploring-incidence-of-lung-cancer" class="section level1">
-<h1>Exploring Incidence of Lung Cancer</h1>
-<p> </p>
-<p>And finally, an interactive map of the US that shows incidence rate of lung/bronchus cancer by state is at the bottom of this page, and gives a visualization of regional incidence trends. From this, it can be seen that southern states and northern midwest states have the highest incidence rates of lung and bronchus cancers. Kentucky had the highest incidence of lung and bronchus cancer in 2013-2017 and Utah had the lowest incidence rate.</p>
+<p>Here, an interactive map of the US that shows incidence rate of lung/bronchus cancer by state is at the bottom of this page, and gives a visualization of regional incidence trends. From this, it can be seen that southern states and northern midwest states have the highest incidence rates of lung and bronchus cancers. Kentucky had the highest incidence of lung and bronchus cancer in 2013-2017 and Utah had the lowest incidence rate.</p>
 <pre class="r"><code>g = list(
   scope = &#39;usa&#39;,
   projection = list(type = &#39;albers usa&#39;),
@@ -847,9 +742,13 @@ inc_state %&gt;%
     title = &quot;Distribution of Lung/Bronchus Cancer Incidence Rate by State in 2013-2017&quot;,
     geo = g
   )</code></pre>
-<div id="htmlwidget-4fb9831eab24cc7e4de4" style="width:90%;height:460.8px;" class="plotly html-widget"></div>
-<script type="application/json" data-for="htmlwidget-4fb9831eab24cc7e4de4">{"x":{"visdat":{"48744e6251cb":["function () ","plotlyVisDat"]},"cur_data":"48744e6251cb","attrs":{"48744e6251cb":{"locationmode":"USA-states","alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"z":{},"text":{},"locations":{},"color":{},"colors":"viridis","inherit":true}},"layout":{"margin":{"b":40,"l":60,"t":25,"r":10},"mapType":"geo","scene":{"zaxis":{"title":"lung_and_bronchus_both_sexes_combined"}},"geo":{"domain":{"x":[0,1],"y":[0,1]},"scope":"usa","projection":{"type":"albers usa"},"showlakes":true,"lakecolor":"rgba(255,255,255,1)"},"hovermode":"closest","showlegend":false,"legend":{"yanchor":"top","y":0.5},"title":"Distribution of Lung/Bronchus Cancer Incidence Rate by State in 2013-2017"},"source":"A","config":{"modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"data":[{"colorbar":{"title":"Incidence Rate per 100,000","ticklen":2,"len":0.5,"lenmode":"fraction","y":1,"yanchor":"top"},"colorscale":[["0","rgba(68,1,84,1)"],["0.0416666666666667","rgba(71,17,100,1)"],["0.0833333333333334","rgba(72,31,112,1)"],["0.125","rgba(71,45,123,1)"],["0.166666666666667","rgba(68,58,131,1)"],["0.208333333333333","rgba(64,70,136,1)"],["0.25","rgba(59,82,139,1)"],["0.291666666666667","rgba(54,93,141,1)"],["0.333333333333333","rgba(49,104,142,1)"],["0.375","rgba(44,114,142,1)"],["0.416666666666667","rgba(40,124,142,1)"],["0.458333333333333","rgba(36,134,142,1)"],["0.5","rgba(33,144,141,1)"],["0.541666666666667","rgba(31,154,138,1)"],["0.583333333333333","rgba(32,164,134,1)"],["0.625","rgba(39,173,129,1)"],["0.666666666666667","rgba(53,183,121,1)"],["0.708333333333333","rgba(71,193,110,1)"],["0.75","rgba(93,200,99,1)"],["0.791666666666667","rgba(117,208,84,1)"],["0.833333333333333","rgba(143,214,68,1)"],["0.875","rgba(170,220,50,1)"],["0.916666666666667","rgba(199,224,32,1)"],["0.958333333333333","rgba(227,228,24,1)"],["1","rgba(253,231,37,1)"]],"showscale":true,"locationmode":"USA-states","z":[64.8,55.8,46.7,77.2,41.5,41.4,59.6,66.9,57.7,62.8,45.7,49.5,63.7,72.2,63.3,56.2,91,66.2,72.1,56.4,61.6,63.3,56.1,74.9,72,53.7,57,63.7,55.3,38.5,58.7,67.7,57.7,67.8,67.4,54.1,63.5,69.4,64.4,59,74.5,50.6,26,61.1,56.4,54,79.8,59.1,42.2],"text":["Alabama","Alaska","Arizona","Arkansas","California","Colorado","Connecticut","Delaware","Florida","Georgia","Hawaii","Idaho","Illinois","Indiana","Iowa","Kansas","Kentucky","Louisiana","Maine","Maryland","Massachusetts","Michigan","Minnesota","Mississippi","Missouri","Montana","Nebraska","New Hampshire","New Jersey","New Mexico","New York","North Carolina","North Dakota","Ohio","Oklahoma","Oregon","Pennsylvania","Rhode Island","South Carolina","South Dakota","Tennessee","Texas","Utah","Vermont","Virginia","Washington","West Virginia","Wisconsin","Wyoming"],"locations":["AL","AK","AZ","AR","CA","CO","CT","DE","FL","GA","HI","ID","IL","IN","IA","KS","KY","LA","ME","MD","MA","MI","MN","MS","MO","MT","NE","NH","NJ","NM","NY","NC","ND","OH","OK","OR","PA","RI","SC","SD","TN","TX","UT","VT","VA","WA","WV","WI","WY"],"type":"choropleth","marker":{"line":{"colorbar":{"title":"","ticklen":2},"cmin":26,"cmax":91,"colorscale":[["0","rgba(68,1,84,1)"],["0.0416666666666667","rgba(71,17,100,1)"],["0.0833333333333334","rgba(72,31,112,1)"],["0.125","rgba(71,45,123,1)"],["0.166666666666667","rgba(68,58,131,1)"],["0.208333333333333","rgba(64,70,136,1)"],["0.25","rgba(59,82,139,1)"],["0.291666666666667","rgba(54,93,141,1)"],["0.333333333333333","rgba(49,104,142,1)"],["0.375","rgba(44,114,142,1)"],["0.416666666666667","rgba(40,124,142,1)"],["0.458333333333333","rgba(36,134,142,1)"],["0.5","rgba(33,144,141,1)"],["0.541666666666667","rgba(31,154,138,1)"],["0.583333333333333","rgba(32,164,134,1)"],["0.625","rgba(39,173,129,1)"],["0.666666666666667","rgba(53,183,121,1)"],["0.708333333333333","rgba(71,193,110,1)"],["0.75","rgba(93,200,99,1)"],["0.791666666666667","rgba(117,208,84,1)"],["0.833333333333333","rgba(143,214,68,1)"],["0.875","rgba(170,220,50,1)"],["0.916666666666667","rgba(199,224,32,1)"],["0.958333333333333","rgba(227,228,24,1)"],["1","rgba(253,231,37,1)"]],"showscale":false,"color":[64.8,55.8,46.7,77.2,41.5,41.4,59.6,66.9,57.7,62.8,45.7,49.5,63.7,72.2,63.3,56.2,91,66.2,72.1,56.4,61.6,63.3,56.1,74.9,72,53.7,57,63.7,55.3,38.5,58.7,67.7,57.7,67.8,67.4,54.1,63.5,69.4,64.4,59,74.5,50.6,26,61.1,56.4,54,79.8,59.1,42.2]}},"geo":"geo","frame":null}],"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.2,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+<div id="htmlwidget-703d372e223c59779f5c" style="width:90%;height:460.8px;" class="plotly html-widget"></div>
+<script type="application/json" data-for="htmlwidget-703d372e223c59779f5c">{"x":{"visdat":{"1dac61cb4660":["function () ","plotlyVisDat"]},"cur_data":"1dac61cb4660","attrs":{"1dac61cb4660":{"locationmode":"USA-states","alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"z":{},"text":{},"locations":{},"color":{},"colors":"viridis","inherit":true}},"layout":{"margin":{"b":40,"l":60,"t":25,"r":10},"mapType":"geo","scene":{"zaxis":{"title":"lung_and_bronchus_both_sexes_combined"}},"geo":{"domain":{"x":[0,1],"y":[0,1]},"scope":"usa","projection":{"type":"albers usa"},"showlakes":true,"lakecolor":"rgba(255,255,255,1)"},"hovermode":"closest","showlegend":false,"legend":{"yanchor":"top","y":0.5},"title":"Distribution of Lung/Bronchus Cancer Incidence Rate by State in 2013-2017"},"source":"A","config":{"modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"data":[{"colorbar":{"title":"Incidence Rate per 100,000","ticklen":2,"len":0.5,"lenmode":"fraction","y":1,"yanchor":"top"},"colorscale":[["0","rgba(68,1,84,1)"],["0.0416666666666667","rgba(71,17,100,1)"],["0.0833333333333334","rgba(72,31,112,1)"],["0.125","rgba(71,45,123,1)"],["0.166666666666667","rgba(68,58,131,1)"],["0.208333333333333","rgba(64,70,136,1)"],["0.25","rgba(59,82,139,1)"],["0.291666666666667","rgba(54,93,141,1)"],["0.333333333333333","rgba(49,104,142,1)"],["0.375","rgba(44,114,142,1)"],["0.416666666666667","rgba(40,124,142,1)"],["0.458333333333333","rgba(36,134,142,1)"],["0.5","rgba(33,144,141,1)"],["0.541666666666667","rgba(31,154,138,1)"],["0.583333333333333","rgba(32,164,134,1)"],["0.625","rgba(39,173,129,1)"],["0.666666666666667","rgba(53,183,121,1)"],["0.708333333333333","rgba(71,193,110,1)"],["0.75","rgba(93,200,99,1)"],["0.791666666666667","rgba(117,208,84,1)"],["0.833333333333333","rgba(143,214,68,1)"],["0.875","rgba(170,220,50,1)"],["0.916666666666667","rgba(199,224,32,1)"],["0.958333333333333","rgba(227,228,24,1)"],["1","rgba(253,231,37,1)"]],"showscale":true,"locationmode":"USA-states","z":[64.8,55.8,46.7,77.2,41.5,41.4,59.6,66.9,57.7,62.8,45.7,49.5,63.7,72.2,63.3,56.2,91,66.2,72.1,56.4,61.6,63.3,56.1,74.9,72,53.7,57,63.7,55.3,38.5,58.7,67.7,57.7,67.8,67.4,54.1,63.5,69.4,64.4,59,74.5,50.6,26,61.1,56.4,54,79.8,59.1,42.2],"text":["Alabama","Alaska","Arizona","Arkansas","California","Colorado","Connecticut","Delaware","Florida","Georgia","Hawaii","Idaho","Illinois","Indiana","Iowa","Kansas","Kentucky","Louisiana","Maine","Maryland","Massachusetts","Michigan","Minnesota","Mississippi","Missouri","Montana","Nebraska","New Hampshire","New Jersey","New Mexico","New York","North Carolina","North Dakota","Ohio","Oklahoma","Oregon","Pennsylvania","Rhode Island","South Carolina","South Dakota","Tennessee","Texas","Utah","Vermont","Virginia","Washington","West Virginia","Wisconsin","Wyoming"],"locations":["AL","AK","AZ","AR","CA","CO","CT","DE","FL","GA","HI","ID","IL","IN","IA","KS","KY","LA","ME","MD","MA","MI","MN","MS","MO","MT","NE","NH","NJ","NM","NY","NC","ND","OH","OK","OR","PA","RI","SC","SD","TN","TX","UT","VT","VA","WA","WV","WI","WY"],"type":"choropleth","marker":{"line":{"colorbar":{"title":"","ticklen":2},"cmin":26,"cmax":91,"colorscale":[["0","rgba(68,1,84,1)"],["0.0416666666666667","rgba(71,17,100,1)"],["0.0833333333333334","rgba(72,31,112,1)"],["0.125","rgba(71,45,123,1)"],["0.166666666666667","rgba(68,58,131,1)"],["0.208333333333333","rgba(64,70,136,1)"],["0.25","rgba(59,82,139,1)"],["0.291666666666667","rgba(54,93,141,1)"],["0.333333333333333","rgba(49,104,142,1)"],["0.375","rgba(44,114,142,1)"],["0.416666666666667","rgba(40,124,142,1)"],["0.458333333333333","rgba(36,134,142,1)"],["0.5","rgba(33,144,141,1)"],["0.541666666666667","rgba(31,154,138,1)"],["0.583333333333333","rgba(32,164,134,1)"],["0.625","rgba(39,173,129,1)"],["0.666666666666667","rgba(53,183,121,1)"],["0.708333333333333","rgba(71,193,110,1)"],["0.75","rgba(93,200,99,1)"],["0.791666666666667","rgba(117,208,84,1)"],["0.833333333333333","rgba(143,214,68,1)"],["0.875","rgba(170,220,50,1)"],["0.916666666666667","rgba(199,224,32,1)"],["0.958333333333333","rgba(227,228,24,1)"],["1","rgba(253,231,37,1)"]],"showscale":false,"color":[64.8,55.8,46.7,77.2,41.5,41.4,59.6,66.9,57.7,62.8,45.7,49.5,63.7,72.2,63.3,56.2,91,66.2,72.1,56.4,61.6,63.3,56.1,74.9,72,53.7,57,63.7,55.3,38.5,58.7,67.7,57.7,67.8,67.4,54.1,63.5,69.4,64.4,59,74.5,50.6,26,61.1,56.4,54,79.8,59.1,42.2]}},"geo":"geo","frame":null}],"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.2,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
 <p><em>Note. The raw data for incidence rate of cancer by cancer type did not include data point for Nevada in the combined national rates. Original data recommends referring to publications and sources page on American Cancer Society website</em></p>
+<p> </p>
+</div>
+<div id="exploring-mortality-of-lung-cancer" class="section level2">
+<h2>Exploring Mortality of Lung Cancer</h2>
 <p> </p>
 <p>Similarly, the interactive map of the mortality rate from lung and bronchus cancer in 2013-2017 shows comparable distribution across the states as the incidence rate.</p>
 <pre class="r"><code>g = list(
@@ -893,8 +792,114 @@ death_state %&gt;%
     title = &quot;Distribution of Lung/Bronchus Cancer Mortality Rate by State in 2013-2017&quot;,
     geo = g
   )</code></pre>
-<div id="htmlwidget-52ae1ee2abbc1ff72abd" style="width:90%;height:460.8px;" class="plotly html-widget"></div>
-<script type="application/json" data-for="htmlwidget-52ae1ee2abbc1ff72abd">{"x":{"visdat":{"4874430321d7":["function () ","plotlyVisDat"]},"cur_data":"4874430321d7","attrs":{"4874430321d7":{"locationmode":"USA-states","alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"z":{},"text":{},"locations":{},"color":{},"colors":"viridis","inherit":true}},"layout":{"margin":{"b":40,"l":60,"t":25,"r":10},"mapType":"geo","scene":{"zaxis":{"title":"lung_and_bronchus_both_sexes_combined"}},"geo":{"domain":{"x":[0,1],"y":[0,1]},"scope":"usa","projection":{"type":"albers usa"},"showlakes":true,"lakecolor":"rgba(255,255,255,1)"},"hovermode":"closest","showlegend":false,"legend":{"yanchor":"top","y":0.5},"title":"Distribution of Lung/Bronchus Cancer Mortality Rate by State in 2013-2017"},"source":"A","config":{"modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"data":[{"colorbar":{"title":"Mortality Rate per 100,000","ticklen":2,"len":0.5,"lenmode":"fraction","y":1,"yanchor":"top"},"colorscale":[["0","rgba(68,1,84,1)"],["0.0416666666666667","rgba(71,17,100,1)"],["0.0833333333333333","rgba(72,31,112,1)"],["0.125","rgba(71,45,123,1)"],["0.166666666666667","rgba(68,58,131,1)"],["0.208333333333333","rgba(64,70,136,1)"],["0.25","rgba(59,82,139,1)"],["0.291666666666667","rgba(54,93,141,1)"],["0.333333333333333","rgba(49,104,142,1)"],["0.375","rgba(44,114,142,1)"],["0.416666666666667","rgba(40,124,142,1)"],["0.458333333333333","rgba(36,134,142,1)"],["0.5","rgba(33,144,141,1)"],["0.541666666666667","rgba(31,154,138,1)"],["0.583333333333333","rgba(32,164,134,1)"],["0.625","rgba(39,173,129,1)"],["0.666666666666667","rgba(53,183,121,1)"],["0.708333333333333","rgba(71,193,110,1)"],["0.75","rgba(93,200,99,1)"],["0.791666666666667","rgba(117,208,84,1)"],["0.833333333333333","rgba(143,214,68,1)"],["0.875","rgba(170,220,50,1)"],["0.916666666666667","rgba(199,224,32,1)"],["0.958333333333333","rgba(227,228,24,1)"],["1","rgba(253,231,37,1)"]],"showscale":true,"locationmode":"USA-states","z":[48.5,36.6,31.3,52.8,28.1,26.5,33.1,43.2,37.5,40.9,29.3,32.4,41.1,48.7,41.3,41.6,60.4,47.5,46.7,37.2,37.1,44.1,35.2,52.8,48.7,35.9,37.9,39.3,41.1,33.7,26.8,33.6,44.1,35.1,46.7,50,36.6,40.8,42.2,42.7,39.3,51.3,34.1,18.1,41.4,38.8,35.5,53.6,38.5,30.9],"text":["Alabama","Alaska","Arizona","Arkansas","California","Colorado","Connecticut","Delaware","Florida","Georgia","Hawaii","Idaho","Illinois","Indiana","Iowa","Kansas","Kentucky","Louisiana","Maine","Maryland","Massachusetts","Michigan","Minnesota","Mississippi","Missouri","Montana","Nebraska","Nevada","New Hampshire","New Jersey","New Mexico","New York","North Carolina","North Dakota","Ohio","Oklahoma","Oregon","Pennsylvania","Rhode Island","South Carolina","South Dakota","Tennessee","Texas","Utah","Vermont","Virginia","Washington","West Virginia","Wisconsin","Wyoming"],"locations":["AL","AK","AZ","AR","CA","CO","CT","DE","FL","GA","HI","ID","IL","IN","IA","KS","KY","LA","ME","MD","MA","MI","MN","MS","MO","MT","NE","NV","NH","NJ","NM","NY","NC","ND","OH","OK","OR","PA","RI","SC","SD","TN","TX","UT","VT","VA","WA","WV","WI","WY"],"type":"choropleth","marker":{"line":{"colorbar":{"title":"","ticklen":2},"cmin":18.1,"cmax":60.4,"colorscale":[["0","rgba(68,1,84,1)"],["0.0416666666666667","rgba(71,17,100,1)"],["0.0833333333333333","rgba(72,31,112,1)"],["0.125","rgba(71,45,123,1)"],["0.166666666666667","rgba(68,58,131,1)"],["0.208333333333333","rgba(64,70,136,1)"],["0.25","rgba(59,82,139,1)"],["0.291666666666667","rgba(54,93,141,1)"],["0.333333333333333","rgba(49,104,142,1)"],["0.375","rgba(44,114,142,1)"],["0.416666666666667","rgba(40,124,142,1)"],["0.458333333333333","rgba(36,134,142,1)"],["0.5","rgba(33,144,141,1)"],["0.541666666666667","rgba(31,154,138,1)"],["0.583333333333333","rgba(32,164,134,1)"],["0.625","rgba(39,173,129,1)"],["0.666666666666667","rgba(53,183,121,1)"],["0.708333333333333","rgba(71,193,110,1)"],["0.75","rgba(93,200,99,1)"],["0.791666666666667","rgba(117,208,84,1)"],["0.833333333333333","rgba(143,214,68,1)"],["0.875","rgba(170,220,50,1)"],["0.916666666666667","rgba(199,224,32,1)"],["0.958333333333333","rgba(227,228,24,1)"],["1","rgba(253,231,37,1)"]],"showscale":false,"color":[48.5,36.6,31.3,52.8,28.1,26.5,33.1,43.2,37.5,40.9,29.3,32.4,41.1,48.7,41.3,41.6,60.4,47.5,46.7,37.2,37.1,44.1,35.2,52.8,48.7,35.9,37.9,39.3,41.1,33.7,26.8,33.6,44.1,35.1,46.7,50,36.6,40.8,42.2,42.7,39.3,51.3,34.1,18.1,41.4,38.8,35.5,53.6,38.5,30.9]}},"geo":"geo","frame":null}],"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.2,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+<div id="htmlwidget-d43aed8003807d76bf0a" style="width:90%;height:460.8px;" class="plotly html-widget"></div>
+<script type="application/json" data-for="htmlwidget-d43aed8003807d76bf0a">{"x":{"visdat":{"1dac2d9111e8":["function () ","plotlyVisDat"]},"cur_data":"1dac2d9111e8","attrs":{"1dac2d9111e8":{"locationmode":"USA-states","alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"z":{},"text":{},"locations":{},"color":{},"colors":"viridis","inherit":true}},"layout":{"margin":{"b":40,"l":60,"t":25,"r":10},"mapType":"geo","scene":{"zaxis":{"title":"lung_and_bronchus_both_sexes_combined"}},"geo":{"domain":{"x":[0,1],"y":[0,1]},"scope":"usa","projection":{"type":"albers usa"},"showlakes":true,"lakecolor":"rgba(255,255,255,1)"},"hovermode":"closest","showlegend":false,"legend":{"yanchor":"top","y":0.5},"title":"Distribution of Lung/Bronchus Cancer Mortality Rate by State in 2013-2017"},"source":"A","config":{"modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"data":[{"colorbar":{"title":"Mortality Rate per 100,000","ticklen":2,"len":0.5,"lenmode":"fraction","y":1,"yanchor":"top"},"colorscale":[["0","rgba(68,1,84,1)"],["0.0416666666666667","rgba(71,17,100,1)"],["0.0833333333333333","rgba(72,31,112,1)"],["0.125","rgba(71,45,123,1)"],["0.166666666666667","rgba(68,58,131,1)"],["0.208333333333333","rgba(64,70,136,1)"],["0.25","rgba(59,82,139,1)"],["0.291666666666667","rgba(54,93,141,1)"],["0.333333333333333","rgba(49,104,142,1)"],["0.375","rgba(44,114,142,1)"],["0.416666666666667","rgba(40,124,142,1)"],["0.458333333333333","rgba(36,134,142,1)"],["0.5","rgba(33,144,141,1)"],["0.541666666666667","rgba(31,154,138,1)"],["0.583333333333333","rgba(32,164,134,1)"],["0.625","rgba(39,173,129,1)"],["0.666666666666667","rgba(53,183,121,1)"],["0.708333333333333","rgba(71,193,110,1)"],["0.75","rgba(93,200,99,1)"],["0.791666666666667","rgba(117,208,84,1)"],["0.833333333333333","rgba(143,214,68,1)"],["0.875","rgba(170,220,50,1)"],["0.916666666666667","rgba(199,224,32,1)"],["0.958333333333333","rgba(227,228,24,1)"],["1","rgba(253,231,37,1)"]],"showscale":true,"locationmode":"USA-states","z":[48.5,36.6,31.3,52.8,28.1,26.5,33.1,43.2,37.5,40.9,29.3,32.4,41.1,48.7,41.3,41.6,60.4,47.5,46.7,37.2,37.1,44.1,35.2,52.8,48.7,35.9,37.9,39.3,41.1,33.7,26.8,33.6,44.1,35.1,46.7,50,36.6,40.8,42.2,42.7,39.3,51.3,34.1,18.1,41.4,38.8,35.5,53.6,38.5,30.9],"text":["Alabama","Alaska","Arizona","Arkansas","California","Colorado","Connecticut","Delaware","Florida","Georgia","Hawaii","Idaho","Illinois","Indiana","Iowa","Kansas","Kentucky","Louisiana","Maine","Maryland","Massachusetts","Michigan","Minnesota","Mississippi","Missouri","Montana","Nebraska","Nevada","New Hampshire","New Jersey","New Mexico","New York","North Carolina","North Dakota","Ohio","Oklahoma","Oregon","Pennsylvania","Rhode Island","South Carolina","South Dakota","Tennessee","Texas","Utah","Vermont","Virginia","Washington","West Virginia","Wisconsin","Wyoming"],"locations":["AL","AK","AZ","AR","CA","CO","CT","DE","FL","GA","HI","ID","IL","IN","IA","KS","KY","LA","ME","MD","MA","MI","MN","MS","MO","MT","NE","NV","NH","NJ","NM","NY","NC","ND","OH","OK","OR","PA","RI","SC","SD","TN","TX","UT","VT","VA","WA","WV","WI","WY"],"type":"choropleth","marker":{"line":{"colorbar":{"title":"","ticklen":2},"cmin":18.1,"cmax":60.4,"colorscale":[["0","rgba(68,1,84,1)"],["0.0416666666666667","rgba(71,17,100,1)"],["0.0833333333333333","rgba(72,31,112,1)"],["0.125","rgba(71,45,123,1)"],["0.166666666666667","rgba(68,58,131,1)"],["0.208333333333333","rgba(64,70,136,1)"],["0.25","rgba(59,82,139,1)"],["0.291666666666667","rgba(54,93,141,1)"],["0.333333333333333","rgba(49,104,142,1)"],["0.375","rgba(44,114,142,1)"],["0.416666666666667","rgba(40,124,142,1)"],["0.458333333333333","rgba(36,134,142,1)"],["0.5","rgba(33,144,141,1)"],["0.541666666666667","rgba(31,154,138,1)"],["0.583333333333333","rgba(32,164,134,1)"],["0.625","rgba(39,173,129,1)"],["0.666666666666667","rgba(53,183,121,1)"],["0.708333333333333","rgba(71,193,110,1)"],["0.75","rgba(93,200,99,1)"],["0.791666666666667","rgba(117,208,84,1)"],["0.833333333333333","rgba(143,214,68,1)"],["0.875","rgba(170,220,50,1)"],["0.916666666666667","rgba(199,224,32,1)"],["0.958333333333333","rgba(227,228,24,1)"],["1","rgba(253,231,37,1)"]],"showscale":false,"color":[48.5,36.6,31.3,52.8,28.1,26.5,33.1,43.2,37.5,40.9,29.3,32.4,41.1,48.7,41.3,41.6,60.4,47.5,46.7,37.2,37.1,44.1,35.2,52.8,48.7,35.9,37.9,39.3,41.1,33.7,26.8,33.6,44.1,35.1,46.7,50,36.6,40.8,42.2,42.7,39.3,51.3,34.1,18.1,41.4,38.8,35.5,53.6,38.5,30.9]}},"geo":"geo","frame":null}],"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.2,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+</div>
+<div id="exploring-trends-in-death-from-lung-cancer" class="section level2">
+<h2>Exploring Trends in Death From Lung Cancer</h2>
+<pre class="r"><code>read_death_time =
+  read_excel(&quot;data/DeathTrend.xlsx&quot;, 
+             skip = 6) %&gt;%
+  janitor::clean_names()
+
+x = c(&quot;colorectum_female&quot;, &quot;colorectum_male&quot;, &quot;liver_and_intrahepatic_bile_duct_female&quot;,
+      &quot;liver_and_intrahepatic_bile_duct_male&quot;, &quot;lung_and_bronchus_female&quot;, 
+      &quot;lung_and_bronchus_male&quot;, &quot;ovary_female&quot;, &quot;uterus_cervix_and_corpus_combined_female&quot;)
+
+remove_note = function(column_name) {
+  read_death_time = read_death_time %&gt;% 
+    separate(column_name, into = c(column_name, &quot;note&quot;), sep = &quot;\\-&quot;) %&gt;% 
+    select(-note)}
+
+for (i in x) {
+  read_death_time = remove_note(i)} 
+
+death_time =
+  read_death_time %&gt;%
+  filter(year %in% 2000:2016) %&gt;%
+  select(-c(&quot;breast_male&quot;, &quot;ovary_male&quot;, &quot;prostate_female&quot;,
+            &quot;uterus_cervix_and_corpus_combined_male&quot;)) %&gt;%
+  mutate_at(vars(-(&quot;year&quot;)), as.numeric) %&gt;%
+  mutate(
+   year = as.numeric(year)
+  )</code></pre>
+<p>Following plot shows the death trend in lung cancer over the same period of time as the previous plot of pollutants. As can be seen, lung cancer has sharply decreased from 2000-2016, which is similar to the trend we see in NO2 and SO2.</p>
+<pre class="r"><code>death_time %&gt;% 
+  rename(
+    male = lung_and_bronchus_male,
+    female = lung_and_bronchus_female
+  ) %&gt;% 
+  pivot_longer(
+    female:male,
+    names_to = &quot;gender&quot;, 
+    values_to = &quot;death_rate&quot;
+  ) %&gt;% 
+  ggplot(aes(x = year,y = death_rate, group = gender, color = gender)) + 
+  geom_point() +
+  geom_line() +
+  labs(
+    title = &quot;Trend in US Death rate from Lung Cancer, 2000-2016&quot;,
+    x = &quot;Year&quot;,
+    y = &quot;Lung Cancer Death Rate(per 100,000)&quot;
+  )</code></pre>
+<p><img src="exploratory-analysis_files/figure-html/unnamed-chunk-8-1.png" width="90%" /></p>
+<p> </p>
+<hr />
+</div>
+</div>
+<div id="exploring-relationship-between-trend-in-death-rate-from-lung-cancer-to-pollution-concentration" class="section level1">
+<h1>Exploring relationship between trend in death rate from Lung Cancer to Pollution Concentration</h1>
+<p> </p>
+<p>After analyzing pollutants and lung cancer mortality/incidence on their own, we combined the pollution data with our data on cancer death and incidence in order to draw conclusions on the correlative effects pollutants have on cancer.</p>
+<p>The next series of plots compares the pollutant concentration to the lung cancer death rate, statifying by gender. 6 of the 8 plots show a positive, linear relationship between the pollutant concentration and death rate. The 2 plots are the exception are both for O3, which shows a negative, linear relationship with death rate.</p>
+<pre class="r"><code>merged_death_pollution =
+merge(death_time, modified_pollution, by = &quot;year&quot;) 
+
+
+pollutant_variables =
+  merged_death_pollution %&gt;% 
+  select(no2,o3,so2,co) %&gt;% 
+  colnames() %&gt;% 
+  as.vector()</code></pre>
+<p>Create a for loop to plot Pollutant concentration vs. Lung Cancer Death Rate</p>
+<div id="male" class="section level2">
+<h2>Male</h2>
+<pre class="r"><code>pollutant_variables =
+  pollutant_variables %&gt;% 
+  as.list()
+
+
+for (i in pollutant_variables) {
+  plot =
+  ggplot(merged_death_pollution, aes_string(i,  &quot;lung_and_bronchus_male&quot;)) + 
+  geom_point() +
+  geom_smooth(method = lm, se = FALSE) +
+  labs(title = &quot;Pollutant Concentration vs. Lung Cancer Death Rate(Male)&quot;, 
+       y = &quot;Lung Cancer Death Rate(per 100,000)&quot;) +
+  theme(plot.title = element_text(hjust = 0.5, face = &quot;bold&quot;))
+  
+  print(plot)
+  
+}</code></pre>
+<p><img src="exploratory-analysis_files/figure-html/unnamed-chunk-10-1.png" width="90%" /><img src="exploratory-analysis_files/figure-html/unnamed-chunk-10-2.png" width="90%" /><img src="exploratory-analysis_files/figure-html/unnamed-chunk-10-3.png" width="90%" /><img src="exploratory-analysis_files/figure-html/unnamed-chunk-10-4.png" width="90%" /></p>
+</div>
+<div id="female" class="section level2">
+<h2>Female</h2>
+<pre class="r"><code>for (i in pollutant_variables) {
+  plot =
+  ggplot(merged_death_pollution, aes_string(i,  &quot;lung_and_bronchus_female&quot;)) + 
+  geom_point() +
+  geom_smooth(method = lm, se = FALSE) +
+  labs(title = &quot;Pollutant Concentration vs. Lung Cancer Death Rate(Female)&quot;, 
+       y = &quot;Lung Cancer Death Rate(per 100,000)&quot;) +
+  theme(plot.title = element_text(hjust = 0.5, face = &quot;bold&quot;))
+  
+  print(plot)
+  
+}</code></pre>
+<p><img src="exploratory-analysis_files/figure-html/unnamed-chunk-11-1.png" width="90%" /><img src="exploratory-analysis_files/figure-html/unnamed-chunk-11-2.png" width="90%" /><img src="exploratory-analysis_files/figure-html/unnamed-chunk-11-3.png" width="90%" /><img src="exploratory-analysis_files/figure-html/unnamed-chunk-11-4.png" width="90%" /></p>
+<hr />
+</div>
 </div>
 
 
