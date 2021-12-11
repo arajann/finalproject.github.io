@@ -334,10 +334,9 @@ inc_state %>%
     geo = g
   )
 
-
 ```
 
-  
-  
+*Note. The raw data for incidence rate of cancer by cancer type did not include data point for Nevada in the combined national rates. Original data recommends referring to publications and sources page on American Cancer Society website*
 
+According to the choropleth map, Kentucky had the highest incidence of lung and bronchus cancer in 2013-2017 and similarly higher rates observed in the surrounding states. On the contrary, Utah had the lowest incidence rate.
 
