@@ -9,7 +9,7 @@ output:
 
 &nbsp;
 
-To understand the polltion-related factors that act upon cancer incidence and death, we obtained, cleaned, and analyzed pollution data that spanned from 2000-2016. This data contained concentrations from the known pollutants NO2, O3, SO2, and CO. 
+To understand the pollution-related factors that act upon cancer incidence and death, we obtained, cleaned, and analyzed pollution data that spanned from 2000-2016. This data contained concentrations from the known pollutants NO2, O3, SO2, and CO. 
 
 ```{r setup, include=FALSE}
 library(tidyverse)
@@ -96,7 +96,7 @@ modified_pollution %>%
 
 &nbsp;
 
-To compare the distributions of the pollutants to each other, we created a series of boxplots. As you can see, NO2 has the highest average concentration of any of the pollutants in ppm, and also has a skewed-right shape. CO and O3 have much narrowers distributions (in addition to much lower mean concentrations), making their shape harder to discern. SO2, however, appears to be approximately normally distributed. 
+To compare the distributions of the pollutants to each other, we created a series of boxplots. As you can see, NO2 has the highest average concentration of any of the pollutants in ppm, and also has a skewed-right shape. CO and O3 have much narrower distributions (in addition to much lower mean concentrations), making their shape harder to discern. SO2, however, appears to be approximately normally distributed. 
 
 ```{r}
 ppb_plot =
@@ -366,7 +366,7 @@ death_time %>%
 
 After analyzing pollutants and lung cancer mortality/incidence on their own, we combined the pollution data with our data on cancer death and incidence in order to draw conclusions on the correlative effects pollutants have on cancer. 
 
-The next series of plots compares the pollutant concentration to the lung cancer death rate, statifying by gender. We see moderately strong, positive linear correlations between Carbon Monoxide(co), Sulfur Dioxide(so2), and nitrous dioxide(no2) and lung cancer death rate among males. Whereas for females, we only see a moderate linear correlation between so2 and carbon monoxide concentrations and lung cancer death rate.     
+The next series of plots compares the pollutant concentration to the lung cancer death rate, stratifying by gender. We see moderately strong, positive linear correlations between Carbon Monoxide(co), Sulfur Dioxide(so2), and nitrous dioxide(no2) and lung cancer death rate among males. Whereas for females, we only see a moderate linear correlation between so2 and carbon monoxide concentrations and lung cancer death rate.     
 
 ```{r}
 merged_death_pollution =

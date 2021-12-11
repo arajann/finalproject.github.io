@@ -169,7 +169,7 @@ pollution_incidence %>%
 ```
 
 
-The plot indicates a random scatter of residuals. Therefore, the assumption of homescedasticity is not violated.
+The plot indicates a random scatter of residuals. Therefore, the assumption of homoscedasticity is not violated.
 
 -----
 

@@ -19,7 +19,7 @@ Anand Rajan (ar4173), Matt Neky (mjn2142), Joe Kim (jhk2201), Alyssa Watson (aw3
 ## Background and Related Works
 
 
-Given the rapid progression of climate change, we have seen widespread effects on the environment, in which long-term exposure subsequently have harmful health effects that is a cause for public health concern. Major air pollutants have serious adverse effects on population health and has been linked by substantial evidence to be a large contributor to an increased burden of cancer.
+Given the rapid progression of climate change, we have seen widespread effects on the environment, in which long-term exposure subsequently has harmful health effects that are a cause for public health concern. Major air pollutants have serious adverse effects on population health and has been linked by substantial evidence to be a large contributor to an increased burden of cancer.
 
 Common air pollutants are responsible for pervasive inflammation throughout the body ([NSW, 2021](https://www.health.nsw.gov.au/environment/air/Pages/outdoor-air-pollution.aspx)), and long-term exposure has been linked to increased mortality for all cancers, but particularly hazardous for cancers of the lung cancer. ([Kim et. al, 2018](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6266691/)).
 
@@ -95,7 +95,7 @@ The second data set is air pollution data in the United States from 2000 to 2016
 We focused our analyses on the mean values of 4 major pollutants:
 
 - **Nitrogen Dioxide (NO2)** : measured in parts per billion
-- **Sulphur Dioxide (SO2)** : measured in parts per billion
+- **Sulfur Dioxide (SO2)** : measured in parts per billion
 - **Carbon Monoxide (CO)** : measured in parts per million
 - **Ozone (O3)** : measured in parts per million
 
