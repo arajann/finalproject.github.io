@@ -156,7 +156,7 @@ pollution_incidence %>%
   geom_point() +
   geom_smooth(method = "lm", se = FALSE) +
   labs(
-    title = "Predictions vs Residuals plot",
+    title = "Residuals vs. Predictions plot",
     x = "Predictions",
     y = "Residuals"
   ) +
