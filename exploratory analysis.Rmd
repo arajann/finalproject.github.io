@@ -230,7 +230,7 @@ inc_state %>%
   plot_geo(., locationmode = 'USA-states') %>% 
   add_trace(
     z = ~lung_and_bronchus_both_sexes_combined, text = ~state, locations = ~code,
-    color = ~lung_and_bronchus_both_sexes_combined, colors = 'viridis'
+    color = ~lung_and_bronchus_both_sexes_combined, colors = 'inferno'
   ) %>% 
   colorbar(title = "Incidence Rate per 100,000") %>% 
   layout(
@@ -285,7 +285,7 @@ death_state %>%
   plot_geo(., locationmode = 'USA-states') %>% 
   add_trace(
     z = ~lung_and_bronchus_both_sexes_combined, text = ~state, locations = ~code,
-    color = ~lung_and_bronchus_both_sexes_combined, colors = 'viridis'
+    color = ~lung_and_bronchus_both_sexes_combined, colors = 'inferno'
   ) %>% 
   colorbar(title = "Mortality Rate per 100,000") %>% 
   layout(

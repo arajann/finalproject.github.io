@@ -329,6 +329,7 @@ div.tocify {
         <li>
   <a href="Report.html">Report</a>
 </li>
+<li class="dropdown-header">Webcast</li>
 <li>
   <a href="exploratory-analysis.html">Exploratory Analysis</a>
 </li>
@@ -337,9 +338,6 @@ div.tocify {
 </li>
 <li>
   <a href="pollution_state.html">Pollution By State</a>
-</li>
-<li>
-  <a></a>
 </li>
 <li>
   <a href="https://github.com/arajann/finalproject/">
@@ -369,9 +367,12 @@ div.tocify {
 </div>
 
 
-<p>To continue our analysis we will build a linear model that assesses the relationship between pollutant concentration and incidence of lung cancer. We will merge the data set with incidence rate by state with the pollution data set that has been aggregated by state over the 15 year period. In essence we would like to answer whether states that had higher mean pollutant concentrations over this 15 year period were significantly associated with higher lung cancer incidence. Thus, from building the model we can assess whether concentrations of the various pollutants are significantly associated with increased incidence rates of lung cancer. We will evaluate the predictive accuracy of the model, and cross validate the fitted model to other potential models.</p>
+<p> </p>
+<p>To continue our analysis we will build a linear model that assesses the relationship between pollutant concentration and incidence of lung cancer. We will merge the data set with incidence rate by state with the pollution data set that has been aggregated by state over the 17 year period. In essence we would like to answer whether states that had higher mean pollutant concentrations over this 15 year period were significantly associated with higher lung cancer incidence. Thus, from building the model we can assess whether concentrations of the various pollutants are significantly associated with increased incidence rates of lung cancer. We will evaluate the predictive accuracy of the model, and cross validate the fitted model to other potential models.<br />
+ </p>
 <div id="importing-and-merging-pollution-dataset-with-lung-cancer-incidence-dataset" class="section level2">
 <h2>Importing and Merging Pollution Dataset with Lung Cancer Incidence Dataset</h2>
+<p> </p>
 <pre class="r"><code>inc_state =
   read_excel(&quot;data/IncRate.xlsx&quot;, sheet = &quot;State&quot;, 
              skip = 6) %&gt;%
@@ -419,8 +420,9 @@ div.tocify {
     lung_and_bronchus_male = as.numeric(lung_and_bronchus_male)
   )</code></pre>
 </div>
-<div id="building-a-model-to-analyze-the-relationship-betweenn-lung-cancer-incidence-and-pollutant-concentration" class="section level2">
-<h2>Building a Model to analyze the relationship betweenn Lung Cancer Incidence and Pollutant concentration</h2>
+<div id="plotting-each-pollutant-concentration-vs.-lung-cancer-incidence" class="section level2">
+<h2>Plotting each Pollutant concentration vs. Lung Cancer Incidence</h2>
+<p> </p>
 <p>Let’s begin by exploring each pollutant to see if there exists linear relationship between the pollutant concentration and incidence of lung cancer</p>
 <pre class="r"><code>continuous_variables =
   pollution_incidence %&gt;% 
@@ -554,9 +556,11 @@ for (i in continuous_variables) {
   scale_color_viridis(discrete = TRUE) +
   theme_bw()</code></pre>
 <p><img src="pollution_linear_models_files/figure-html/unnamed-chunk-8-1.png" width="672" /> The plot indicates a random scatter of residuals. Therefore, the assumption of homescedasticity is not violated.</p>
+<p> </p>
 </div>
-<div id="cross-validate" class="section level2">
-<h2>Cross Validate</h2>
+<div id="cross-validation" class="section level2">
+<h2>Cross Validation</h2>
+<p> </p>
 <p>We will cross validate the fitted model to models that are a combination of the different predictors. O3 and so2 were grouped together because of the scatter plots before that indicate slight positive relationships. Similarly no2 and co were grouped together because of the scatter plots that indicated slightly negative relationships.</p>
 <pre class="r"><code>comparison_model = lm(lung_and_bronchus_both_sexes_combined ~ o3 + so2, data = pollution_incidence)  
 comparison_model2 = lm(lung_and_bronchus_both_sexes_combined ~ no2 + co, data = pollution_incidence)</code></pre>
@@ -594,8 +598,11 @@ cv_df %&gt;%
   ggplot(aes(x = model, y = rmse)) + geom_boxplot()</code></pre>
 <p><img src="pollution_linear_models_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
 <p>From the boxplot, we see that the fitted model has a lower RMSE compared to the comparison models. Despite the fitted model being better,the mean RMSE value is equal to 10, which is not good. Thus the overall predictive accuracy of the fitted model is quite low. We will now evaluate whether stratifying lung cancer incidence by gender affects the predictive accuracy of the model.</p>
-<div id="lung-cancer-incidnce-stratified-by-gender" class="section level3">
-<h3>Lung Cancer Incidnce Stratified by Gender</h3>
+<p> </p>
+</div>
+<div id="lung-cancer-incidence-models-stratified-by-gender" class="section level2">
+<h2>Lung Cancer Incidence Models Stratified by Gender</h2>
+<p> </p>
 <p>Female Model</p>
 <pre class="r"><code>female_model = lm(lung_and_bronchus_female ~ no2 + o3 + so2 + co, data = pollution_incidence)</code></pre>
 <pre class="r"><code>female_model %&gt;% 
@@ -805,7 +812,6 @@ cv_df %&gt;%
 </tbody>
 </table>
 <p>From looking at the beta coefficients and model analyses for both models, predictive accuracy did not improve.</p>
-</div>
 </div>
 
 
