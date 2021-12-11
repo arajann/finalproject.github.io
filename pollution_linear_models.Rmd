@@ -20,7 +20,7 @@ knitr::opts_chunk$set(warning = FALSE, message = FALSE)
 
 &nbsp;
 
-To continue our analysis we will build a linear model that assesses the relationship between pollutant concentration and incidence of lung cancer. We will merge the data set with incidence rate by state with the pollution data set that has been aggregated by state over the 15 year period. In essence we would like to answer whether states that had higher mean pollutant concentrations over this 15 year period were significantly associated with higher lung cancer incidence. Thus, from building the model we can assess whether concentrations of the various pollutants are significantly associated with increased incidence rates of lung cancer.  We will evaluate the predictive accuracy of the model, and cross validate the fitted model to other potential models.  
+To continue our analysis we will build a linear model that assesses the relationship between pollutant concentration and incidence of lung cancer. We will merge the data set with incidence rate by state with the pollution data set that has been aggregated by state over the 17 year period. In essence we would like to answer whether states that had higher mean pollutant concentrations over this 15 year period were significantly associated with higher lung cancer incidence. Thus, from building the model we can assess whether concentrations of the various pollutants are significantly associated with increased incidence rates of lung cancer.  We will evaluate the predictive accuracy of the model, and cross validate the fitted model to other potential models.  
 &nbsp;
 
 ## Importing and Merging Pollution Dataset with Lung Cancer Incidence Dataset 
@@ -82,7 +82,7 @@ pollution_incidence = read_csv("data/uspollution_us_2000_2016.csv") %>%
 ```
 
 
-## Building a Model to analyze the relationship betweenn Lung Cancer Incidence and Pollutant concentration
+## Plotting each Pollutant concentration vs. Lung Cancer Incidence
 
 &nbsp;
 
@@ -120,6 +120,8 @@ for (i in continuous_variables) {
 ```
 
 Well, this is not the best start. From reviewing the scatter plots, none of the pollutants show a particularly strong linear relationship with incidence of lung cancer. Each plot has a linear model fitted, but as we can see none of the linear associations are strong, however we will proceed forward with a model that includes all the pollutants.The lack of strong linear association will be noted in the final discussion of the prediction accuracy of the fitted model.
+
+
 
 ```{r}
 fitted_model = lm(lung_and_bronchus_both_sexes_combined ~ no2 + o3 + so2 + co, 
@@ -161,7 +163,7 @@ The plot indicates a random scatter of residuals. Therefore, the assumption of h
 
 &nbsp;
 
-## Cross Validate 
+## Cross Validation 
 
 &nbsp;
 
@@ -217,7 +219,7 @@ From the boxplot, we see that the fitted model has a lower RMSE compared to the 
 
 &nbsp;
 
-### Lung Cancer Incidnce Stratified by Gender 
+## Lung Cancer Incidence Models Stratified by Gender 
 
 &nbsp;
 

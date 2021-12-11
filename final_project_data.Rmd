@@ -242,5 +242,7 @@ death_cancer_plot =
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1)) +
   labs(title = "Cancer Death Rate for Different Cancer Types by Sex in 2013-2017", 
        x = "Cancer Type", y = "Death")
+
+inc_cancer_plot + death_cancer_plot
 ```
 

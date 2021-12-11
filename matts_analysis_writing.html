@@ -9,14 +9,16 @@
 <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
+<meta name="author" content="Matthew Neky" />
 
+<meta name="date" content="2021-12-10" />
 
-<title>Report</title>
+<title>Draft File of Matt’s Analysis Writing</title>
 
-<script src="site_libs/header-attrs-2.11/header-attrs.js"></script>
-<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="site_libs/header-attrs-2.10/header-attrs.js"></script>
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<link href="site_libs/bootstrap-3.3.5/css/united.min.css" rel="stylesheet" />
+<link href="site_libs/bootstrap-3.3.5/css/journal.min.css" rel="stylesheet" />
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
@@ -239,7 +241,7 @@ $(document).ready(function () {
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="index.html">Main Page</a>
+      <a class="navbar-brand" href="index.html">Home</a>
     </div>
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
@@ -247,13 +249,17 @@ $(document).ready(function () {
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="exploratory analysis.html">Analysis</a>
+  <a href="Report.html">Report</a>
+</li>
+<li class="dropdown-header">Webcast</li>
+<li>
+  <a href="exploratory-analysis.html">Exploratory Analysis</a>
 </li>
 <li>
-  <a href="mailto:&lt;jhk2201@cumc.columbia.edu&gt;">
-    <span class="fa fa-envelope fa-lg"></span>
-     
-  </a>
+  <a href="pollution_linear_models.html">Regression Model</a>
+</li>
+<li>
+  <a href="pollution_state.html">Pollution By State</a>
 </li>
 <li>
   <a href="https://github.com/arajann/finalproject/">
@@ -270,17 +276,16 @@ $(document).ready(function () {
 
 
 
-<h1 class="title toc-ignore">Report</h1>
+<h1 class="title toc-ignore">Draft File of Matt’s Analysis Writing</h1>
+<h4 class="author">Matthew Neky</h4>
+<h4 class="date">12/10/2021</h4>
 
 </div>
 
 
-<p> </p>
-<div id="about-this-site" class="section level3">
-<h3>About this site</h3>
-<p>Sometimes you need to say a bit about the site – how it was made, where it’s hosted, where the source code can be found.</p>
-<p>If this is for a project or analysis, I recommend giving some details about the R package versions that you used to create the content.</p>
-</div>
+<p>Exploratory Analysis: To understand the pollution-related factors that act upon cancer incidence and death, we obtained, cleaned, and analyzed pollution data that spanned from 2000-2016. This data contained concentrations from the known pollutants NO2, O3, SO2, and CO. In the first table under the “Exploring Pollution Data Set” section, you can see the average concentrations of each pollutant in question in the United States for each year over the 17-year span. Below that, we have included another data frame with the means across the entire 17-year span. To compare the distributions of the pollutants to each other, we created a series of boxplots. As you can see, NO2 has the highest average concentration of any of the pollutants in ppm, and also has a skewed-right shape. CO and O3 have much narrowers distributions (in addition to much lower mean concentrations), making their shape harder to discern. SO2, however, appears to be approximately normally distributed. The next plot we created shows the pollution concentration with respect to time. This plot reveals that while NO2 and SO2 have been decreasing in concentration in recent years, that CO and O3 have remained relatively stable. After analyzing pollutants on their own, we combined the pollution data with our data on cancer death and incidence in order to draw conclusions on the correlative effects pollutants have on cancer. The first plot doing this shows the death trend in lung cancer over the same period of time as the previous plot of pollutants. As can be seen, lung cancer has sharply decreased from 2000-2016, which is similar to the trend we see in NO2 and SO2. The next series of plots compares the pollutant concentration to the lung cancer death rate, statifying by gender. 6 of the 8 plots show a positive, linear relationship between the pollutant concentration and death rate. The 2 plots are the exception are both for O3, which shows a negative, linear relationship with death rate. And finally, an interactive map of the US that shows incidence rate of lung/bronchus cancer by state is at the bottom of this page, and gives a visualization of regional incidence trends. From this, it can be seen that southern states and northern midwest states have the highest incidence rates of lung and bronchus cancers.</p>
+<p>Limitations and Challenges:</p>
+<p>When cleaning the data, it became apparent that some of the analyses we intended to do were not possible. For instance, not all of the data sets we obtained had time variables, so they could not easily be merged with the pollution data set (which had a range of data from 2000-2016) to create plots comparing either incidence or death, or creating linear models. Because of this limitation that emerged from lack of a time variable in all of our original data sets, we could not explore every possible model we were originally interested in. Additionally, many of the data sets had text notes accompanying the numeric entries saying that data collection practices were altered starting a certain year. Because of this, it is not entirely clear how reliable and consistent all of the data points are, since government collection practices of data do not appear to be standardized even within a single state. Another limitation is data that appears to have flaws, but cannot be verified. For instance, certain data sets we worked with had variables for a certain type of cancer separated out by male, female, and then the total. However, the total did not always equal the sum of the male and female columns, which raised questions about the reliability of the data sets.</p>
 
 
 
