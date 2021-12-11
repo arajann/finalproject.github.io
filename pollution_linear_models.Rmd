@@ -21,7 +21,10 @@ knitr::opts_chunk$set(warning = FALSE, message = FALSE)
 &nbsp;
 
 To continue our analysis we will build a linear model that assesses the relationship between pollutant concentration and incidence of lung cancer. We will merge the data set with incidence rate by state with the pollution data set that has been aggregated by state over the 17 year period. In essence we would like to answer whether states that had higher mean pollutant concentrations over this 15 year period were significantly associated with higher lung cancer incidence. Thus, from building the model we can assess whether concentrations of the various pollutants are significantly associated with increased incidence rates of lung cancer.  We will evaluate the predictive accuracy of the model, and cross validate the fitted model to other potential models.  
+
 &nbsp;
+
+-----
 
 ## Importing and Merging Pollution Dataset with Lung Cancer Incidence Dataset 
 
@@ -81,6 +84,7 @@ pollution_incidence = read_csv("data/uspollution_us_2000_2016.csv") %>%
 
 ```
 
+-----
 
 ## Plotting each Pollutant concentration vs. Lung Cancer Incidence
 
@@ -161,6 +165,8 @@ pollution_incidence %>%
 ```
 The plot indicates a random scatter of residuals. Therefore, the assumption of homescedasticity is not violated.
 
+-----
+
 &nbsp;
 
 ## Cross Validation 
@@ -216,6 +222,8 @@ cv_df %>%
 ```
 
 From the boxplot, we see that the fitted model has a lower RMSE compared to the comparison models. Despite the fitted model being better,the mean RMSE value is equal to 10, which is not good. Thus the overall predictive accuracy of the fitted model is quite low. We will now evaluate whether stratifying lung cancer incidence by gender affects the predictive accuracy of the model. 
+
+-----
 
 &nbsp;
 

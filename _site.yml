@@ -5,14 +5,14 @@ navbar:
   right:
     - text: "Report"
       href: Report.html
-    - text: "Webcast"
-      href: 
     - text: "Exploratory Analysis"
       href: exploratory-analysis.html
     - text: "Regression Model"
       href: pollution_linear_models.html
     - text: "Pollution By State"
       href: pollution_state.html
+    - icon: fa-youtube fa-lg
+      href: https://www.youtube.com/watch?v=HuIztqndmkU&ab_channel=BullsFreak
     - icon: fa-github fa-lg
       href: https://github.com/arajann/finalproject/
 output:

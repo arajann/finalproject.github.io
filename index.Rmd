@@ -27,7 +27,7 @@ The continous developing understanding of health and medicine continues the reve
 &nbsp;
 
 
-##### **Group Members**:
+### **Group Members**:
 
   * Anand Rajan (ar4173)
   * Matt Neky (mjn2142)
@@ -35,13 +35,12 @@ The continous developing understanding of health and medicine continues the reve
   * Alyssa Watson (aw3253)
   * Yoo Rim Oh (yo2336)
 
-
 &nbsp;
 
-##### **For more information regarding our topic, attached are relevant research studies.**
+##### ***For more information regarding our topic, attached are relevant research studies.***
 
-[Outdoor air pollution and cancer](https://acsjournals.onlinelibrary.wiley.com/doi/10.3322/caac.21632)
+[1. Outdoor air pollution and cancer](https://acsjournals.onlinelibrary.wiley.com/doi/10.3322/caac.21632)
 
-[Lung Cancer and Air Pollution](https://ehp.niehs.nih.gov/doi/abs/10.1289/ehp.95103s8219)
+[2. Lung Cancer and Air Pollution](https://ehp.niehs.nih.gov/doi/abs/10.1289/ehp.95103s8219)
 
 &nbsp;
