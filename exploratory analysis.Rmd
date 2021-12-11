@@ -9,7 +9,7 @@ output:
 
 &nbsp;
 
-To understand the pulltion-related factors that act upon cancer incidence and death, we obtained, cleaned, and analyzed pollution data that spanned from 2000-2016. This data contained concentrations from the known pollutants NO2, O3, SO2, and CO. 
+To understand the polltion-related factors that act upon cancer incidence and death, we obtained, cleaned, and analyzed pollution data that spanned from 2000-2016. This data contained concentrations from the known pollutants NO2, O3, SO2, and CO. 
 
 ```{r setup, include=FALSE}
 library(tidyverse)
@@ -83,7 +83,7 @@ modified_pollution %>%
    summarize(
     mean_concentration = mean(concentration),
     median_concentration = median(concentration),
-    sd_concentration = sd(concentration)) %>% 
+    standard_deviation = sd(concentration)) %>% 
   arrange(measurement) %>%
   knitr::kable(digits = 3)
 ```
@@ -190,7 +190,7 @@ ppb_point / ppm_point + plot_annotation(title =
 
 &nbsp;
 
-Here, an interactive map of the US that shows incidence rate of lung/bronchus cancer by state is at the bottom of this page, and gives a visualization of regional incidence trends. From this, it can be seen that southern states and northern midwest states have the highest incidence rates of lung and bronchus cancers. Kentucky had the highest incidence of lung and bronchus cancer in 2013-2017 and Utah had the lowest incidence rate.
+Here, an interactive map of the US that shows incidence rate of lung/bronchus cancer by state is at the bottom of this page, and gives a visualization of regional incidence trends. From this, it can be seen that southern states and northern Midwest states have the highest incidence rates of lung and bronchus cancers. Kentucky had the highest incidence of lung and bronchus cancer in 2013-2017 and Utah had the lowest incidence rate. We will further explore the relationship between pollution concentration and lung cancer incidence in our regression analysis. 
 
 ```{r}
 g = list(
@@ -366,7 +366,7 @@ death_time %>%
 
 After analyzing pollutants and lung cancer mortality/incidence on their own, we combined the pollution data with our data on cancer death and incidence in order to draw conclusions on the correlative effects pollutants have on cancer. 
 
-The next series of plots compares the pollutant concentration to the lung cancer death rate, statifying by gender. 6 of the 8 plots show a positive, linear relationship between the pollutant concentration and death rate. The 2 plots are the exception are both for O3, which shows a negative, linear relationship with death rate.    
+The next series of plots compares the pollutant concentration to the lung cancer death rate, statifying by gender. We see moderately strong, positive linear correlations between Carbon Monoxide(co), Sulfur Dioxide(so2), and nitrous dioxide(no2) and lung cancer death rate among males. Whereas for females, we only see a moderate linear correlation between so2 and carbon monoxide concentrations and lung cancer death rate.     
 
 ```{r}
 merged_death_pollution =
