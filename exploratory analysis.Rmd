@@ -355,7 +355,7 @@ inc_state %>%
     z = ~lung_and_bronchus_both_sexes_combined, text = ~state, locations = ~code,
     color = ~lung_and_bronchus_both_sexes_combined, colors = 'viridis'
   ) %>% 
-  colorbar(title = "Incidence Rate") %>% 
+  colorbar(title = "Incidence Rate per 100,000") %>% 
   layout(
     title = "Distribution of Lung/Bronchus Cancer Incidence Rate by State in 2013-2017",
     geo = g
@@ -365,3 +365,51 @@ inc_state %>%
 
 *Note. The raw data for incidence rate of cancer by cancer type did not include data point for Nevada in the combined national rates. Original data recommends referring to publications and sources page on American Cancer Society website*
 
+&nbsp;
+
+Similarly, the interactive map of the mortality rate from lung and bronchus cancer in 2013-2017 shows comparable distribution across the states as the incidence rate.
+
+```{r}
+g = list(
+  scope = 'usa',
+  projection = list(type = 'albers usa'),
+  showlakes = TRUE,
+  lakecolor = toRGB('white')
+)
+
+death_state =
+  read_excel("data/DeathRate.xlsx", sheet = "State", 
+             skip = 6) %>%
+  janitor::clean_names() %>% 
+  separate(
+    col = breast_both_sexes_combined,
+    into = c("breast_total", "female_breast_only"),
+    sep = "-"
+  ) %>% 
+  select(-female_breast_only) %>%
+  mutate(
+    breast_male = if_else(breast_male == "n/a", "0", breast_male),
+    cervix_male = if_else(cervix_male == "n/a", "0", cervix_male),
+  ) %>%
+  mutate_at(vars(-("state")), as.numeric) %>%
+  filter(state != "Puerto Rico")
+
+
+death_state %>%
+  select(state, lung_and_bronchus_both_sexes_combined) %>%
+  mutate(code = state.abb[match(state, state.name)],
+         lung_and_bronchus_both_sexes_combined = as.numeric(lung_and_bronchus_both_sexes_combined)) %>%
+  filter(code != is.na(code)) %>%
+  relocate(state, code) %>%
+  plot_geo(., locationmode = 'USA-states') %>% 
+  add_trace(
+    z = ~lung_and_bronchus_both_sexes_combined, text = ~state, locations = ~code,
+    color = ~lung_and_bronchus_both_sexes_combined, colors = 'viridis'
+  ) %>% 
+  colorbar(title = "Mortality Rate per 100,000") %>% 
+  layout(
+    title = "Distribution of Lung/Bronchus Cancer Mortality Rate by State in 2013-2017",
+    geo = g
+  )
+
+```
