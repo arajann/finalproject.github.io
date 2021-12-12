@@ -12,7 +12,7 @@ navbar:
     - text: "Pollution By State"
       href: pollution_state.html
     - icon: fa-youtube fa-lg
-      href: https://www.youtube.com/watch?v=HuIztqndmkU&ab_channel=BullsFreak
+      href: https://www.youtube.com/watch?v=v6F2kSxB0y8&ab_channel=JosephKim
     - icon: fa-github fa-lg
       href: https://github.com/arajann/finalproject/
 output:
