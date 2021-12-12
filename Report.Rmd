@@ -284,8 +284,9 @@ When cleaning the data, it became apparent that some of the analyses we intended
 &nbsp;
 
 If we were the continue on with this current analysis, some things we would do differently are ... 
+
+
 1. We would create more models looking at different cancers. 
-&nbsp;
 2. We would conduct statistical testing such as running ANOVA tests to test the significance of the     
 relationships being explored. 
 
