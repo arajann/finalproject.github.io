@@ -275,6 +275,8 @@ Our exploratory analysis also showed that NO2, CO, and SO2 all have positive, li
 
 Though we were able to create an assortment of insightful visualizations, there were many obstacles that we encountered that prevented us from deriving concrete conclusions about the relationship between pollution and lung cancer. However, lung cancer remains as the leading cause of cancer related deaths, and exploring as many possible contributions to its prevalence is critical in future public health research and policy. 
 
+&nbsp;
+
 ## Limitations and Challenges
 
 When cleaning the data, it became apparent that some of the analyses we intended to do were not possible. For instance, not all of the data sets we obtained had time variables, so they could not easily be merged with the pollution data set (which had a range of data from 2000-2016) to create plots comparing either incidence or death, or creating linear models. Because of this limitation that emerged from lack of a time variable in all of our original data sets, we could not explore every possible model we were originally interested in. Additionally, many of the data sets had text notes accompanying the numeric entries saying that data collection practices were altered starting a certain year. Because of this, it is not entirely clear how reliable and consistent all of the data points are, since government collection practices of data do not appear to be standardized even within a single state. Another limitation is data that appears to have flaws, but cannot be verified. For instance, certain data sets we worked with had variables for a certain type of cancer separated out by male, female, and then the total. However, the total did not always equal the sum of the male and female columns, which raised questions about the reliability of the data sets. Given the complexity of the epidemiology of lung cancer, we did not have the necessary measures to stratify our data to account for known social-economic variables that contribute to lung cancer incidence and mortality. In future studies, we could explore how income level, access to healthcare, and urban vs rural (measures of SES) contribute to the relationship between air pollutant concentration and cancers. 
@@ -283,7 +285,9 @@ When cleaning the data, it became apparent that some of the analyses we intended
 
 If we were the continue on with this current analysis, some things we would do differently are ... 
 1. We would create more models looking at different cancers. 
-2. We would conduct statistical testing such as running ANOVA tests to test the significance of the relationships being explored. 
+&nbsp;
+2. We would conduct statistical testing such as running ANOVA tests to test the significance of the     
+relationships being explored. 
 
 
 
